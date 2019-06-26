@@ -16,7 +16,7 @@ class Controller extends BaseController
     }
 
     public function dashboard(){
-        return view('dashboard');
+        return view('index');
     }
 
     #--------------------------------------------------------------------------

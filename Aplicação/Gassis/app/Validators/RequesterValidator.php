@@ -18,7 +18,11 @@ class RequesterValidator extends LaravelValidator
      * @var array
      */
     protected $rules = [
-        ValidatorInterface::RULE_CREATE => [],
+        ValidatorInterface::RULE_CREATE => [
+            'name'           => 'required',
+            'email'          => 'required',
+            'birth'          => 'nullable'
+        ],
         ValidatorInterface::RULE_UPDATE => [],
     ];
 }

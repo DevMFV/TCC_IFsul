@@ -13,7 +13,7 @@ class RequesterUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**

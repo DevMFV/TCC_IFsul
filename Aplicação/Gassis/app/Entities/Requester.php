@@ -29,7 +29,7 @@ class Requester extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'birth', 'filename', 'email', 'password', 'status', 'permission'
+        'name', 'birth', 'email', 'password', 'status', 'permission'
     ];
 
     /**

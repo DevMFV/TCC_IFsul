@@ -78,4 +78,8 @@ class DashboardController extends Controller
 
         dd($request->all());
     }
+
+    public function reqTables(){
+        return view('requesterTables');
+    }
 }

@@ -30,7 +30,7 @@ class CreateRequestersTable extends Migration
 		
 			//Permission
 			$table->String('status')->default('active');
-			$table->String('permission')->default('app.requester');
+			$table->String('permission')->default('1');
 
 			$table->rememberToken();
 			$table->timestamps();

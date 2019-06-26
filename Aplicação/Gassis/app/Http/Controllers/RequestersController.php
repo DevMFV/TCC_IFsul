@@ -11,6 +11,7 @@ use App\Http\Requests\RequesterCreateRequest;
 use App\Http\Requests\RequesterUpdateRequest;
 use App\Repositories\RequesterRepository;
 use App\Validators\RequesterValidator;
+use App\Services\RequesterService;
 
 /**
  * Class RequestersController.
@@ -28,17 +29,17 @@ class RequestersController extends Controller
      * @var RequesterValidator
      */
     protected $validator;
+    protected $service;
 
     /**
      * RequestersController constructor.
      *
      * @param RequesterRepository $repository
-     * @param RequesterValidator $validator
      */
-    public function __construct(RequesterRepository $repository, RequesterValidator $validator)
+    public function __construct(RequesterRepository $repository, RequesterService $service)
     {
         $this->repository = $repository;
-        $this->validator  = $validator;
+        $this->service = $service;
     }
 
     /**
@@ -46,9 +47,22 @@ class RequestersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
+
+    public function register(){
+        return view('requesters.requesterAdd');
+    }
+
+    public function index(){
+        
+        $requesters = $this->repository->all();
+
+        return view('requesters.index',[
+            'requesters' => $requesters,
+        ]);
+    
+        
+
+        /*$this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $requesters = $this->repository->all();
 
         if (request()->wantsJson()) {
@@ -59,6 +73,8 @@ class RequestersController extends Controller
         }
 
         return view('requesters.index', compact('requesters'));
+        */
+
     }
 
     /**
@@ -70,39 +86,23 @@ class RequestersController extends Controller
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function store(RequesterCreateRequest $request)
+    public function store(RequesterCreateRequest $requestPar)
     {
-        try {
+      
+      $request = $this->service->store($requestPar->all());
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
+      $req = $request['success'] ? $request['data']: null;
 
-            $requester = $this->repository->create($request->all());
-
-            $response = [
-                'message' => 'Requester created.',
-                'data'    => $requester->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+      session()->flush('success',[
+          'success'      => $request['success'],
+          'messages'     => $request['message']
+      ]);
+        
+        return view('requesters.requesterAdd',['requester'=>$req]);
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified res$requesterurce.
      *
      * @param  int $id
      *

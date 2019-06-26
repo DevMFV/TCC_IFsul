@@ -11,10 +11,10 @@
 |
 */
 
-#Route::get('/', ['as'=> '/','uses'=>'Controller@homepage']);
+Route::get('/', ['as'=> '/','uses'=>'Controller@homepage']);
 Route::get('/dashboard', ['as'=> 'dashboard','uses'=>'Controller@dashboard']);
 
-
+Route::get('/reqTables', ['as'=> 'reqTables','uses'=>'DashboardController@reqTables']);
 
 #==========================================================================
 
@@ -31,6 +31,12 @@ Route::post('/auth', ['as'=> 'auth' ,'uses'=>'DashboardController@auth']);
 Route::post('/logout', ['as'=> 'requester.logout' ,'uses'=>'DashboardController@logout']);
 
 Route::get('/index', ['as'=> 'index' ,'uses'=>'DashboardController@index']);
+
+Route::resources(['requester'=>'RequestersController']);
+
+Route::get('/register', ['as'=> 'register' ,'uses'=>'RequestersController@register']);
+
+Route::post('/requesterStore', ['as'=> 'requesterStore' ,'uses'=>'RequestersController@store']);
 
 
 
