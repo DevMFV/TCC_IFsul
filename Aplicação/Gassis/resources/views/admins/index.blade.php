@@ -24,19 +24,12 @@
 
 <body id="page-top">
 
-  @if(session('sucsses'))
-    <h3> Foi </h3>
-
-  @else
-    <h3> Não houve retorno </h3>
-  @endif
-
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="index.html">Start Bootstrap</a>
+    <a class="navbar-brand mr-1" href="#">GAssis</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
-      <i class="fas fa-bars"></i>
+      <!-- <i class="fas fa-bars"></i> -->
     </button>
 
     <!-- Navbar Search -->
@@ -53,6 +46,16 @@
 
     <!-- Navbar -->
     <ul class="navbar-nav ml-auto ml-md-0">
+
+      <div class="dv">.</div>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('admin.logout')}}">
+          <span class="logout">Sair</span>
+        </a>
+      </li>
+
+      <!--
       <li class="nav-item dropdown no-arrow mx-1">
         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-bell fa-fw"></i>
@@ -88,6 +91,8 @@
           <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
         </div>
       </li>
+      -->
+
     </ul>
 
   </nav>
@@ -95,40 +100,26 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
+    
     <ul class="sidebar navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="index.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span>
-        </a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-          <h6 class="dropdown-header">Login Screens:</h6>
-          <a class="dropdown-item" href="login.html">Login</a>
-          <a class="dropdown-item" href="register.html">Register</a>
-          <a class="dropdown-item" href="forgot-password.html">Forgot Password</a>
-          <div class="dropdown-divider"></div>
-          <h6 class="dropdown-header">Other Pages:</h6>
-          <a class="dropdown-item" href="404.html">404 Page</a>
-          <a class="dropdown-item" href="blank.html">Blank Page</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="{{route('requester.index')}}">
-          <i style="color:blue" class="fas fa-fw fa-user"></i>
-          <span style="color:blue">Solicitantes</span></a>
-          
-      </li>
+          <a class="nav-link" href="{{route('dashboard')}}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Página inicial</span>
+          </a>
+        </li>
+
+        <li class="nav-item active">
+          <a class="nav-link" href="{{route('admin.index')}}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Solicitantes</span></a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('tipoSol.index')}}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Tipo de Solicitante</span></a>
+        </li>
     </ul>
 
     <div id="content-wrapper">
@@ -144,39 +135,69 @@
         </ol>
 
         <!-- DataTables Example -->
-        <div class="card card-register mx-auto mt-5">
-      <div class="card-header">Cadastrar Solicitante</div>
-      <div class="card-body">
-        <form action="{{ action('RequestersController@store') }}" method="post">
-          {{ csrf_field() }}
-          <div class="form-group">
-            <div class="form-row">
-              <div class="col-md-6">
-                <div class="form-label-group">
-                  <input type="text" name="name" id="firstName" class="form-control" placeholder="First name" required="required" autofocus="autofocus">
-                  <label for="firstName">Nome Completo</label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-label-group">
-                  <input type="date" name="birth" id="lastName" class="form-control" placeholder="Last name" >
-                  <label for="lastName">Data de Nascimento</label>
-                </div>
-              </div>
+        <div class="card mb-3">
+          <div class="card-header">
+            <i class="fas fa-table"></i>
+            Data Table Example</div>
+          <div class="card-body">
+            <div class="table-responsive">
+
+          
+                <a class="nav-link-topAction" href="{{route('register')}}">
+                  Cadastrar Solicitante
+                </a>
+              
+
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    
+                    <th>Foto</th>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  @foreach($admins as $admin)
+
+                  <tr>
+
+                    <td>{{ $admin->filename }}</td>
+                    <td>{{ $admin->id }}</td>
+                    <td>{{ $admin->name }}</td>
+                    <td>{{ $admin->email }}</td>
+                    <td>{{ $admin->status }}</td>
+                    <td>
+
+                      {!!Form::open(['route' => ['admin.destroy', $admin->id], 'method' => 'DELETE'])!!}
+                        {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
+                      {!!Form::close()!!}
+
+                    </td>
+
+                  </tr>
+
+                  @endforeach
+
+                </tbody>
+              </table>
+
             </div>
           </div>
-          <div class="form-group">
-            <div class="form-label-group">
-              <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="required">
-              <label for="inputEmail">Email</label>
-            </div>
-          </div>
-         
-          <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
-        </form>
-        
+          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        </div>
+
+        <p class="small text-center text-muted my-5">
+          <em>More table examples coming soon...</em>
+        </p>
+
       </div>
-    </div>
       <!-- /.container-fluid -->
 
       <!-- Sticky Footer -->

@@ -17,12 +17,11 @@
 
         {!! Form::open(['class'=>'form','route' => 'auth', 'method' => 'post']) !!}
 
-            <label class="box-legend">Logar Solicitante</label>
+            <label class="box-legend">Login</label>
             <div class="datas">
 
-
-                {!!Form::text('requesterlogin', null, ['class'=>'data-item','type'=>'email','placeholder'=>'Digite seu Login']) !!}
-                {!!Form::password('requesterpassword',['class'=>'data-item','placeholder'=>'Digite sua Senha']) !!}
+                {!!Form::text('adminlogin', null, ['class'=>'data-item','type'=>'email','placeholder'=>'Digite seu Login','required'=>'required']) !!}
+                {!!Form::password('adminpassword',['class'=>'data-item','placeholder'=>'Digite sua Senha','required'=>'required']) !!}
 
             </div>
 

@@ -4,16 +4,16 @@ namespace App\Repositories;
 
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Repositories\RequesterRepository;
-use App\Entities\Requester;
-use App\Validators\RequesterValidator;
+use App\Repositories\UserRepository;
+use App\Entities\User;
+use App\Validators\UserValidator;
 
 /**
- * Class RequesterRepositoryEloquent.
+ * Class UserRepositoryEloquent.
  *
  * @package namespace App\Repositories;
  */
-class RequesterRepositoryEloquent extends BaseRepository implements RequesterRepository
+class UserRepositoryEloquent extends BaseRepository implements UserRepository
 {
     /**
      * Specify Model class name
@@ -22,7 +22,7 @@ class RequesterRepositoryEloquent extends BaseRepository implements RequesterRep
      */
     public function model()
     {
-        return Requester::class;
+        return User::class;
     }
 
     /**
@@ -33,7 +33,7 @@ class RequesterRepositoryEloquent extends BaseRepository implements RequesterRep
     public function validator()
     {
 
-        return RequesterValidator::class;
+        return UserValidator::class;
     }
 
 

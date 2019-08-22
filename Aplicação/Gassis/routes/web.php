@@ -12,9 +12,6 @@
 */
 
 Route::get('/', ['as'=> '/','uses'=>'Controller@homepage']);
-Route::get('/dashboard', ['as'=> 'dashboard','uses'=>'Controller@dashboard']);
-
-Route::get('/reqTables', ['as'=> 'reqTables','uses'=>'DashboardController@reqTables']);
 
 #==========================================================================
 
@@ -23,21 +20,25 @@ Route::get('/reqTables', ['as'=> 'reqTables','uses'=>'DashboardController@reqTab
 #--------------------------------------------------------------------------
 
 
-Route::get('/login', ['as'=>'/login','uses'=>'Controller@loginRequester']);
+Route::get('/login', ['as'=>'login','uses'=>'Controller@login']);
 
-Route::post('/auth', ['as'=> 'auth' ,'uses'=>'DashboardController@auth']);
+Route::post('/auth', ['as'=> 'auth' ,'uses'=>'AdminDashboardController@auth']);
 
+Route::group(['middleware' => 'auth'], 
+function() { 
 
-Route::post('/logout', ['as'=> 'requester.logout' ,'uses'=>'DashboardController@logout']);
+    Route::get('/dashboard', ['as'=> 'dashboard','uses'=>'Controller@dashboard']);
+    Route::get('/reqTables', ['as'=> 'reqTables','uses'=>'AdminDashboardController@reqTables']);
+    Route::get('/logout', ['as'=> 'admin.logout' ,'uses'=>'AdminDashboardController@logout']);
+    Route::get('/index', ['as'=> 'index' ,'uses'=>'AdminDashboardController@index']);
+    Route::resources(['admin'=>'AdminsController']); 
+    Route::get('/register', ['as'=> 'register' ,'uses'=>'AdminsController@register']);
+    Route::post('/adminStore', ['as'=> 'adminStore' ,'uses'=>'AdminsController@store']);
 
-Route::get('/index', ['as'=> 'index' ,'uses'=>'DashboardController@index']);
+    Route::resources(['tipoSol'=>'TipoSolicitantesController']);
+    Route::post('/tipoSolStore', ['as'=> 'tipoSolStore' ,'uses'=>'TipoSolicitantesController@store']);
 
-Route::resources(['requester'=>'RequestersController']);
-
-Route::get('/register', ['as'=> 'register' ,'uses'=>'RequestersController@register']);
-
-Route::post('/requesterStore', ['as'=> 'requesterStore' ,'uses'=>'RequestersController@store']);
-
+}); 
 
 
 #==========================================================================

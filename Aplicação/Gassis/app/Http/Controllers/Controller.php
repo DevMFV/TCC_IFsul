@@ -23,7 +23,7 @@ class Controller extends BaseController
     // method to requester login VIEW
     #--------------------------------------------------------------------------
 
-    public function loginRequester(){
+    public function login(){
         return view('login');
     }
 

@@ -2,15 +2,15 @@
 
 namespace App\Presenters;
 
-use App\Transformers\RequesterTransformer;
+use App\Transformers\UserTransformer;
 use Prettus\Repository\Presenter\FractalPresenter;
 
 /**
- * Class RequesterPresenter.
+ * Class UserPresenter.
  *
  * @package namespace App\Presenters;
  */
-class RequesterPresenter extends FractalPresenter
+class UserPresenter extends FractalPresenter
 {
     /**
      * Transformer
@@ -19,6 +19,6 @@ class RequesterPresenter extends FractalPresenter
      */
     public function getTransformer()
     {
-        return new RequesterTransformer();
+        return new UserTransformer();
     }
 }

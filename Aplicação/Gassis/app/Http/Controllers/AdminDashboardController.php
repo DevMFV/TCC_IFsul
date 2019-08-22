@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Repositories\RequesterRepository;
-use App\Validators\RequesterValidator;
-use Auth;
+use App\Repositories\AdminRepository;
+use App\Validators\AdminValidator;
+//use Auth;
 use PHPUnit\Framework\Exception;
+use Illuminate\Support\Facades\Auth;
 
-class DashboardController extends Controller
+class AdminDashboardController extends Controller
 {
     /**
      * @var DasboardRepository
@@ -21,7 +22,7 @@ class DashboardController extends Controller
     private $validator;
 
     
-    public function __construct(RequesterRepository $repository, RequesterValidator $validator)
+    public function __construct(AdminRepository $repository, AdminValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
@@ -33,14 +34,14 @@ class DashboardController extends Controller
 
     public function logout(){
         Auth::logout();
-        return redirect()->route('/login');
+        return redirect()->route('login');
     }
 
     public function auth(Request $request){
-        
+
         $data = array(
-            "email"=>$request->get('requesterlogin'),
-            "password"=>$request->get('requesterpassword')
+            "email"=>$request->get('adminlogin'),
+            "password"=>$request->get('adminpassword')
         );
 
         try{
@@ -53,18 +54,18 @@ class DashboardController extends Controller
             else{
 
                 //busca pelo email informado
-                $requester=$this->repository->findWhere(['email' => $request->get('requesterlogin')])->first();
+                $Admin=$this->repository->findWhere(['email' => $request->get('adminlogin')])->first();
 
                 // Verifica se achou o objeto
-                if(!$requester){
+                if(!$Admin){
                     throw new Exception("Email invalido!");
                 }
                 // se achou, verefica se a senha do objeto é a mesma que foi informada
-                else if($requester->password != $request->get('requesterpassword')){
-                    throw new Exception("Senha invalido!");
+                else if($Admin->password != $request->get('adminpassword')){
+                    throw new Exception("Senha invalida!");
                 }
                 // se estiver tudo certo, autentica.
-                else{Auth::login($requester);}
+                else{Auth::login($Admin);}
 
             }
 
@@ -73,13 +74,9 @@ class DashboardController extends Controller
         catch(\Exeption $e){
             return $e->getMessage();
         }
-
-        
-
-        dd($request->all());
     }
 
     public function reqTables(){
-        return view('requesterTables');
+        return view('AdminTables');
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 /**
  * Class CreateRequestersTable.
  */
-class CreateRequestersTable extends Migration
+class CreateUsersTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -15,13 +15,13 @@ class CreateRequestersTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('requesters', function(Blueprint $table) {
+		Schema::create('users', function(Blueprint $table) {
 
 			$table->increments('id');
 
-			//People Datas 
+			//People Datas -v
+
 			$table->String('name', 50);
-			$table->date('birth')->nullable();
 			$table->String('filename')->nullable();
 
 			//Auht Datas
@@ -30,7 +30,6 @@ class CreateRequestersTable extends Migration
 		
 			//Permission
 			$table->String('status')->default('active');
-			$table->String('permission')->default('1');
 
 			$table->rememberToken();
 			$table->timestamps();
@@ -46,11 +45,11 @@ class CreateRequestersTable extends Migration
 	public function down()
 	{
 
-		Schema::table('requesters', function(Blueprint $table) {
-			// apagar relacionamentos
-		});
+	//	Schema::table('users', function(Blueprint $table) {
+	//		// apagar relacionamentos
+	//	});
 
 		// DROPA A TABELA
-		Schema::drop('requesters');
+		Schema::dropIfExists('users');
 	}
 }

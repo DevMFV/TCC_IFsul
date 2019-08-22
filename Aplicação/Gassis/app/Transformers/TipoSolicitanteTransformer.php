@@ -3,23 +3,23 @@
 namespace App\Transformers;
 
 use League\Fractal\TransformerAbstract;
-use App\Entities\Requester;
+use App\Entities\TipoSolicitante;
 
 /**
- * Class RequesterTransformer.
+ * Class TipoSolicitanteTransformer.
  *
  * @package namespace App\Transformers;
  */
-class RequesterTransformer extends TransformerAbstract
+class TipoSolicitanteTransformer extends TransformerAbstract
 {
     /**
-     * Transform the Requester entity.
+     * Transform the TipoSolicitante entity.
      *
-     * @param \App\Entities\Requester $model
+     * @param \App\Entities\TipoSolicitante $model
      *
      * @return array
      */
-    public function transform(Requester $model)
+    public function transform(TipoSolicitante $model)
     {
         return [
             'id'         => (int) $model->id,

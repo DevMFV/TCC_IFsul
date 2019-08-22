@@ -2,17 +2,17 @@
 
 namespace App\Services;
 
-Use App\Repositories\RequesterRepository;
-Use App\Validators\RequesterValidator;
+Use App\Repositories\AdminRepository;
+Use App\Validators\AdminValidator;
 use Prettus\Validator\Contracts\ValidatorInterface;
 
-class REquesterService{
+class AdminService{
 
     private $validator;
     private $repository;
 
 
-    public function __construct(RequesterRepository $repository, RequesterValidator $validator){
+    public function __construct(AdminRepository $repository, AdminValidator $validator){
 
         $this->validator = $validator;
         $this->repository = $repository;
@@ -23,12 +23,13 @@ class REquesterService{
         try{
 
             $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
-            $requester = $this->repository->create($data);
+
+            $admin = $this->repository->create($data);
 
             return[
                 'success'=>true,
                 'message'=>'Solicitante cadastrado',
-                'data'=> $requester
+                'data'=> $admin
             ];
         }
         catch(\Exeption $e){
@@ -53,8 +54,31 @@ class REquesterService{
 
     }
 
-    public function delete(){
+    public function destroy($admin_id){
+        try{
+            $this->repository->delete($admin_id);
 
+            return[
+                'success'=>true,
+                'message'=>'Usuário removido.'
+            ];
+        }
+        catch(\Exeption $e){
+
+
+            switch(get_class($e)){
+                case QueryException::class          : return ['success' => false, 'message' =>$e->getMessage()];
+                case ValidatorException::class      : return ['success' => false, 'message' =>$e->getMessageBag()];
+                case QueryException::class          : return ['success' => false, 'message' =>$e->getMessage()];
+                default                             : return ['success' => false, 'message' =>$e->getMessage()];
+            }
+
+
+            return[
+                'success'=>false,
+                'message'=>$e->getMessage(),
+            ];
+        }
     }
    
 }

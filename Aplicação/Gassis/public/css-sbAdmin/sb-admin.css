@@ -48,24 +48,111 @@
   box-sizing: border-box;
 }
 
+.form-submit{
+  background-color:#007bff;
+  border-radius: 50px;
+  width: 100%;
+  margin: 0 0 20px 0px;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  color:white;
+  border:none;
+}
+
+.form-submit:hover{
+  background-color:rgb(226, 226, 226);
+  color:#007bff;
+}
+
+
+.nav-link-topAction-back{
+  background-color:none;
+  border-radius: 50px;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  color:white;
+}
+
+.nav-link-topAction-back:hover{
+  background-color:rgb(182, 182, 182);
+  border-radius: 50px;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none; 
+  color:#007bff;
+}
+
+.nav-link-topAction-back-div{
+  display: flex;
+  background-color:#343a40;
+  border-radius: 50px;
+  width: 100%;
+  margin: 0 0 20px 0px;
+  text-align: center;
+  text-decoration: none;
+  color:white;
+  border:none;
+}
+
+.remove{
+  display: flex;
+}
+.remove-form-submit{
+  background-color:#ff0000;
+  border-radius: 50px;
+  width: 100%;
+  margin: 0 0 20px 0px;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  color:white;
+  border:none;
+}
+
+.remove-form-submit:hover{
+  background-color:rgb(211, 211, 211);
+  color:#990000;
+}
+
+
+.logout{
+  color:grey;
+}
+.logout:hover{
+  color:white;
+}
+
+.dv{
+  width:1px;
+  background-color:grey;
+  position:relative;
+  right:15px;
+  margin-left:20px;
+}
+
 .active-blue{
   color:blue;
 }
 
 .nav-link-topAction{
-  background-color: rgb(226, 226, 226);
+  background-color:#007bff;
   border-radius: 50px;
   width: 25%;
   margin: 0 0 20px 0px;
   padding: 0.5rem 1rem;
   text-align: center;
   text-decoration: none;
+  color:white;
 }
 
 .nav-link-topAction:hover{
-  background-color: #007bff;
+  background-color:rgb(226, 226, 226);
   text-decoration: none;
-  color:rgb(226, 226, 226);
+  color:blue;
 }
 
 html {
@@ -1972,7 +2059,9 @@ pre code {
 
 @media (max-width: 575.98px) {
   .table-responsive-sm {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -10598,6 +10687,7 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  flex-direction: row;
 }
 
 #wrapper #content-wrapper {

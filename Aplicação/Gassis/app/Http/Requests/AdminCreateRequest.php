@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RequesterCreateRequest extends FormRequest
+class AdminCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class RequesterCreateRequest extends FormRequest
     public function rules()
     {
         return [
-          
+            //
         ];
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Requester extends Authenticatable
+class User extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
@@ -15,12 +15,10 @@ class Requester extends Authenticatable
     public $timestamps = true;
 
     /*name
-    birth
     filename
     login
     password
     status
-    permission
     */
 
     /**
@@ -29,7 +27,7 @@ class Requester extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'birth', 'email', 'password', 'status', 'permission'
+        'name', 'email', 'password', 'status'
     ];
 
     /**

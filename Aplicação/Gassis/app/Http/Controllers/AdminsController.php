@@ -7,36 +7,36 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\RequesterCreateRequest;
-use App\Http\Requests\RequesterUpdateRequest;
-use App\Repositories\RequesterRepository;
-use App\Validators\RequesterValidator;
-use App\Services\RequesterService;
+use App\Http\Requests\AdminCreateRequest;
+use App\Http\Requests\AdminUpdateRequest;
+use App\Repositories\AdminRepository;
+use App\Validators\AdminValidator;
+use App\Services\AdminService;
 
 /**
- * Class RequestersController.
+ * Class AdminsController.
  *
  * @package namespace App\Http\Controllers;
  */
-class RequestersController extends Controller
+class AdminsController extends Controller
 {
     /**
-     * @var RequesterRepository
+     * @var AdminRepository
      */
     protected $repository;
 
     /**
-     * @var RequesterValidator
+     * @var AdminValidator
      */
     protected $validator;
     protected $service;
 
     /**
-     * RequestersController constructor.
+     * AdminsController constructor.
      *
-     * @param RequesterRepository $repository
+     * @param AdminRepository $repository
      */
-    public function __construct(RequesterRepository $repository, RequesterService $service)
+    public function __construct(AdminRepository $repository, AdminService $service)
     {
         $this->repository = $repository;
         $this->service = $service;
@@ -49,30 +49,30 @@ class RequestersController extends Controller
      */
 
     public function register(){
-        return view('requesters.requesterAdd');
+        return view('admins.adminAdd');
     }
 
     public function index(){
         
-        $requesters = $this->repository->all();
+        $admins = $this->repository->all();
 
-        return view('requesters.index',[
-            'requesters' => $requesters,
+        return view('admins.index',[
+            'admins' => $admins,
         ]);
     
         
 
         /*$this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $requesters = $this->repository->all();
+        $admins = $this->repository->all();
 
         if (request()->wantsJson()) {
 
             return response()->json([
-                'data' => $requesters,
+                'data' => $admins,
             ]);
         }
 
-        return view('requesters.index', compact('requesters'));
+        return view('admins.index', compact('admins'));
         */
 
     }
@@ -80,15 +80,14 @@ class RequestersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  RequesterCreateRequest $request
+     * @param  AdminCreateRequest $request
      *
      * @return \Illuminate\Http\Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function store(RequesterCreateRequest $requestPar)
+    public function store(AdminCreateRequest $requestPar)
     {
-      
       $request = $this->service->store($requestPar->all());
 
       $req = $request['success'] ? $request['data']: null;
@@ -98,11 +97,12 @@ class RequestersController extends Controller
           'messages'     => $request['message']
       ]);
         
-        return view('requesters.requesterAdd',['requester'=>$req]);
+      return view('admins.adminAdd');
+
     }
 
     /**
-     * Display the specified res$requesterurce.
+     * Display the specified res$adminurce.
      *
      * @param  int $id
      *
@@ -110,16 +110,16 @@ class RequestersController extends Controller
      */
     public function show($id)
     {
-        $requester = $this->repository->find($id);
+        $admin = $this->repository->find($id);
 
         if (request()->wantsJson()) {
 
             return response()->json([
-                'data' => $requester,
+                'data' => $admin,
             ]);
         }
 
-        return view('requesters.show', compact('requester'));
+        return view('admins.show', compact('admin'));
     }
 
     /**
@@ -131,32 +131,32 @@ class RequestersController extends Controller
      */
     public function edit($id)
     {
-        $requester = $this->repository->find($id);
+        $admin = $this->repository->find($id);
 
-        return view('requesters.edit', compact('requester'));
+        return view('admins.edit', compact('admin'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  RequesterUpdateRequest $request
+     * @param  AdminUpdateRequest $request
      * @param  string            $id
      *
      * @return Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function update(RequesterUpdateRequest $request, $id)
+    public function update(AdminUpdateRequest $request, $id)
     {
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
-            $requester = $this->repository->update($request->all(), $id);
+            $admin = $this->repository->update($request->all(), $id);
 
             $response = [
-                'message' => 'Requester updated.',
-                'data'    => $requester->toArray(),
+                'message' => 'Admin updated.',
+                'data'    => $admin->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -189,16 +189,15 @@ class RequestersController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = $this->repository->delete($id);
+        $request = $this->service->destroy($id);
 
-        if (request()->wantsJson()) {
+        session()->flush('success',[
+            'success'      => $request['success'],
+            'messages'     => $request['message']
+        ]);
 
-            return response()->json([
-                'message' => 'Requester deleted.',
-                'deleted' => $deleted,
-            ]);
-        }
-
-        return redirect()->back()->with('message', 'Requester deleted.');
+        return redirect()->route('admin.index');
     }
 }
+
+
