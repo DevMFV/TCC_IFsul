@@ -4,16 +4,16 @@ namespace App\Repositories;
 
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Repositories\AdminRepository;
-use App\Entities\Admin;
-use App\Validators\AdminValidator;
+use App\Repositories\TipoDeficienciaRepository;
+use App\Entities\TipoDeficiencia;
+use App\Validators\TipoDeficienciaValidator;
 
 /**
- * Class AdminRepositoryEloquent.
+ * Class TipoDeficienciaRepositoryEloquent.
  *
  * @package namespace App\Repositories;
  */
-class AdminRepositoryEloquent extends BaseRepository implements AdminRepository
+class TipoDeficienciaRepositoryEloquent extends BaseRepository implements TipoDeficienciaRepository
 {
     /**
      * Specify Model class name
@@ -22,7 +22,7 @@ class AdminRepositoryEloquent extends BaseRepository implements AdminRepository
      */
     public function model()
     {
-        return Admin::class;
+        return TipoDeficiencia::class;
     }
 
     /**
@@ -33,7 +33,7 @@ class AdminRepositoryEloquent extends BaseRepository implements AdminRepository
     public function validator()
     {
 
-        return AdminValidator::class;
+        return TipoDeficienciaValidator::class;
     }
 
 

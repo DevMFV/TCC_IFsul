@@ -7,11 +7,11 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class TipoSolicitante.
+ * Class TipoDeficiencia.
  *
  * @package namespace App\Entities;
  */
-class TipoSolicitante extends Model implements Transformable
+class TipoDeficiencia extends Model implements Transformable
 {
     use TransformableTrait;
 
@@ -20,12 +20,14 @@ class TipoSolicitante extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable  =      ['tipo'];
-    
+    protected $fillable = [
+        'tipo',
+        'codigo'
+    ];
+
     public $timestamps   =      true;
 
     public function users(){
         return $this->hasMany(User::class);
     }
-
 }

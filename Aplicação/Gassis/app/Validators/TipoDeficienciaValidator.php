@@ -6,11 +6,11 @@ use \Prettus\Validator\Contracts\ValidatorInterface;
 use \Prettus\Validator\LaravelValidator;
 
 /**
- * Class AdminValidator.
+ * Class TipoDeficienciaValidator.
  *
  * @package namespace App\Validators;
  */
-class AdminValidator extends LaravelValidator
+class TipoDeficienciaValidator extends LaravelValidator
 {
     /**
      * Validation Rules
@@ -18,10 +18,7 @@ class AdminValidator extends LaravelValidator
      * @var array
      */
     protected $rules = [
-        ValidatorInterface::RULE_CREATE => [
-            'name'           => 'required',
-            'email'          => 'required',
-        ],
+        ValidatorInterface::RULE_CREATE => [],
         ValidatorInterface::RULE_UPDATE => [],
     ];
 }

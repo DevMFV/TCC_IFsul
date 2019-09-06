@@ -10,20 +10,28 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Repositories\UserRepository;
+use App\Repositories\TipoSolicitanteRepository;
 use App\Validators\UserValidator;
 use App\Services\UserService;
+use App\Entities\TipoSolicitante;
 
 /**
- * Class UsersController.
+ * Class RequestersController.
  *
  * @package namespace App\Http\Controllers;
  */
-class UsersController extends Controller
+
+class RequestersController extends Controller
 {
     /**
      * @var UserRepository
      */
     protected $repository;
+
+    /**
+     * @var TipoSolicitanteRepository
+     */
+    protected $tipoRepository;
 
     /**
      * @var UserValidator
@@ -35,10 +43,12 @@ class UsersController extends Controller
      * UsersController constructor.
      *
      * @param UserRepository $repository
+     * @param TipoSolicitanteRepository $tipoRepository
      */
-    public function __construct(UserRepository $repository, UserService $service)
+    public function __construct(UserRepository $repository, UserService $service, TipoSolicitanteRepository $tipoRepository)
     {
         $this->repository = $repository;
+        $this->tipoRepository = $tipoRepository;
         $this->service = $service;
     }
 
@@ -49,31 +59,24 @@ class UsersController extends Controller
      */
 
     public function register(){
-        return view('users.userAdd');
+        
+        $tiposSolicitante = $this->tipoRepository->all();
+        $tipoSolicitanteList = TipoSolicitante::pluck('tipo','id')->all();
+
+        return view('requesters.requesterAdd',[
+            'tiposSolicitante' => $tiposSolicitante,
+            'tipoSolicitanteList' => $tipoSolicitanteList
+        ]);
     }
 
     public function index(){
         
         $users = $this->repository->all();
 
-        return view('users.index',[
+        return view('requesters.index',[
             'users' => $users,
+            
         ]);
-    
-        
-
-        /*$this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $users = $this->repository->all();
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $users,
-            ]);
-        }
-
-        return view('users.index', compact('users'));
-        */
 
     }
 
@@ -86,19 +89,22 @@ class UsersController extends Controller
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
+
     public function store(UserCreateRequest $requestPar)
     {
-        
-      $request = $this->service->store($requestPar->all(),2);
 
-      $req = $request['success'] ? $request['data']: null;
+      $request = $this->service->store($requestPar->all(),2);
 
       session()->flash('success',[
           'success'      => $request['success'],
           'messages'     => $request['message']
       ]);
         
-      return view('users.userAdd');
+      $tipoSolicitanteList = TipoSolicitante::pluck('tipo','id')->all();
+
+        return view('requesters.requesterAdd',[
+            'tipoSolicitanteList' => $tipoSolicitanteList
+        ]);
 
     }
 
@@ -130,6 +136,8 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function edit($id)
     {
         $user = $this->repository->find($id);
@@ -147,6 +155,8 @@ class UsersController extends Controller
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
+
+
     public function update(UserUpdateRequest $request, $id)
     {
         try {
@@ -188,6 +198,8 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function destroy($id)
     {
         $request = $this->service->destroy($id);
@@ -197,7 +209,7 @@ class UsersController extends Controller
             'messages'     => $request['message']
         ]);
 
-        return redirect()->route('user.index');
+        return redirect()->route('requester.index');
     }
 }
 

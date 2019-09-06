@@ -11,6 +11,9 @@
 
   <title>SB Admin - Tables</title>
 
+   <!-- Font-family Montserrat -->
+   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
   <!-- Custom fonts for this template-->
   <link href="{{asset('vendor-sbAdmin/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
 
@@ -19,17 +22,17 @@
 
   <!-- Custom styles for this template-->
   <link href="{{asset('css-sbAdmin/sb-admin.css')}}" rel="stylesheet">
-  
+
 </head>
 
 <body id="page-top">
 
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="index.html">GAssis</a>
+    <a class="navbar-brand mr-1" href="#">GAssis</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
-      <i class="fas fa-bars"></i>
+      <!-- <i class="fas fa-bars"></i> -->
     </button>
 
     <!-- Navbar Search -->
@@ -50,7 +53,7 @@
       <div class="dv">.</div>
 
       <li class="nav-item">
-        <a class="nav-link" href="{{route('admin.logout')}}">
+        <a class="nav-link" href="{{route('user.logout')}}">
           <span class="logout">Sair</span>
         </a>
       </li>
@@ -100,53 +103,39 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
-    
     <ul class="sidebar navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('dashboard')}}">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Página inicial</span>
-        </a>
-      </li>
+     
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('dashboard')}}">
+         <i class="fas fa-fw fa-tachometer-alt"></i>
+         <span>Página inicial</span>
+       </a>
+     </li>
 
-      <!--
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-          <h6 class="dropdown-header">Login Screens:</h6>
-          <a class="dropdown-item" href="login.html">Login</a>
-          <a class="dropdown-item" href="register.html">Register</a>
-          <a class="dropdown-item" href="forgot-password.html">Forgot Password</a>
-          <div class="dropdown-divider"></div>
-          <h6 class="dropdown-header">Other Pages:</h6>
-          <a class="dropdown-item" href="404.html">404 Page</a>
-          <a class="dropdown-item" href="blank.html">Blank Page</a>
-        </div>
-      </li>
-      
-      <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span></a>
-      </li>
-      -->
+     <li class="nav-item active">
+       <a class="nav-link" href="{{route('assisted.index')}}">
+         <i class="fas fa-fw fa-hands"></i>
+         <span>Assistidos</span></a>
+     </li>
 
-      <li class="nav-item active">
-        <a class="nav-link" href="{{route('admin.index')}}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Solicitantes</span></a>
-      </li>
-      
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('tipoSol.index')}}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Tipo de Solicitante</span></a>
-      </li>
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('requester.index')}}">
+         <i class="fas fa-fw fa-user"></i>
+         <span>Solicitantes</span></a>
+     </li>
 
-    </ul>
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('productor.index')}}">
+         <i class="fas fa-fw fa-hammer"></i>
+         <span>Produtores</span></a>
+     </li>
+     
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('tipoSol.index')}}">
+         <i class="fas fa-fw fa-user"></i>
+         <span>Tipo de Solicitante</span></a>
+     </li>
+</ul>
 
     <div id="content-wrapper">
 
@@ -161,44 +150,81 @@
         </ol>
 
         <!-- DataTables Example -->
-        <div class="card card-register mx-auto mt-5">
-      <div class="card-header">Cadastrar Solicitante
+        <div class="card mb-3">
+          <div class="card-header">
+            <i class="fas fa-table"></i>
+            Data Table Example</div>
+          <div class="card-body">
+            <div class="table-responsive">
 
-      </div>
-
-      <div class="card-body">
-
-      {!! Form::open(['class'=>'form','route' => 'adminStore', 'method' => 'post']) !!}
-          {{ csrf_field() }}
-          <div class="form-group">
-            <div class="form-row">
-              <div class="col-md-12">
-                <div class="form-label-group">
-                  <input type="text" name="name" id="firstName" class="form-control" placeholder="First name" required="required" autofocus="autofocus">
-                  <label for="firstName">Nome Completo</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="form-label-group">
-              <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="required">
-              <label for="inputEmail">Email</label>
-            </div>
-          </div>
           
-          {!!Form::submit('Cadastrar',['class'=>'form-submit']) !!}
+                @if (Gate::allows('create'))
+                <a class="nav-link-topAction" href="{{route('assistedRegister')}}">
+                  Cadastrar Assistido
+                </a>
+                @endif
+              
 
-            <div class="nav-link-topAction-back-div">
-              <a class="nav-link-topAction-back" href="{{route('admin.index')}}">
-                Voltar
-              </a>
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    
+                    <th>Id</th>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>Tipo Deficiencia</th>
+                    <th>Email</th>
+                    <th>Status</th>
+
+                   
+                    <th>Ações</th>
+
+
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  @foreach($users as $user)
+
+                  @if ($user->permission == 1)
+
+                  <tr>
+                    
+                    <td>{{ $user->id }}</td>
+                    <td>{{ $user->filename }}</td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->tipoDef->tipo}}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->status }}</td>
+                    
+                    <td>
+
+                      {!!Form::open(['route' => ['assisted.destroy', $user->id], 'method' => 'DELETE'])!!}
+                        {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
+                      {!!Form::close()!!}
+
+                    </td>
+
+                  </tr>
+
+                  @endif
+
+                  @endforeach
+
+                </tbody>
+              </table>
+
             </div>
+          </div>
+          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        </div>
 
-          {!! Form::close() !!}
-        
+        <p class="small text-center text-muted my-5">
+          <em>More table examples coming soon...</em>
+        </p>
+
       </div>
-    </div>
       <!-- /.container-fluid -->
 
       <!-- Sticky Footer -->

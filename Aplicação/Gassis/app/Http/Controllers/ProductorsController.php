@@ -14,11 +14,12 @@ use App\Validators\UserValidator;
 use App\Services\UserService;
 
 /**
- * Class UsersController.
+ * Class ProductorsController.
  *
  * @package namespace App\Http\Controllers;
  */
-class UsersController extends Controller
+
+class ProductorsController extends Controller
 {
     /**
      * @var UserRepository
@@ -49,31 +50,16 @@ class UsersController extends Controller
      */
 
     public function register(){
-        return view('users.userAdd');
+        return view('productors.productorAdd');
     }
 
     public function index(){
         
         $users = $this->repository->all();
 
-        return view('users.index',[
+        return view('productors.index',[
             'users' => $users,
         ]);
-    
-        
-
-        /*$this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $users = $this->repository->all();
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $users,
-            ]);
-        }
-
-        return view('users.index', compact('users'));
-        */
 
     }
 
@@ -86,19 +72,18 @@ class UsersController extends Controller
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
+
     public function store(UserCreateRequest $requestPar)
     {
-        
-      $request = $this->service->store($requestPar->all(),2);
 
-      $req = $request['success'] ? $request['data']: null;
+      $request = $this->service->store($requestPar->all(),3);
 
       session()->flash('success',[
           'success'      => $request['success'],
           'messages'     => $request['message']
       ]);
         
-      return view('users.userAdd');
+      return view('productors.productorAdd');
 
     }
 
@@ -130,6 +115,8 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function edit($id)
     {
         $user = $this->repository->find($id);
@@ -147,6 +134,8 @@ class UsersController extends Controller
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
+
+
     public function update(UserUpdateRequest $request, $id)
     {
         try {
@@ -188,6 +177,8 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function destroy($id)
     {
         $request = $this->service->destroy($id);
@@ -197,7 +188,7 @@ class UsersController extends Controller
             'messages'     => $request['message']
         ]);
 
-        return redirect()->route('user.index');
+        return redirect()->route('productor.index');
     }
 }
 

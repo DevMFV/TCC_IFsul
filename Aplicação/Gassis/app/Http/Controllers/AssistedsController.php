@@ -10,20 +10,31 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Repositories\UserRepository;
+use App\Repositories\TipoDeficienciaRepository;
 use App\Validators\UserValidator;
 use App\Services\UserService;
+use App\Entities\TipoDeficiencia;
+use App\Entities\User;
+use App\Providers\AppServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 /**
- * Class UsersController.
+ * Class AssistedsController.
  *
  * @package namespace App\Http\Controllers;
  */
-class UsersController extends Controller
+
+class AssistedsController extends Controller
 {
     /**
      * @var UserRepository
      */
     protected $repository;
+
+    /**
+     * @var TipoDeficienciaRepository
+     */
+    protected $tipoRepository;
 
     /**
      * @var UserValidator
@@ -35,10 +46,12 @@ class UsersController extends Controller
      * UsersController constructor.
      *
      * @param UserRepository $repository
+     * @param TipoDeficienciaRepository $tipoRepository
      */
-    public function __construct(UserRepository $repository, UserService $service)
+    public function __construct(UserRepository $repository, UserService $service, TipoDeficienciaRepository $tipoRepository)
     {
         $this->repository = $repository;
+        $this->tipoRepository = $tipoRepository;
         $this->service = $service;
     }
 
@@ -49,31 +62,24 @@ class UsersController extends Controller
      */
 
     public function register(){
-        return view('users.userAdd');
+        
+        $tiposDeficiencia = $this->tipoRepository->all();
+        $tipoDeficienciaList = TipoDeficiencia::pluck('tipo','id')->all();
+
+        return view('assisteds.assistedAdd',[
+            'tiposDeficiencia' => $tiposDeficiencia,
+            'tipoDeficienciaList' => $tipoDeficienciaList
+        ]);
     }
 
     public function index(){
-        
+
         $users = $this->repository->all();
 
-        return view('users.index',[
+        return view('assisteds.index',[
             'users' => $users,
+            
         ]);
-    
-        
-
-        /*$this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $users = $this->repository->all();
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $users,
-            ]);
-        }
-
-        return view('users.index', compact('users'));
-        */
 
     }
 
@@ -86,19 +92,22 @@ class UsersController extends Controller
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
+
     public function store(UserCreateRequest $requestPar)
     {
-        
-      $request = $this->service->store($requestPar->all(),2);
 
-      $req = $request['success'] ? $request['data']: null;
+      $request = $this->service->store($requestPar->all(),1);
 
       session()->flash('success',[
           'success'      => $request['success'],
           'messages'     => $request['message']
       ]);
         
-      return view('users.userAdd');
+      $tipoDeficienciaList = TipoDeficiencia::pluck('tipo','id')->all();
+
+        return view('assisteds.assistedAdd',[
+            'tipoDeficienciaList' => $tipoDeficienciaList
+        ]);
 
     }
 
@@ -130,6 +139,8 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function edit($id)
     {
         $user = $this->repository->find($id);
@@ -147,6 +158,8 @@ class UsersController extends Controller
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
+
+
     public function update(UserUpdateRequest $request, $id)
     {
         try {
@@ -188,16 +201,22 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function destroy($id)
     {
-        $request = $this->service->destroy($id);
+        if(auth()->user()->can('create',User::class)) {
 
-        session()->flash('success',[
-            'success'      => $request['success'],
-            'messages'     => $request['message']
-        ]);
+            $request = $this->service->destroy($id);
 
-        return redirect()->route('user.index');
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+
+            return redirect()->route('assisted.index');
+            
+        }
     }
 }
 

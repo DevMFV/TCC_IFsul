@@ -2,15 +2,15 @@
 
 namespace App\Presenters;
 
-use App\Transformers\AdminTransformer;
+use App\Transformers\DemandTransformer;
 use Prettus\Repository\Presenter\FractalPresenter;
 
 /**
- * Class AdminPresenter.
+ * Class DemandPresenter.
  *
  * @package namespace App\Presenters;
  */
-class AdminPresenter extends FractalPresenter
+class DemandPresenter extends FractalPresenter
 {
     /**
      * Transformer
@@ -19,6 +19,6 @@ class AdminPresenter extends FractalPresenter
      */
     public function getTransformer()
     {
-        return new AdminTransformer();
+        return new DemandTransformer();
     }
 }

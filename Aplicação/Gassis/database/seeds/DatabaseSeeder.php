@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 use App\Entities\User;
 use App\Entities\Requester;
 use App\Entities\Admin;
+use App\Entities\TipoDeficiencia;
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,14 +28,27 @@ class DatabaseSeeder extends Seeder
             'password'          => env('PASSWORD_HASH') ? bcrypt('124356789') : '124356789'
         ]);
         
-        */
 
-        Admin::create([
-            'name'              => 'Matheus',
-            'filename'          => 'asdfasdasdfasdf', 
-            'email'             => 'madmin@gmail.com', 
-            'password'          => env('PASSWORD_HASH') ? bcrypt('123456789') : '123456789',
+        */
+        
+
+        User::create([
+            'name'                      => 'Vinícius',
+            'filename'                  => 'asdfasdasdfasdf', 
+            'email'                     => 'vrequester@gmail.com', 
+            'password'                  => env('PASSWORD_HASH') ? bcrypt('987654321') : '987654321',
+            'tipo_solicitante_id'       => 1,   
+            'permission'                => 2,
         ]);
+
+        /* 
+
+        TipoDeficiencia::create([
+            'tipo'            => 'Deficiência Múltipla',
+            'codigo'          => 5
+        ]);
+
+        */
         
     }
 }

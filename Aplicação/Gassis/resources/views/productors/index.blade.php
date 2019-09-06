@@ -103,37 +103,38 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
+    
     <ul class="sidebar navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="{{route('dashboard')}}">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Página inicial</span>
-        </a>
-      </li>
+          <a class="nav-link" href="{{route('dashboard')}}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Página inicial</span>
+          </a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('assisted.index')}}">
+            <i class="fas fa-fw fa-hands"></i>
+            <span>Assistidos</span></a>
+        </li>
 
-      <li class="nav-item">
-       <a class="nav-link" href="{{route('assisted.index')}}">
-         <i class="fas fa-fw fa-hands"></i>
-         <span>Assistidos</span></a>
-     </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('requester.index')}}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Solicitantes</span></a>
+        </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('requester.index')}}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Solicitantes</span></a>
-      </li>
-
-      <li class="nav-item">
+        <li class="nav-item active">
         <a class="nav-link" href="{{route('productor.index')}}">
           <i class="fas fa-fw fa-hammer"></i>
           <span>Produtores</span></a>
-      </li>
+        </li>
 
-      <li class="nav-item active">
-        <a class="nav-link" href="{{route('tipoSol.index')}}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Tipo de Solicitante</span></a>
-      </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('tipoSol.index')}}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Tipo de Solicitante</span></a>
+        </li>
     </ul>
 
     <div id="content-wrapper">
@@ -156,29 +157,22 @@
           <div class="card-body">
             <div class="table-responsive">
 
-              {!! Form::open(['class'=>'form','route' => 'tipoSolStore', 'method' => 'post']) !!}
-                {{ csrf_field() }}
-                <div class="form-group">
-                  <div class="form-row">
-                    <div class="col-md-12">
-                      <div class="form-label-group">
-                        <input type="text" name="tipo" id="firstName" class="form-control" placeholder="First name" required="required" autofocus="autofocus">
-                        <label for="firstName">Nome do tipo</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {!!Form::submit('Cadastrar',['class'=>'form-submit']) !!}
-
-              {!! Form::close() !!}
+          
+                <a class="nav-link-topAction" href="{{route('productorRegister')}}">
+                  Cadastrar Produtor
+                </a>
+              
 
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                   <tr>
                     
+                    <th>Foto</th>
                     <th>Id</th>
-                    <th>Tipo de Solicitante</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Status</th>
+
                     <th>Ações</th>
 
                   </tr>
@@ -186,20 +180,28 @@
 
                 <tbody>
 
-             @foreach($tipoSolicitantes as $tipoSolicitante)
+                  @foreach($users as $user)
 
+                  @if ($user->permission == 3)
 
                   <tr>
 
-                    <td>{{ $tipoSolicitante->id }}</td>
-                    <td>{{ $tipoSolicitante->tipo }}</td>
+                    <td>{{ $user->filename }}</td>
+                    <td>{{ $user->id }}</td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->status }}</td>
                     <td>
-                      {!!Form::open(['route' => ['tipoSol.destroy', $tipoSolicitante->id], 'method' => 'DELETE'])!!}
+
+                      {!!Form::open(['route' => ['productor.destroy', $user->id], 'method' => 'DELETE'])!!}
                         {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
                       {!!Form::close()!!}
+
                     </td>
 
                   </tr>
+
+                  @endif
 
                   @endforeach
 

@@ -20,8 +20,8 @@
             <label class="box-legend">Login</label>
             <div class="datas">
 
-                {!!Form::text('adminlogin', null, ['class'=>'data-item','type'=>'email','placeholder'=>'Digite seu Login','required'=>'required']) !!}
-                {!!Form::password('adminpassword',['class'=>'data-item','placeholder'=>'Digite sua Senha','required'=>'required']) !!}
+                {!!Form::text('userlogin', null, ['class'=>'data-item','type'=>'email','placeholder'=>'Digite seu Login','required'=>'required']) !!}
+                {!!Form::password('userpassword',['class'=>'data-item','placeholder'=>'Digite sua Senha','required'=>'required']) !!}
 
             </div>
 

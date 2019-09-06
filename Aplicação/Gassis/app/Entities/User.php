@@ -27,7 +27,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'status'
+        'name', 
+        'email',
+        'permission', 
+        'password', 
+        'status',
+        'tipo_deficiencia_id',
+        'tipo_solicitante_id'
+
     ];
 
     /**
@@ -50,6 +57,14 @@ class User extends Authenticatable
 
     public function setPasswordAttribute($value){
         $this->attributes['password'] = env('PASSWORD_HASH') ? bcrypt($value) : $value;
+    }
+
+    public function tipoSol(){
+        return $this->belongsTo(TipoSolicitante::class, 'tipo_solicitante_id');
+    }
+
+    public function tipoDef(){
+        return $this->belongsTo(TipoDeficiencia::class, 'tipo_deficiencia_id');
     }
 
 }

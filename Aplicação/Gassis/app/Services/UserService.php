@@ -2,35 +2,38 @@
 
 namespace App\Services;
 
-Use App\Repositories\AdminRepository;
-Use App\Validators\AdminValidator;
+Use App\Repositories\UserRepository;
+Use App\Validators\UserValidator;
 use Prettus\Validator\Contracts\ValidatorInterface;
 
-class AdminService{
+class UserService{
 
     private $validator;
     private $repository;
 
 
-    public function __construct(AdminRepository $repository, AdminValidator $validator){
+    public function __construct(UserRepository $repository, UserValidator $validator){
 
         $this->validator = $validator;
         $this->repository = $repository;
     }
 
-    public function store($data){
+    public function store($data,$p){
 
         try{
 
+            $data += ["permission"=>$p];
+
             $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
 
-            $admin = $this->repository->create($data);
+            $user = $this->repository->create($data);
 
             return[
                 'success'=>true,
                 'message'=>'Solicitante cadastrado',
-                'data'=> $admin
+                'data'=> $user
             ];
+            
         }
         catch(\Exeption $e){
 
@@ -54,9 +57,9 @@ class AdminService{
 
     }
 
-    public function destroy($admin_id){
+    public function destroy($user_id){
         try{
-            $this->repository->delete($admin_id);
+            $this->repository->delete($user_id);
 
             return[
                 'success'=>true,

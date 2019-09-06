@@ -88,11 +88,14 @@ class AdminsController extends Controller
      */
     public function store(AdminCreateRequest $requestPar)
     {
-      $request = $this->service->store($requestPar->all());
+
+        
+
+      $request = $this->service->store($requestPar->all(),2);
 
       $req = $request['success'] ? $request['data']: null;
 
-      session()->flush('success',[
+      session()->flash('success',[
           'success'      => $request['success'],
           'messages'     => $request['message']
       ]);

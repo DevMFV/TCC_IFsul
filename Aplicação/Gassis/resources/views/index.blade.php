@@ -11,6 +11,9 @@
 
   <title>SB Admin - Dashboard</title>
 
+  <!-- Font-family Montserrat -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
   <!-- Custom fonts for this template-->
   <link href="{{asset('vendor-sbAdmin/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
 
@@ -50,7 +53,7 @@
       <div class="dv">.</div>
 
       <li class="nav-item">
-        <a class="nav-link" href="{{route('admin.logout')}}">
+        <a class="nav-link" href="{{route('user.logout')}}">
           <span class="logout">Sair</span>
         </a>
       </li>
@@ -110,11 +113,23 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="{{route('admin.index')}}">
+              <a class="nav-link" href="{{route('assisted.index')}}">
+                <i class="fas fa-fw fa-hands"></i>
+                <span>Assistidos</span></a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('requester.index')}}">
                 <i class="fas fa-fw fa-user"></i>
                 <span>Solicitantes</span></a>
             </li>
 
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('productor.index')}}">
+                <i class="fas fa-fw fa-hammer"></i>
+                <span>Produtores</span></a>
+            </li>
+            
             <li class="nav-item">
               <a class="nav-link" href="{{route('tipoSol.index')}}">
                 <i class="fas fa-fw fa-user"></i>

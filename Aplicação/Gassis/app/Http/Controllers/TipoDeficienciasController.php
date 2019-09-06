@@ -7,43 +7,38 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\tipoSolicitanteCreateRequest;
-use App\Http\Requests\tipoSolicitanteUpdateRequest;
-use App\Repositories\TipoSolicitanteRepository;
-use App\Validators\TipoSolicitanteValidator;
-use App\Services\TipoSolicitanteService;
-
+use App\Http\Requests\TipoDeficienciaCreateRequest;
+use App\Http\Requests\TipoDeficienciaUpdateRequest;
+use App\Repositories\TipoDeficienciaRepository;
+use App\Validators\TipoDeficienciaValidator;
 
 /**
- * Class TipoSolicitantesController.
+ * Class TipoDeficienciasController.
  *
  * @package namespace App\Http\Controllers;
  */
-class TipoSolicitantesController extends Controller
+class TipoDeficienciasController extends Controller
 {
     /**
-     * @var TipoSolicitanteRepository
+     * @var TipoDeficienciaRepository
      */
     protected $repository;
 
     /**
-     * @var TipoSolicitanteValidator
+     * @var TipoDeficienciaValidator
      */
     protected $validator;
 
-    protected $service;
-
     /**
-     * TipoSolicitantesController constructor.
+     * TipoDeficienciasController constructor.
      *
-     * @param TipoSolicitanteRepository $repository
-     * @param TipoSolicitanteValidator $validator
+     * @param TipoDeficienciaRepository $repository
+     * @param TipoDeficienciaValidator $validator
      */
-    public function __construct(TipoSolicitanteRepository $repository, TipoSolicitanteValidator $validator,TipoSolicitanteService $service)
+    public function __construct(TipoDeficienciaRepository $repository, TipoDeficienciaValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
-        $this->service = $service;
     }
 
     /**
@@ -53,53 +48,57 @@ class TipoSolicitantesController extends Controller
      */
     public function index()
     {
-
-        $tipoSolicitantes = $this->repository->all();
-
-        return view('admins.tipoSolicitanteAdd',[
-            'tipoSolicitantes' => $tipoSolicitantes,
-        ]);
-
-        /*
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $tipoSolicitantes = $this->repository->all();
+        $tipoDeficiencias = $this->repository->all();
 
         if (request()->wantsJson()) {
 
             return response()->json([
-                'data' => $tipoSolicitantes,
+                'data' => $tipoDeficiencias,
             ]);
         }
 
-        return view('tipoSolicitantes.tipoSolicitanteAdd', compact('tipoSolicitantes'));
-        */
+        return view('tipoDeficiencias.index', compact('tipoDeficiencias'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  TipoSolicitanteCreateRequest $request
+     * @param  TipoDeficienciaCreateRequest $request
      *
      * @return \Illuminate\Http\Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-
-
-    public function store(TipoSolicitanteCreateRequest $requestPar)
+    public function store(TipoDeficienciaCreateRequest $request)
     {
-    
-      $request = $this->service->store($requestPar->all());
+        try {
 
-      //$req = $request['success'] ? $request['data']: null;
+            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
 
-      session()->flash('success',[
-          'success'      => $request['success'],
-          'messages'     => $request['message']
-      ]);
+            $tipoDeficiencium = $this->repository->create($request->all());
 
-      return redirect()->route('tipoSol.index');
+            $response = [
+                'message' => 'TipoDeficiencia created.',
+                'data'    => $tipoDeficiencium->toArray(),
+            ];
 
+            if ($request->wantsJson()) {
+
+                return response()->json($response);
+            }
+
+            return redirect()->back()->with('message', $response['message']);
+        } catch (ValidatorException $e) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'error'   => true,
+                    'message' => $e->getMessageBag()
+                ]);
+            }
+
+            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+        }
     }
 
     /**
@@ -111,16 +110,16 @@ class TipoSolicitantesController extends Controller
      */
     public function show($id)
     {
-        $tipoSolicitante = $this->repository->find($id);
+        $tipoDeficiencium = $this->repository->find($id);
 
         if (request()->wantsJson()) {
 
             return response()->json([
-                'data' => $tipoSolicitante,
+                'data' => $tipoDeficiencium,
             ]);
         }
 
-        return view('tipoSolicitantes.show', compact('tipoSolicitante'));
+        return view('tipoDeficiencias.show', compact('tipoDeficiencium'));
     }
 
     /**
@@ -132,32 +131,32 @@ class TipoSolicitantesController extends Controller
      */
     public function edit($id)
     {
-        $tipoSolicitante = $this->repository->find($id);
+        $tipoDeficiencium = $this->repository->find($id);
 
-        return view('tipoSolicitantes.edit', compact('tipoSolicitante'));
+        return view('tipoDeficiencias.edit', compact('tipoDeficiencium'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  TipoSolicitanteUpdateRequest $request
+     * @param  TipoDeficienciaUpdateRequest $request
      * @param  string            $id
      *
      * @return Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function update(TipoSolicitanteUpdateRequest $request, $id)
+    public function update(TipoDeficienciaUpdateRequest $request, $id)
     {
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
-            $tipoSolicitante = $this->repository->update($request->all(), $id);
+            $tipoDeficiencium = $this->repository->update($request->all(), $id);
 
             $response = [
-                'message' => 'TipoSolicitante updated.',
-                'data'    => $tipoSolicitante->toArray(),
+                'message' => 'TipoDeficiencia updated.',
+                'data'    => $tipoDeficiencium->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -195,11 +194,11 @@ class TipoSolicitantesController extends Controller
         if (request()->wantsJson()) {
 
             return response()->json([
-                'message' => 'TipoSolicitante deleted.',
+                'message' => 'TipoDeficiencia deleted.',
                 'deleted' => $deleted,
             ]);
         }
 
-        return redirect()->back()->with('message', 'TipoSolicitante deleted.');
+        return redirect()->back()->with('message', 'TipoDeficiencia deleted.');
     }
 }

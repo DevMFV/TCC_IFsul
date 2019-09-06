@@ -22,21 +22,64 @@ Route::get('/', ['as'=> '/','uses'=>'Controller@homepage']);
 
 Route::get('/login', ['as'=>'login','uses'=>'Controller@login']);
 
-Route::post('/auth', ['as'=> 'auth' ,'uses'=>'AdminDashboardController@auth']);
+Route::post('/auth', ['as'=> 'auth' ,'uses'=>'UserDashboardController@auth']);
 
 Route::group(['middleware' => 'auth'], 
 function() { 
 
-    Route::get('/dashboard', ['as'=> 'dashboard','uses'=>'Controller@dashboard']);
-    Route::get('/reqTables', ['as'=> 'reqTables','uses'=>'AdminDashboardController@reqTables']);
-    Route::get('/logout', ['as'=> 'admin.logout' ,'uses'=>'AdminDashboardController@logout']);
-    Route::get('/index', ['as'=> 'index' ,'uses'=>'AdminDashboardController@index']);
-    Route::resources(['admin'=>'AdminsController']); 
-    Route::get('/register', ['as'=> 'register' ,'uses'=>'AdminsController@register']);
-    Route::post('/adminStore', ['as'=> 'adminStore' ,'uses'=>'AdminsController@store']);
+    #========================================================================================================
+    // DASHBOARD
+    #--------------------------------------------------------------------------------------------------------
+        Route::get('/dashboard', ['as'=> 'dashboard','uses'=>'Controller@dashboard']);
+        Route::get('/logout', ['as'=> 'user.logout' ,'uses'=>'UserDashboardController@logout']);
+        Route::get('/index', ['as'=> 'index' ,'uses'=>'UserDashboardController@index']);
+    #--------------------------------------------------------------------------------------------------------
+    #========================================================================================================
+    
 
-    Route::resources(['tipoSol'=>'TipoSolicitantesController']);
-    Route::post('/tipoSolStore', ['as'=> 'tipoSolStore' ,'uses'=>'TipoSolicitantesController@store']);
+    // USER
+
+        Route::resources(['requester'=>'RequestersController']); 
+
+    //
+
+    #========================================================================================================
+    // ASSISTED
+    #--------------------------------------------------------------------------------------------------------
+    Route::get('/assistedRegister', ['as'=> 'assistedRegister' ,'uses'=>'AssistedsController@register']);
+    Route::post('/assistedStore', ['as'=> 'assistedStore' ,'uses'=>'AssistedsController@store']);
+    Route::resources(['assisted'=>'AssistedsController']);
+    #--------------------------------------------------------------------------------------------------------
+    #========================================================================================================
+
+    #========================================================================================================
+    // REQUESTER
+    #--------------------------------------------------------------------------------------------------------
+        Route::get('/requesterRegister', ['as'=> 'requesterRegister' ,'uses'=>'RequestersController@register']);
+        Route::post('/requesterStore', ['as'=> 'requesterStore' ,'uses'=>'RequestersController@store']);
+        Route::resources(['requester'=>'RequestersController']);
+    #--------------------------------------------------------------------------------------------------------
+    #========================================================================================================
+
+    #========================================================================================================
+    // PRODUCTOR
+    #--------------------------------------------------------------------------------------------------------
+        Route::get('/productorRegister', ['as'=> 'productorRegister' ,'uses'=>'ProductorsController@register']);
+        Route::post('/productorStore', ['as'=> 'productorStore' ,'uses'=>'ProductorsController@store']);
+        Route::resources(['productor'=>'ProductorsController']);
+    #--------------------------------------------------------------------------------------------------------
+    #========================================================================================================
+
+
+    #========================================================================================================
+        // TIPO SOLICITANTE
+    #--------------------------------------------------------------------------------------------------------
+        Route::resources(['tipoSol'=>'TipoSolicitantesController']);
+        Route::post('/tipoSolStore', ['as'=> 'tipoSolStore' ,'uses'=>'TipoSolicitantesController@store']);
+    #--------------------------------------------------------------------------------------------------------
+    #========================================================================================================
+    
+    
 
 }); 
 
