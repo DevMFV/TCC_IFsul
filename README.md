@@ -20,4 +20,4 @@ A documentação do sistema encontra-se na pasta "Documentação" deste reposit�
 
 ### Protótipo
 
-Acesse o link: https://www.quant-ux.com/test.html?h=a2aa10aE8hw9dVL37IzUVTpikU9luJWhBqVdlZghuzjSNLHzDrvfKHoFEBfa
+Acesse o link: https://www.quant-ux.com/#/test.html?h=a2aa10aE8hw9dVL37IzUVTpikU9luJWhBqVdlZghuzjSNLHzDrvfKHoFEBfa
