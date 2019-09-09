@@ -14,6 +14,9 @@
   <!-- Font-family Montserrat -->
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
+  <!-- Font-family Nunito -->
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+
   <!-- Custom fonts for this template-->
   <link href="{{asset('vendor-sbAdmin/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
 
@@ -118,6 +121,7 @@
                 <span>Assistidos</span></a>
             </li>
 
+            @if (Gate::allows('admin'))
             <li class="nav-item">
               <a class="nav-link" href="{{route('requester.index')}}">
                 <i class="fas fa-fw fa-user"></i>
@@ -135,6 +139,7 @@
                 <i class="fas fa-fw fa-user"></i>
                 <span>Tipo de Solicitante</span></a>
             </li>
+            @endif
     </ul>
 
     <div id="content-wrapper">

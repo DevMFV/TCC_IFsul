@@ -14,6 +14,7 @@ use App\Repositories\TipoSolicitanteRepository;
 use App\Validators\UserValidator;
 use App\Services\UserService;
 use App\Entities\TipoSolicitante;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * Class RequestersController.
@@ -59,24 +60,31 @@ class RequestersController extends Controller
      */
 
     public function register(){
-        
-        $tiposSolicitante = $this->tipoRepository->all();
-        $tipoSolicitanteList = TipoSolicitante::pluck('tipo','id')->all();
 
-        return view('requesters.requesterAdd',[
-            'tiposSolicitante' => $tiposSolicitante,
-            'tipoSolicitanteList' => $tipoSolicitanteList
-        ]);
+        if(Gate::allows('admin')){
+
+            $tiposSolicitante = $this->tipoRepository->all();
+            $tipoSolicitanteList = TipoSolicitante::pluck('tipo','id')->all();
+
+            return view('requesters.requesterAdd',[
+                'tiposSolicitante' => $tiposSolicitante,
+                'tipoSolicitanteList' => $tipoSolicitanteList
+            ]);
+        }
+        else{return view('accessDenied');}
+        
     }
 
     public function index(){
-        
-        $users = $this->repository->all();
 
-        return view('requesters.index',[
-            'users' => $users,
-            
-        ]);
+        if(Gate::allows('admin')){
+            $users = $this->repository->all();
+
+            return view('requesters.index',[
+                'users' => $users,
+            ]);
+        }
+        else{return view('accessDenied');}
 
     }
 
@@ -93,18 +101,21 @@ class RequestersController extends Controller
     public function store(UserCreateRequest $requestPar)
     {
 
-      $request = $this->service->store($requestPar->all(),2);
+        if(Gate::allows('admin')){
+            $request = $this->service->store($requestPar->all(),2);
 
-      session()->flash('success',[
-          'success'      => $request['success'],
-          'messages'     => $request['message']
-      ]);
-        
-      $tipoSolicitanteList = TipoSolicitante::pluck('tipo','id')->all();
-
-        return view('requesters.requesterAdd',[
-            'tipoSolicitanteList' => $tipoSolicitanteList
-        ]);
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+            
+            $tipoSolicitanteList = TipoSolicitante::pluck('tipo','id')->all();
+            
+            return view('requesters.requesterAdd',[
+                'tipoSolicitanteList' => $tipoSolicitanteList
+            ]);
+        }
+        else{return view('accessDenied');}
 
     }
 
@@ -202,14 +213,20 @@ class RequestersController extends Controller
 
     public function destroy($id)
     {
-        $request = $this->service->destroy($id);
 
-        session()->flash('success',[
-            'success'      => $request['success'],
-            'messages'     => $request['message']
-        ]);
+        if(Gate::allows('admin')){
+            $request = $this->service->destroy($id);
 
-        return redirect()->route('requester.index');
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+
+            return redirect()->route('requester.index');
+        }
+        else{return view('accessDenied');}
+
+        
     }
 }
 

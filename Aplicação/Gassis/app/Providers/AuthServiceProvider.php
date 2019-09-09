@@ -38,8 +38,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('create', function($user){
+        Gate::define('admin', function($user){
             if($user->permission == 4){
+                return true;
+            }
+        });
+
+        Gate::define('admOrReq', function($user){
+            if($user->permission == 4 || $user->permission == 2){
                 return true;
             }
         });

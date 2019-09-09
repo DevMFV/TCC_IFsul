@@ -67,4 +67,6 @@ class User extends Authenticatable
         return $this->belongsTo(TipoDeficiencia::class, 'tipo_deficiencia_id');
     }
 
+    
+
 }

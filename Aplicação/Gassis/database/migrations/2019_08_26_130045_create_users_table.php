@@ -50,7 +50,7 @@ class CreateUsersTable extends Migration
 				1 -> Assistido
 				2 -> Solicitante
 				3 -> Produtor
-				4 -> Useristrador
+				4 -> Administrador
 
 			*/
 

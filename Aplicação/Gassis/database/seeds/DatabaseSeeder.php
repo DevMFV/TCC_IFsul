@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'filename'                  => 'asdfasdasdfasdf', 
             'email'                     => 'vrequester@gmail.com', 
             'password'                  => env('PASSWORD_HASH') ? bcrypt('987654321') : '987654321',
-            'tipo_solicitante_id'       => 1,   
+            //'tipo_solicitante_id'       => 1,   
             'permission'                => 2,
         ]);
 

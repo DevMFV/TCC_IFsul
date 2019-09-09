@@ -118,6 +118,7 @@
             <span>Assistidos</span></a>
         </li>
 
+        @if (Gate::allows('admin'))
         <li class="nav-item active">
           <a class="nav-link" href="{{route('requester.index')}}">
             <i class="fas fa-fw fa-user"></i>
@@ -135,6 +136,8 @@
             <i class="fas fa-fw fa-user"></i>
             <span>Tipo de Solicitante</span></a>
         </li>
+        @endif
+
     </ul>
 
     <div id="content-wrapper">

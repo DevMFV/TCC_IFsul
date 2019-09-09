@@ -19,25 +19,25 @@ class CreateDemandsTable extends Migration
 
 			$table->increments('id');
 
-			// Demand Datas
+			// People Datas
 
-			$table->String('title', 50);
+			$table->String('titulo', 50);
+			$table->date('data_pedido')->nullable();
+			$table->date('data_prazo')->nullable();
 			$table->String('filename')->nullable();
-			$table->date('data_prazo');
-			
-
-			// Assisted Datas
 		
-			$table->unsignedInteger('assistido_id')->nullable();
-
 			// Requester Datas
 
-			$table->unsignedInteger('solicitante_id')->unique();
+			$table->unsignedInteger('requester_id')->nullable();
+
+			// Assisted Datas
+
+			$table->unsignedInteger('assisted_id')->nullable();
 
 			// Relations
 
-			$table->foreign('assistido_id')->references('id')->on('users');
-			$table->foreign('solicitante_id')->references('id')->on('users');
+			$table->foreign('requester_id')->references('id')->on('users');
+			$table->foreign('assisted_id')->references('id')->on('users');
 
 
 			$table->String('status')->default('active');

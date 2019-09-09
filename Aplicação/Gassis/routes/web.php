@@ -46,9 +46,9 @@ function() {
     #========================================================================================================
     // ASSISTED
     #--------------------------------------------------------------------------------------------------------
-    Route::get('/assistedRegister', ['as'=> 'assistedRegister' ,'uses'=>'AssistedsController@register']);
-    Route::post('/assistedStore', ['as'=> 'assistedStore' ,'uses'=>'AssistedsController@store']);
-    Route::resources(['assisted'=>'AssistedsController']);
+        Route::get('/assistedRegister', ['as'=> 'assistedRegister' ,'uses'=>'AssistedsController@register']);
+        Route::post('/assistedStore', ['as'=> 'assistedStore' ,'uses'=>'AssistedsController@store']);
+        Route::resources(['assisted'=>'AssistedsController']);
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================
 

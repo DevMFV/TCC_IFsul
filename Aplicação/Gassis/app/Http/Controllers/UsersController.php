@@ -49,32 +49,12 @@ class UsersController extends Controller
      */
 
     public function register(){
-        return view('users.userAdd');
-    }
-
-    public function index(){
-        
-        $users = $this->repository->all();
-
-        return view('users.index',[
-            'users' => $users,
-        ]);
-    
-        
-
-        /*$this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $users = $this->repository->all();
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $users,
-            ]);
+        if(Gate::allows('admin')){
+            return view('productors.productorAdd');
         }
+        else{return view('accessDenied');}
 
-        return view('users.index', compact('users'));
-        */
-
+        return view('users.userAdd');
     }
 
     /**

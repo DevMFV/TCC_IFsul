@@ -12,6 +12,7 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Repositories\UserRepository;
 use App\Validators\UserValidator;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * Class ProductorsController.
@@ -50,16 +51,24 @@ class ProductorsController extends Controller
      */
 
     public function register(){
-        return view('productors.productorAdd');
+
+        if(Gate::allows('admin')){
+            return view('productors.productorAdd');
+        }
+        else{return view('accessDenied');}
+        
     }
 
     public function index(){
         
-        $users = $this->repository->all();
+        if(Gate::allows('admin')){
+            $users = $this->repository->all();
 
-        return view('productors.index',[
-            'users' => $users,
-        ]);
+            return view('productors.index',[
+                'users' => $users,
+            ]);
+        }
+        else{return view('accessDenied');}
 
     }
 
@@ -76,14 +85,18 @@ class ProductorsController extends Controller
     public function store(UserCreateRequest $requestPar)
     {
 
-      $request = $this->service->store($requestPar->all(),3);
+        if(Gate::allows('admin')){
+            
+            $request = $this->service->store($requestPar->all(),3);
 
-      session()->flash('success',[
-          'success'      => $request['success'],
-          'messages'     => $request['message']
-      ]);
-        
-      return view('productors.productorAdd');
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+              
+            return view('productors.productorAdd');
+        }
+        else{return view('accessDenied');}
 
     }
 
@@ -181,14 +194,20 @@ class ProductorsController extends Controller
 
     public function destroy($id)
     {
-        $request = $this->service->destroy($id);
 
-        session()->flash('success',[
-            'success'      => $request['success'],
-            'messages'     => $request['message']
-        ]);
+        if(Gate::allows('admin')){
+            
+            $request = $this->service->destroy($id);
 
-        return redirect()->route('productor.index');
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+    
+            return redirect()->route('productor.index');
+        }
+         else{return view('accessDenied');}
+
     }
 }
 

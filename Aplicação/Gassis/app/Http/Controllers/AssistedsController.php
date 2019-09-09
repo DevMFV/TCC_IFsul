@@ -62,15 +62,21 @@ class AssistedsController extends Controller
      */
 
     public function register(){
-        
-        $tiposDeficiencia = $this->tipoRepository->all();
-        $tipoDeficienciaList = TipoDeficiencia::pluck('tipo','id')->all();
 
-        return view('assisteds.assistedAdd',[
-            'tiposDeficiencia' => $tiposDeficiencia,
+        if(Gate::allows('admin')){
+
+            $tipoDeficienciaList = TipoDeficiencia::pluck('tipo','id')->all();
+            $tiposDeficiencia = $this->tipoRepository->all();
+
+            return view('assisteds.assistedAdd',[
+                'tiposDeficiencia' => $tiposDeficiencia,
             'tipoDeficienciaList' => $tipoDeficienciaList
-        ]);
+            ]);
+
+        }
+        else{return view('accessDenied');}
     }
+
 
     public function index(){
 
@@ -95,19 +101,22 @@ class AssistedsController extends Controller
 
     public function store(UserCreateRequest $requestPar)
     {
+        if(Gate::allows('admin')){
 
-      $request = $this->service->store($requestPar->all(),1);
+            $request = $this->service->store($requestPar->all(),1);
 
-      session()->flash('success',[
-          'success'      => $request['success'],
-          'messages'     => $request['message']
-      ]);
-        
-      $tipoDeficienciaList = TipoDeficiencia::pluck('tipo','id')->all();
-
-        return view('assisteds.assistedAdd',[
-            'tipoDeficienciaList' => $tipoDeficienciaList
-        ]);
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+            
+            $tipoDeficienciaList = TipoDeficiencia::pluck('tipo','id')->all();
+            
+              return view('assisteds.assistedAdd',[
+                  'tipoDeficienciaList' => $tipoDeficienciaList
+              ]);
+        }
+        else{return view('accessDenied');}
 
     }
 
@@ -205,7 +214,7 @@ class AssistedsController extends Controller
 
     public function destroy($id)
     {
-        if(auth()->user()->can('create',User::class)) {
+        if(Gate::allows('admin')){
 
             $request = $this->service->destroy($id);
 
@@ -217,6 +226,7 @@ class AssistedsController extends Controller
             return redirect()->route('assisted.index');
             
         }
+        else{return view('accessDenied');}
     }
 }
 

@@ -12,6 +12,7 @@ use App\Http\Requests\tipoSolicitanteUpdateRequest;
 use App\Repositories\TipoSolicitanteRepository;
 use App\Validators\TipoSolicitanteValidator;
 use App\Services\TipoSolicitanteService;
+use Illuminate\Support\Facades\Gate;
 
 
 /**
@@ -54,25 +55,15 @@ class TipoSolicitantesController extends Controller
     public function index()
     {
 
-        $tipoSolicitantes = $this->repository->all();
+        if(Gate::allows('admin')){
+            $tipoSolicitantes = $this->repository->all();
 
-        return view('admins.tipoSolicitanteAdd',[
-            'tipoSolicitantes' => $tipoSolicitantes,
-        ]);
-
-        /*
-        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $tipoSolicitantes = $this->repository->all();
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $tipoSolicitantes,
+            return view('admins.tipoSolicitanteAdd',[
+                'tipoSolicitantes' => $tipoSolicitantes,
             ]);
         }
+        else{return view('accessDenied');}
 
-        return view('tipoSolicitantes.tipoSolicitanteAdd', compact('tipoSolicitantes'));
-        */
     }
 
     /**
@@ -88,17 +79,20 @@ class TipoSolicitantesController extends Controller
 
     public function store(TipoSolicitanteCreateRequest $requestPar)
     {
-    
-      $request = $this->service->store($requestPar->all());
 
-      //$req = $request['success'] ? $request['data']: null;
+        if(Gate::allows('admin')){
+            $request = $this->service->store($requestPar->all());
 
-      session()->flash('success',[
-          'success'      => $request['success'],
-          'messages'     => $request['message']
-      ]);
+            //$req = $request['success'] ? $request['data']: null;
 
-      return redirect()->route('tipoSol.index');
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+            
+            return redirect()->route('tipoSol.index');
+        }
+        else{return view('accessDenied');}
 
     }
 
@@ -190,16 +184,20 @@ class TipoSolicitantesController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = $this->repository->delete($id);
 
-        if (request()->wantsJson()) {
+        if(Gate::allows('admin')){
+            $deleted = $this->repository->delete($id);
 
-            return response()->json([
-                'message' => 'TipoSolicitante deleted.',
-                'deleted' => $deleted,
-            ]);
+            if (request()->wantsJson()) {
+    
+                return response()->json([
+                    'message' => 'TipoSolicitante deleted.',
+                    'deleted' => $deleted,
+                ]);
+            }
+    
+            return redirect()->back()->with('message', 'TipoSolicitante deleted.');
         }
-
-        return redirect()->back()->with('message', 'TipoSolicitante deleted.');
+        else{return view('accessDenied');}
     }
 }

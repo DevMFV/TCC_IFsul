@@ -12,6 +12,7 @@ use App\Http\Requests\AdminUpdateRequest;
 use App\Repositories\AdminRepository;
 use App\Validators\AdminValidator;
 use App\Services\AdminService;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * Class AdminsController.
@@ -49,32 +50,25 @@ class AdminsController extends Controller
      */
 
     public function register(){
-        return view('admins.adminAdd');
+
+        if(Gate::allows('admin')){
+            return view('admins.adminAdd');
+        }
+        else{return view('accessDenied');}
+        
     }
 
     public function index(){
         
-        $admins = $this->repository->all();
+        if(Gate::allows('admin')){
+            $admins = $this->repository->all();
 
-        return view('admins.index',[
-            'admins' => $admins,
-        ]);
-    
-        
-
-        /*$this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $admins = $this->repository->all();
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $admins,
+            return view('admins.index',[
+                'admins' => $admins,
             ]);
         }
-
-        return view('admins.index', compact('admins'));
-        */
-
+        else{return view('accessDenied');}
+    
     }
 
     /**
@@ -89,18 +83,19 @@ class AdminsController extends Controller
     public function store(AdminCreateRequest $requestPar)
     {
 
-        
+        if(Gate::allows('admin')){
+            $request = $this->service->store($requestPar->all(),2);
 
-      $request = $this->service->store($requestPar->all(),2);
-
-      $req = $request['success'] ? $request['data']: null;
-
-      session()->flash('success',[
-          'success'      => $request['success'],
-          'messages'     => $request['message']
-      ]);
-        
-      return view('admins.adminAdd');
+            $req = $request['success'] ? $request['data']: null;
+                
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+            
+            return view('admins.adminAdd');
+        }
+        else{return view('accessDenied');}  
 
     }
 
@@ -192,14 +187,18 @@ class AdminsController extends Controller
      */
     public function destroy($id)
     {
-        $request = $this->service->destroy($id);
+        if(Gate::allows('admin')){
+            $request = $this->service->destroy($id);
 
-        session()->flush('success',[
-            'success'      => $request['success'],
-            'messages'     => $request['message']
-        ]);
-
-        return redirect()->route('admin.index');
+            session()->flush('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+    
+            return redirect()->route('admin.index');
+        }
+        else{return view('accessDenied');}
+        
     }
 }
 

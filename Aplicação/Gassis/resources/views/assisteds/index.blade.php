@@ -118,23 +118,26 @@
          <span>Assistidos</span></a>
      </li>
 
+     @if (Gate::allows('admin'))
      <li class="nav-item">
        <a class="nav-link" href="{{route('requester.index')}}">
          <i class="fas fa-fw fa-user"></i>
          <span>Solicitantes</span></a>
      </li>
-
+     
      <li class="nav-item">
        <a class="nav-link" href="{{route('productor.index')}}">
          <i class="fas fa-fw fa-hammer"></i>
          <span>Produtores</span></a>
      </li>
-     
+
      <li class="nav-item">
        <a class="nav-link" href="{{route('tipoSol.index')}}">
          <i class="fas fa-fw fa-user"></i>
          <span>Tipo de Solicitante</span></a>
      </li>
+     @endif
+
 </ul>
 
     <div id="content-wrapper">
@@ -158,7 +161,7 @@
             <div class="table-responsive">
 
           
-                @if (Gate::allows('create'))
+                @if (Gate::allows('admin'))
                 <a class="nav-link-topAction" href="{{route('assistedRegister')}}">
                   Cadastrar Assistido
                 </a>
