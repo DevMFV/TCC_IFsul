@@ -70,7 +70,7 @@ class AssistedsController extends Controller
 
             return view('assisteds.assistedAdd',[
                 'tiposDeficiencia' => $tiposDeficiencia,
-            'tipoDeficienciaList' => $tipoDeficienciaList
+                'tipoDeficienciaList' => $tipoDeficienciaList
             ]);
 
         }

@@ -48,6 +48,77 @@
   box-sizing: border-box;
 }
 
+.container-d{
+  display: flex;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  height: 400px;
+  flex-direction: row;
+}
+
+.details-container{
+  width:100%;
+}
+
+.form-group-col-1{
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.upload { 
+  height: 50px;
+  position: absolute; 
+  top: 0; 
+  font-size: 20px;
+  opacity: 0;
+}
+
+.fileUpload {
+  position: relative;  
+  margin: 10px;
+  width: 50px;
+  height: 50px;
+  background-image: url(../img/addFoto.png) !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.card-Add-demand{
+  top:-40px;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+}
+
+.cols{
+  display: flex;
+  justify-content: space-around;
+  margin: 0 0 2%;
+}
+
+.form-col-1{
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+  align-items: center;
+  margin: 0 0 3%;
+}
+
+.form-col-2{
+  width: 45%;
+}
+
 .form-submit{
   background-color:#007bff;
   border-radius: 50px;
@@ -4992,6 +5063,7 @@ input[type="button"].btn-block {
   background-clip: border-box;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
+  
 }
 
 .card > hr {
@@ -10935,7 +11007,7 @@ body {
 }
 
 .card-register {
-  max-width: 40rem;
+  max-width: 65rem;
 }
 
 .form-label-group {

@@ -113,38 +113,38 @@
      </li>
 
      @if (Gate::allows('admOrReq'))
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('demand.index')}}">
-          <i class="fas fa-fw fa-box"></i>
-          <span>Demandas</span></a>
-      </li>
-      @endif
+     <li class="nav-item active">
+       <a class="nav-link" href="{{route('demand.index')}}">
+         <i class="fas fa-fw fa-box"></i>
+         <span>Demandas</span></a>
+     </li>
+     @endif
 
-      <li class="nav-item active">
+     <li class="nav-item">
        <a class="nav-link" href="{{route('assisted.index')}}">
          <i class="fas fa-fw fa-hands"></i>
          <span>Assistidos</span></a>
-      </li>
-      
-      @if (Gate::allows('admin'))
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('requester.index')}}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Solicitantes</span></a>
-      </li>
+     </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('productor.index')}}">
-          <i class="fas fa-fw fa-hammer"></i>
-          <span>Produtores</span></a>
-      </li>
+     @if (Gate::allows('admin'))
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('requester.index')}}">
+         <i class="fas fa-fw fa-user"></i>
+         <span>Solicitantes</span></a>
+     </li>
+     
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('productor.index')}}">
+         <i class="fas fa-fw fa-hammer"></i>
+         <span>Produtores</span></a>
+     </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('tipoSol.index')}}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Tipo de Solicitante</span></a>
-      </li>
-      @endif
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('tipoSol.index')}}">
+         <i class="fas fa-fw fa-user"></i>
+         <span>Tipo de Solicitante</span></a>
+     </li>
+     @endif
 
 </ul>
 
@@ -169,67 +169,26 @@
             <div class="table-responsive">
 
           
-                @if (Gate::allows('admin'))
-                <a class="nav-link-topAction" href="{{route('assistedRegister')}}">
-                  Cadastrar Assistido
+                @if (Gate::allows('requester'))
+                <a class="nav-link-topAction" href="{{route('demandRegister')}}">
+                  Cadastrar Demanda
                 </a>
                 @endif
-              
 
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                  <tr>
-                    
-                    <th>Id</th>
-                    <th>Foto</th>
-                    <th>Nome</th>
-                    <th>Tipo Deficiencia</th>
-                    <th>Email</th>
-                    <th>Status</th>
+                  
+                <div class="container-d">
+                  
+                  <div class="details-container">
+                    {!!$demands->titulo!!}
+                  </div>
 
-                    @if (Gate::allows('admin'))
-                    <th>Ações</th>
-                    @endif
+                  <div class="details-container">
+                    {!!$demands->titulo!!}
+                  </div>
+                  
 
+                </div>
 
-                  </tr>
-                </thead>
-
-                <tbody>
-
-                  @foreach($users as $user)
-
-                  @if ($user->permission == 1)
-
-                  <tr>
-                    
-                    <td>{{ $user->id }}</td>
-                    <td>{{ $user->filename }}</td>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->tipoDef->tipo}}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->status }}</td>
-
-                    @if (Gate::allows('admin'))
-                    
-                    <td>
-
-                      {!!Form::open(['route' => ['assisted.destroy', $user->id], 'method' => 'DELETE'])!!}
-                        {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
-                      {!!Form::close()!!}
-                 
-                    </td>
-
-                    @endif
-
-                  </tr>
-
-                  @endif
-
-                  @endforeach
-
-                </tbody>
-              </table>
 
             </div>
           </div>

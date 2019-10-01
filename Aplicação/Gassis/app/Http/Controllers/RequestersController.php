@@ -80,9 +80,15 @@ class RequestersController extends Controller
         if(Gate::allows('admin')){
             $users = $this->repository->all();
 
+            
+
+            if($users!=null){}
+
             return view('requesters.index',[
                 'users' => $users,
             ]);
+
+            dd($users);
         }
         else{return view('accessDenied');}
 

@@ -7,38 +7,60 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\DemandCreateRequest;
-use App\Http\Requests\DemandUpdateRequest;
+use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
+use App\Repositories\TipoSolicitanteRepository;
+use App\Validators\UserValidator;
 use App\Repositories\DemandRepository;
-use App\Validators\DemandValidator;
+use App\Repositories\UserRepository;
+use App\Services\UserService;
+use App\Entities\TipoSolicitante;
+use App\Entities\User;
+use Illuminate\Support\Facades\Gate;
+Use App\Services\DemandService;
+use App\Entities\Demand;
+Use App\Repositories\GenericFunctionsForRepository;
 
 /**
- * Class DemandsController.
+ * Class DemandController.
  *
  * @package namespace App\Http\Controllers;
  */
+
 class DemandsController extends Controller
 {
+    /**
+     * @var GenericFunctionsForRepository
+     */
+    protected $repositoryFunctions;
+
     /**
      * @var DemandRepository
      */
     protected $repository;
 
     /**
+     * @var UserRepository
+     */
+    protected $userRepository;
+
+    /**
      * @var DemandValidator
      */
     protected $validator;
+    protected $service;
 
     /**
-     * DemandsController constructor.
+     * DemandssController constructor.
      *
      * @param DemandRepository $repository
-     * @param DemandValidator $validator
+     * @param UserRepository $userRepository
      */
-    public function __construct(DemandRepository $repository, DemandValidator $validator)
+    public function __construct(DemandRepository $repository, DemandService $service, UserRepository $userRepository)
     {
         $this->repository = $repository;
-        $this->validator  = $validator;
+        $this->userRepository = $userRepository;
+        $this->service = $service;
     }
 
     /**
@@ -46,63 +68,96 @@ class DemandsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $demands = $this->repository->all();
 
-        if (request()->wantsJson()) {
+    public function register(){
 
-            return response()->json([
-                'data' => $demands,
+        if(Gate::allows('requester')){
+
+            $usersAssisted = $this->userRepository->findwhere(['permission'=>'1']);
+
+            $usersAssistedList = User::where(['permission'=>'1'])->pluck('name','id');
+
+            return view('demands.demandAdd',[
+                'usersAssisted' => $usersAssisted,
+                'usersAssistedList' => $usersAssistedList
             ]);
         }
+        else{return view('accessDenied');}
+        
+    }
 
-        return view('demands.index', compact('demands'));
+    public function details(){
+
+        if(Gate::allows('admReqProd')){
+
+            $demand = $this->repository->all()->find($_POST['id']);
+            if($demand!=null){
+                return view('demands.detalhes',[
+                    'demands' => $demand,
+                ]);
+            }
+        }
+        else{return view('accessDenied');}
+
+    }
+
+    public function index(){
+
+        if(Gate::allows('admReqProd')){
+
+            $demands = $this->repository->all();
+
+            if($demands!=null){
+                return view('demands.index',[
+                    'demands' => $demands,
+                ]);
+            }
+        }
+        else{return view('accessDenied');}
+
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  DemandCreateRequest $request
+     * @param  UserCreateRequest $request
+     *
+     * @param  Request $requestt
      *
      * @return \Illuminate\Http\Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function store(DemandCreateRequest $request)
+
+    public function store(UserCreateRequest $requestPar)
     {
-        try {
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
+        if(Gate::allows('requester')){
 
-            $demand = $this->repository->create($request->all());
+            $requeststore = $this->service->store($requestPar->all(),auth()->user()->id);
 
-            $response = [
-                'message' => 'Demand created.',
-                'data'    => $demand->toArray(),
-            ];
+            $all = $this->repository->all();
+            foreach ($all as $key => $value) {$last = $value;}
 
-            if ($request->wantsJson()) {
+            $requestPar->file('arquivo')->storeAs('public/demands',$last['id'].'.'.$requestPar->file('arquivo')->extension());
 
-                return response()->json($response);
-            }
+            session()->flash('success',[
+                'success'      => $requeststore['success'],
+                'messages'     => $requeststore['message']
+            ]);
+            
+            $usersAssistedList = User::where(['permission'=>'1'])->pluck('name','id');
 
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+            return view('demands.demandAdd',[
+                'usersAssistedList' => $usersAssistedList
+            ]);
         }
+        else{return view('accessDenied');}
+
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified res$userurce.
      *
      * @param  int $id
      *
@@ -110,16 +165,16 @@ class DemandsController extends Controller
      */
     public function show($id)
     {
-        $demand = $this->repository->find($id);
+        $user = $this->repository->find($id);
 
         if (request()->wantsJson()) {
 
             return response()->json([
-                'data' => $demand,
+                'data' => $user,
             ]);
         }
 
-        return view('demands.show', compact('demand'));
+        return view('users.show', compact('user'));
     }
 
     /**
@@ -129,34 +184,38 @@ class DemandsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function edit($id)
     {
-        $demand = $this->repository->find($id);
+        $user = $this->repository->find($id);
 
-        return view('demands.edit', compact('demand'));
+        return view('users.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  DemandUpdateRequest $request
+     * @param  UserUpdateRequest $request
      * @param  string            $id
      *
      * @return Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function update(DemandUpdateRequest $request, $id)
+
+
+    public function update(UserUpdateRequest $request, $id)
     {
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
-            $demand = $this->repository->update($request->all(), $id);
+            $user = $this->repository->update($request->all(), $id);
 
             $response = [
-                'message' => 'Demand updated.',
-                'data'    => $demand->toArray(),
+                'message' => 'User updated.',
+                'data'    => $user->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -187,18 +246,25 @@ class DemandsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function destroy($id)
     {
-        $deleted = $this->repository->delete($id);
 
-        if (request()->wantsJson()) {
+        if(Gate::allows('admin')){
+            $request = $this->service->destroy($id);
 
-            return response()->json([
-                'message' => 'Demand deleted.',
-                'deleted' => $deleted,
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
             ]);
-        }
 
-        return redirect()->back()->with('message', 'Demand deleted.');
+            return redirect()->route('demand.index');
+        }
+        else{return view('accessDenied');}
+
+        
     }
 }
+
+

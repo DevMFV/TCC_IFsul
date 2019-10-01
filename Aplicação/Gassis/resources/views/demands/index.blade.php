@@ -113,38 +113,38 @@
      </li>
 
      @if (Gate::allows('admOrReq'))
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('demand.index')}}">
-          <i class="fas fa-fw fa-box"></i>
-          <span>Demandas</span></a>
-      </li>
-      @endif
+     <li class="nav-item active">
+       <a class="nav-link" href="{{route('demand.index')}}">
+         <i class="fas fa-fw fa-box"></i>
+         <span>Demandas</span></a>
+     </li>
+     @endif
 
-      <li class="nav-item active">
+     <li class="nav-item">
        <a class="nav-link" href="{{route('assisted.index')}}">
          <i class="fas fa-fw fa-hands"></i>
          <span>Assistidos</span></a>
-      </li>
-      
-      @if (Gate::allows('admin'))
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('requester.index')}}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Solicitantes</span></a>
-      </li>
+     </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('productor.index')}}">
-          <i class="fas fa-fw fa-hammer"></i>
-          <span>Produtores</span></a>
-      </li>
+     @if (Gate::allows('admin'))
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('requester.index')}}">
+         <i class="fas fa-fw fa-user"></i>
+         <span>Solicitantes</span></a>
+     </li>
+     
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('productor.index')}}">
+         <i class="fas fa-fw fa-hammer"></i>
+         <span>Produtores</span></a>
+     </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('tipoSol.index')}}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Tipo de Solicitante</span></a>
-      </li>
-      @endif
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('tipoSol.index')}}">
+         <i class="fas fa-fw fa-user"></i>
+         <span>Tipo de Solicitante</span></a>
+     </li>
+     @endif
 
 </ul>
 
@@ -169,9 +169,9 @@
             <div class="table-responsive">
 
           
-                @if (Gate::allows('admin'))
-                <a class="nav-link-topAction" href="{{route('assistedRegister')}}">
-                  Cadastrar Assistido
+                @if (Gate::allows('requester'))
+                <a class="nav-link-topAction" href="{{route('demandRegister')}}">
+                  Cadastrar Demanda
                 </a>
                 @endif
               
@@ -181,50 +181,54 @@
                   <tr>
                     
                     <th>Id</th>
-                    <th>Foto</th>
-                    <th>Nome</th>
-                    <th>Tipo Deficiencia</th>
-                    <th>Email</th>
-                    <th>Status</th>
+                    <th>Título</th>
+                    <th>Data de soloicitação</th>
+                    <th>Data prazo</th>
+                    <th>Estado atual</th>
+                    <th>Assistido</th>
 
-                    @if (Gate::allows('admin'))
                     <th>Ações</th>
-                    @endif
-
-
+                    
                   </tr>
                 </thead>
 
                 <tbody>
 
-                  @foreach($users as $user)
-
-                  @if ($user->permission == 1)
+                  @foreach($demands as $demand)
 
                   <tr>
-                    
-                    <td>{{ $user->id }}</td>
-                    <td>{{ $user->filename }}</td>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->tipoDef->tipo}}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->status }}</td>
 
-                    @if (Gate::allows('admin'))
+                    <td>{{ $demand->id }}</td>
+                    <td>{{ $demand->titulo }}</td>
+                    <td>{{ $demand->created_at }}</td>
+                    <td>{{ $demand->data_prazo }}</td>
+
+                    @if ($demand->produzindo==null)
+                    <td>{{ "Em espera" }}</td>
+                    @else
+                    <td>{{ "Em produção" }}</td>
+                    @endif
+
+                    <td>{{ $demand->assisted->name}}</td>
+
+                    
                     
                     <td>
 
-                      {!!Form::open(['route' => ['assisted.destroy', $user->id], 'method' => 'DELETE'])!!}
-                        {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
+                      {!!Form::open(['route' => ['demandDetails'], 'method' => 'POST'])!!}
+                        {!!Form::submit('Detalhes',['style'=>'border:none;background-color:transparent']) !!}
+                        <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $demand->id }}">
                       {!!Form::close()!!}
-                 
+
+                      @if (Gate::allows('admin'))
+                        {!!Form::open(['route' => ['demand.destroy', $demand->id], 'method' => 'DELETE'])!!}
+                        {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
+                        {!!Form::close()!!}
+                      @endif
+                    
                     </td>
 
-                    @endif
-
                   </tr>
-
-                  @endif
 
                   @endforeach
 

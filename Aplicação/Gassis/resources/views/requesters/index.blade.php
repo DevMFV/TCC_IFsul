@@ -111,32 +111,39 @@
             <span>Página inicial</span>
           </a>
         </li>
+        @if (Gate::allows('admOrReq'))
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('demand.index')}}">
+          <i class="fas fa-fw fa-box"></i>
+          <span>Demandas</span></a>
+      </li>
+      @endif
 
-        <li class="nav-item">
-          <a class="nav-link" href="{{route('assisted.index')}}">
-            <i class="fas fa-fw fa-hands"></i>
-            <span>Assistidos</span></a>
-        </li>
+      <li class="nav-item">
+       <a class="nav-link" href="{{route('assisted.index')}}">
+         <i class="fas fa-fw fa-hands"></i>
+         <span>Assistidos</span></a>
+      </li>
+      
+      @if (Gate::allows('admin'))
+      <li class="nav-item active">
+        <a class="nav-link" href="{{route('requester.index')}}">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Solicitantes</span></a>
+      </li>
 
-        @if (Gate::allows('admin'))
-        <li class="nav-item active">
-          <a class="nav-link" href="{{route('requester.index')}}">
-            <i class="fas fa-fw fa-user"></i>
-            <span>Solicitantes</span></a>
-        </li>
-
-        <li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link" href="{{route('productor.index')}}">
           <i class="fas fa-fw fa-hammer"></i>
           <span>Produtores</span></a>
-        </li>
+      </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="{{route('tipoSol.index')}}">
-            <i class="fas fa-fw fa-user"></i>
-            <span>Tipo de Solicitante</span></a>
-        </li>
-        @endif
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('tipoSol.index')}}">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Tipo de Solicitante</span></a>
+      </li>
+      @endif
 
     </ul>
 

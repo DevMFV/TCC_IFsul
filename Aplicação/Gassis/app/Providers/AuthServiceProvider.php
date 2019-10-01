@@ -44,8 +44,20 @@ class AuthServiceProvider extends ServiceProvider
             }
         });
 
+        Gate::define('requester', function($user){
+            if($user->permission == 2){
+                return true;
+            }
+        });
+
         Gate::define('admOrReq', function($user){
             if($user->permission == 4 || $user->permission == 2){
+                return true;
+            }
+        });
+
+        Gate::define('admReqProd', function($user){
+            if($user->permission == 4 || $user->permission == 3 || $user->permission == 2){
                 return true;
             }
         });
