@@ -112,13 +112,12 @@
        </a>
      </li>
 
-     @if (Gate::allows('admOrReq'))
+     
      <li class="nav-item active">
        <a class="nav-link" href="{{route('demand.index')}}">
          <i class="fas fa-fw fa-box"></i>
          <span>Demandas</span></a>
      </li>
-     @endif
 
      <li class="nav-item">
        <a class="nav-link" href="{{route('assisted.index')}}">
@@ -215,8 +214,10 @@
                     
                     <td>
 
-                      {!!Form::open(['route' => ['demandDetails'], 'method' => 'POST'])!!}
-                        {!!Form::submit('Detalhes',['style'=>'border:none;background-color:transparent']) !!}
+                      <a class="nav-link" href="{{route('demand.show',$demand->id)}}">Detalhes</a>
+
+                      {!!Form::open(['route' => ['editDemand'], 'method' => 'POST'])!!}
+                        {!!Form::submit('Editar',['style'=>'border:none;background-color:transparent']) !!}
                         <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $demand->id }}">
                       {!!Form::close()!!}
 
@@ -225,6 +226,8 @@
                         {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
                         {!!Form::close()!!}
                       @endif
+
+
                     
                     </td>
 

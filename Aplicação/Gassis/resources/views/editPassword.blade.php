@@ -136,10 +136,11 @@
           <span>Charts</span></a>
       </li>
       -->
+
       @if (Gate::allows('admOrReq'))
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="{{route('demand.index')}}">
-          <i class="fas fa-fw fa-hands"></i>
+          <i class="fas fa-fw fa-box"></i>
           <span>Demandas</span></a>
       </li>
       @endif
@@ -172,61 +173,43 @@
 
     </ul>
 
-    <div id="content-wrapper">
 
-      <div class="container-fluid">
+      <div class="container-fluid-absolute">
 
-        <!-- Breadcrumbs-->
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <a href="#">Dashboard</a>
-          </li>
-          <li class="breadcrumb-item active">Tables</li>
-        </ol>
 
         <!-- DataTables Example -->
-        <div class="card card-register mx-auto mt-5">
-      <div class="card-header">Cadastrar Solicitante
+        <div class="card-edit card-register mx-auto mt-5">
+      <div class="card-header" style="display: flex;justify-content: center;">ATENÇÃO
 
       </div>
 
       <div class="card-body">
 
-      {!! Form::open(['class'=>'form','route' => 'requester.store', 'method' => 'post']) !!}
+
+      <div style="margin: 0 0 15px 0;">
+        <span>{!!$user->name!!}, para sua segurança aconselhamos que altere sua senha.</span>
+      </div>
+
+      {!! Form::open(['class'=>'form','route' => 'updatePassword', 'method' => 'post']) !!}
           {{ csrf_field() }}
+
           <div class="form-group">
             <div class="form-row">
               <div class="col-md-12">
                 <div class="form-label-group">
-                  <input type="text" name="name" id="firstName" class="form-control" placeholder="First name" required="required" autofocus="autofocus">
-                  <label for="firstName">Nome Completo</label>
+                  <input type="password" name="password" id="firstName" class="form-control" placeholder="First name" autofocus="autofocus">
+                  <label for="firstName">Nova Senha</label>
                 </div>
               </div>
             </div>
           </div>
-
-          <div class="form-group">
-            <div class="form-label-group">
-              <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="required">
-              <label for="inputEmail">Email</label>
-            </div>
-          </div>
-
-          <div class="form-group">
-          <div class="form-label-group">
-
-            {!! Form::select('tipo_solicitante_id',$tipoSolicitanteList, NULL, ['class' => 'form-control']) !!}
-
-            </div>
-          </div>
-
           
+          
+          {!!Form::submit('Alterar',['class'=>'form-submit']) !!}
 
-          {!!Form::submit('Cadastrar',['class'=>'form-submit']) !!}
-
-            <div class="nav-link-topAction-back-div">
-              <a class="nav-link-topAction-back" href="{{route('requester.index')}}">
-                Voltar
+              <div class="nav-link-topAction-back-div">
+              <a class="nav-link-topAction-back" href="{{route('dashboard')}}">
+                Ignorar
               </a>
             </div>
 
@@ -235,18 +218,6 @@
       </div>
     </div>
       <!-- /.container-fluid -->
-
-      <!-- Sticky Footer -->
-      <footer class="sticky-footer">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright © Your Website 2019</span>
-          </div>
-        </div>
-      </footer>
-
-    </div>
-    <!-- /.content-wrapper -->
 
   </div>
   <!-- /#wrapper -->

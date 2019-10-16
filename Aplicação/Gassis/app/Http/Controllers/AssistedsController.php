@@ -131,6 +131,8 @@ class AssistedsController extends Controller
     {
         $user = $this->repository->find($id);
 
+        dd($user);
+
         if (request()->wantsJson()) {
 
             return response()->json([
@@ -150,11 +152,17 @@ class AssistedsController extends Controller
      */
 
 
-    public function edit($id)
+    public static function editPassword($id)
     {
-        $user = $this->repository->find($id);
-
-        return view('users.edit', compact('user'));
+        if(Gate::allows('auth')){
+            $user = User::find($id);
+            
+            return view('editPassword',[
+                'user' => $user
+            ]);
+            dd($user);
+        }
+        else{return view('accessDenied');}
     }
 
     /**
@@ -168,38 +176,45 @@ class AssistedsController extends Controller
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
 
+    public function updatePassword(UserUpdateRequest $request, $id)
+    {
+        if(Gate::allows('requester')){
+
+        $request = $this->service->updatePassword($requestPar->all(),1);
+                
+        session()->flash('success',[
+            'success'      => $request['success'],
+            'messages'     => $request['message']
+        ]);
+        
+        $tipoDeficienciaList = TipoDeficiencia::pluck('tipo','id')->all();
+        
+          return view('assisteds.assistedAdd',[
+              'tipoDeficienciaList' => $tipoDeficienciaList
+          ]);
+        }
+        else{return view('accessDenied');}
+    }
+
 
     public function update(UserUpdateRequest $request, $id)
     {
-        try {
+        if(Gate::allows('admin')){
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-
-            $user = $this->repository->update($request->all(), $id);
-
-            $response = [
-                'message' => 'User updated.',
-                'data'    => $user->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+        $request = $this->service->store($requestPar->all(),1);
+                
+        session()->flash('success',[
+            'success'      => $request['success'],
+            'messages'     => $request['message']
+        ]);
+        
+        $tipoDeficienciaList = TipoDeficiencia::pluck('tipo','id')->all();
+        
+          return view('assisteds.assistedAdd',[
+              'tipoDeficienciaList' => $tipoDeficienciaList
+          ]);
         }
+        else{return view('accessDenied');}
     }
 
 

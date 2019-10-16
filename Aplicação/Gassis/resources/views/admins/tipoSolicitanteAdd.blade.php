@@ -167,7 +167,7 @@
           <div class="card-body">
             <div class="table-responsive">
 
-              {!! Form::open(['class'=>'form','route' => 'tipoSolStore', 'method' => 'post']) !!}
+              {!! Form::open(['class'=>'form','route' => 'tipoSol.store', 'method' => 'post']) !!}
                 {{ csrf_field() }}
                 <div class="form-group">
                   <div class="form-row">

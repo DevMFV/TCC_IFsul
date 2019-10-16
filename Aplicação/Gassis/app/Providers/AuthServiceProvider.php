@@ -38,6 +38,18 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::define('passwordStandart', function($user){
+            if($user->password == '987654321'){
+                return true;
+            }
+        });
+
+        Gate::define('auth', function($user){
+            if($user!=null){
+                return true;
+            }
+        });
+
         Gate::define('admin', function($user){
             if($user->permission == 4){
                 return true;

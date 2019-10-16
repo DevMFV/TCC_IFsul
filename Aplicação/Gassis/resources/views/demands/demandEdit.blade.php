@@ -10,7 +10,7 @@
   <meta name="author" content="">
 
   <title>SB Admin - Tables</title>
-
+  
    <!-- Font-family Montserrat -->
    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
@@ -22,6 +22,41 @@
 
   <!-- Custom styles for this template-->
   <link href="{{asset('css-sbAdmin/sb-admin.css')}}" rel="stylesheet">
+
+  <style>
+    .detail-iten{
+      background-image:url({!!$demand->filename!!});
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position-y: center;
+      background-position-x: center;
+    }
+    .container-iten{
+      display: flex;
+      background-color: lightgrey;
+      justify-content: space-between;
+      flex-direction: row;
+      height: 148px;
+      width: 100%;
+      border-radius: 10px;
+    }
+    .detail-iten{
+      display: flex;
+      justify-content: center;
+      background-color: #9292928f;
+      height: 100%;
+      width: 150px;
+      border-radius: -4px;
+      border-radius: 10px 0px 0px 10px;
+    }
+    .detail-iten-2{
+      background-color: lightgray;
+      justify-content: flex-start;
+      display: flex;
+      flex-direction: row;
+      border-radius: 0px 10px 10px 0px;
+    }
+  </style>
   
 </head>
 
@@ -136,21 +171,22 @@
           <span>Charts</span></a>
       </li>
       -->
+
       @if (Gate::allows('admOrReq'))
-      <li class="nav-item active">
-        <a class="nav-link" href="{{route('demand.index')}}">
-          <i class="fas fa-fw fa-hands"></i>
-          <span>Demandas</span></a>
-      </li>
-      @endif
+     <li class="nav-item active">
+       <a class="nav-link" href="{{route('demand.index')}}">
+         <i class="fas fa-fw fa-box"></i>
+         <span>Demandas</span></a>
+     </li>
+     @endif
 
       <li class="nav-item">
        <a class="nav-link" href="{{route('assisted.index')}}">
          <i class="fas fa-fw fa-hands"></i>
          <span>Assistidos</span></a>
-      </li>
-      
-      @if (Gate::allows('admin'))
+     </li>
+
+     @if (Gate::allows('admin'))
       <li class="nav-item">
         <a class="nav-link" href="{{route('requester.index')}}">
           <i class="fas fa-fw fa-user"></i>
@@ -162,7 +198,7 @@
           <i class="fas fa-fw fa-hammer"></i>
           <span>Produtores</span></a>
       </li>
-
+      
       <li class="nav-item">
         <a class="nav-link" href="{{route('tipoSol.index')}}">
           <i class="fas fa-fw fa-user"></i>
@@ -185,47 +221,91 @@
         </ol>
 
         <!-- DataTables Example -->
-        <div class="card card-register mx-auto mt-5">
-      <div class="card-header">Cadastrar Solicitante
+        <div class="card-Add-demand card-register mx-auto mt-5">
+      <div class="card-header">Cadastrar Demanda
 
       </div>
 
       <div class="card-body">
 
-      {!! Form::open(['class'=>'form','route' => 'requester.store', 'method' => 'post']) !!}
+      {!! Form::model($demand,['class'=>'form','route' => ['demand.update', $demand->id], 'method' => 'PUT', 'enctype'=>'multipart/form-data']) !!}
           {{ csrf_field() }}
-          <div class="form-group">
-            <div class="form-row">
-              <div class="col-md-12">
+
+          <div class="cols">
+
+            <div class="form-col-1">
+
+              <div class="form-group-col-1">
+                <div class="form-row">
+                  <div class="col-md-12">
+                    <div class="form-label-group">
+                      <input value="{!!$demand->titulo!!}" type="text" name="titulo" id="titulo" class="form-control" placeholder="First name" required="required" autofocus="autofocus">
+                      <label for="titulo">Título</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group-col-1">
                 <div class="form-label-group">
-                  <input type="text" name="name" id="firstName" class="form-control" placeholder="First name" required="required" autofocus="autofocus">
-                  <label for="firstName">Nome Completo</label>
+                  {!! Form::select('assisted_id',$usersAssistedList, NULL, ['class' => 'form-control']) !!}
+                </div>
+              </div>
+
+              <div class="form-group-col-1">
+                <div class="form-label-group">
+                  <input id="dataPrazo" name="data_prazo" type="date" class="form-control" value="{!!$demand->data_prazo!!}">
+                  <label for="dataPrazo">Data Prazo</label>
+                </div>
+              </div>
+
+              <!-- <span style="font-family:Montserrat;" class="form-legend">Anexo</span>
+
+              <div class="foto-area">
+                  <div class="fileUpload">
+                      <input type="file" name="arquivo" class="upload" />
+                  </div>
+              </div> -->
+
+              <div class="container-iten">
+
+                <!--src="{{url('storage/demands/74.png')}}" -->
+                  
+                <div id="detail-iten" class="detail-iten">
+                  <img id="img" class="img-teste">
+                </div>
+                <div class="detail-iten-2">
+                  <a class="nav-link" href="{{route('productor.index')}}">
+                    <i class="fas fa-fw fa-expand"></i>
+                  </a>
+                  <a class="nav-link" href="{{route('productor.index')}}">
+                    <i class="fas fa-fw fa-download"></i>
+                  </a>
+                </div>
+
+              </div>
+                  
+
+            </div>
+
+            <div class="form-col-2">
+
+              <div class="form-group">
+                <div class="form-label-group">
+                  <textarea style="height:38ch" id="inputDescricao" class="form-control" 
+                  type="text" name="descricao" placeholder="Descrição"  
+                  maxlength="1000" autofocus="autofocus">{!!$demand->descricao!!}
+                  </textarea>
                 </div>
               </div>
             </div>
+        
           </div>
 
-          <div class="form-group">
-            <div class="form-label-group">
-              <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="required">
-              <label for="inputEmail">Email</label>
-            </div>
-          </div>
-
-          <div class="form-group">
-          <div class="form-label-group">
-
-            {!! Form::select('tipo_solicitante_id',$tipoSolicitanteList, NULL, ['class' => 'form-control']) !!}
-
-            </div>
-          </div>
-
-          
-
-          {!!Form::submit('Cadastrar',['class'=>'form-submit']) !!}
+          {!!Form::submit('Atualizar',['class'=>'form-submit']) !!}
 
             <div class="nav-link-topAction-back-div">
-              <a class="nav-link-topAction-back" href="{{route('requester.index')}}">
+              <a class="nav-link-topAction-back" href="{{route('demand.index')}}">
                 Voltar
               </a>
             </div>

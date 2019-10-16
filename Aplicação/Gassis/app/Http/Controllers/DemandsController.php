@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Gate;
 Use App\Services\DemandService;
 use App\Entities\Demand;
 Use App\Repositories\GenericFunctionsForRepository;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class DemandController.
@@ -85,15 +86,28 @@ class DemandsController extends Controller
         else{return view('accessDenied');}
         
     }
-
-    public function details(){
-
+    
+    public function startProduction(){
         if(Gate::allows('admReqProd')){
-
             $demand = $this->repository->all()->find($_POST['id']);
             if($demand!=null){
                 return view('demands.detalhes',[
                     'demands' => $demand,
+                ]);
+            }
+        }
+        else{return view('accessDenied');}
+
+    }
+
+    public function show(Request $id){
+        if(Gate::allows('admReqProd')){
+
+            $demand = $this->repository->all()->find($id['demand']);
+
+            if($demand!=null){
+                return redirect()->route('show',[
+                    'demand' => $demand,
                 ]);
             }
         }
@@ -120,7 +134,7 @@ class DemandsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  UserCreateRequest $request
+     * 
      *
      * @param  Request $requestt
      *
@@ -129,7 +143,7 @@ class DemandsController extends Controller
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
 
-    public function store(UserCreateRequest $requestPar)
+    public function store(Request $requestPar)
     {
 
         if(Gate::allows('requester')){
@@ -139,11 +153,17 @@ class DemandsController extends Controller
             $all = $this->repository->all();
             foreach ($all as $key => $value) {$last = $value;}
 
-            $requestPar->file('arquivo')->storeAs('public/demands',$last['id'].'.'.$requestPar->file('arquivo')->extension());
-
+            if($requestPar->file('arquivo')!=null){
+                $requestPar->file('arquivo')->storeAs('public/demands',$last['id'].'.'.$requestPar->file('arquivo')->extension());
+                $filename = ["filename"=>"storage/demands".'/'.$last['id'].".".$requestPar->file('arquivo')->extension()];
+                $request = $this->service->update($filename,$last['id']);
+            }
+            
             session()->flash('success',[
                 'success'      => $requeststore['success'],
-                'messages'     => $requeststore['message']
+                'messages'     => $requeststore['message'],
+                'file save success'      => $request['success'],
+                'file save messages'     => $request['message'],
             ]);
             
             $usersAssistedList = User::where(['permission'=>'1'])->pluck('name','id');
@@ -155,28 +175,7 @@ class DemandsController extends Controller
         else{return view('accessDenied');}
 
     }
-
-    /**
-     * Display the specified res$userurce.
-     *
-     * @param  int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $user = $this->repository->find($id);
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $user,
-            ]);
-        }
-
-        return view('users.show', compact('user'));
-    }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -186,17 +185,24 @@ class DemandsController extends Controller
      */
 
 
-    public function edit($id)
+    public function edit(Request $id)
     {
-        $user = $this->repository->find($id);
+        $demand = $this->repository->find($id["id"]);
 
-        return view('users.edit', compact('user'));
+        $usersAssisted = $this->userRepository->findwhere(['permission'=>'1']);
+
+        $usersAssistedList = User::where(['permission'=>'1'])->pluck('name','id');
+
+        return view('demands.demandEdit',[
+            'demand' => $demand,
+            'usersAssisted' => $usersAssisted,
+            'usersAssistedList' => $usersAssistedList]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  UserUpdateRequest $request
+     * @param  DemandUpdateRequest $request
      * @param  string            $id
      *
      * @return Response
@@ -205,37 +211,18 @@ class DemandsController extends Controller
      */
 
 
-    public function update(UserUpdateRequest $request, $id)
+    public function update(Request $requestPar, $id)
     {
-        try {
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
+        $request = $this->service->update($requestPar->all(),$id);
 
-            $user = $this->repository->update($request->all(), $id);
+        session()->flash('success',[
+            'success'      => $request['success'],
+            'messages'     => $request['message']
+        ]);
 
-            $response = [
-                'message' => 'User updated.',
-                'data'    => $user->toArray(),
-            ];
+        return redirect()->route('demand.index');
 
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
     }
 
 

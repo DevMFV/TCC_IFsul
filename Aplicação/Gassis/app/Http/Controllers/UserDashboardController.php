@@ -8,7 +8,10 @@ use App\Validators\UserValidator;
 //use Auth;
 use PHPUnit\Framework\Exception;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\User;
+use App\Entities\User;
+use App\Entities\Demand;
+use App\Http\Controllers\UsersController;
+
 
 class UserDashboardController extends Controller
 {
@@ -22,6 +25,11 @@ class UserDashboardController extends Controller
      */
     private $validator;
 
+    /**
+     * @var UsersController
+     */
+    protected $usersController;
+
     
     public function __construct(UserRepository $repository, UserValidator $validator)
     {
@@ -30,8 +38,45 @@ class UserDashboardController extends Controller
     }
 
     public function index(){
-        return redirect()->route('dashboard');
+        return view('index');
     }
+
+    public function show(Request $demand){
+        $demandShow = Demand::find($demand['demand']);
+        return view('demands.detalhes',[
+            'demands' => $demandShow]);
+    }
+
+    public function editPassword(){
+        if(auth()->user()->password=="987654321"){
+
+            $user = User::find(auth()->user()->id);
+
+            return view('editPassword',[
+                'user' => $user
+            ]);
+        }
+        else{
+            return redirect()->route('index');
+        }
+    }
+
+    /*
+    public function updatePassword(){
+
+        
+
+        $update = $this->usersController->updateP($senha,$id);
+
+        session()->flash('success',[
+            'success'      => $update['success'],
+            'messages'     => $update['message']
+        ]);
+
+        return view('index');  
+
+    }
+    */
 
     public function logout(){
         Auth::logout();
@@ -69,7 +114,7 @@ class UserDashboardController extends Controller
                 else{Auth::login($User);}
             }
 
-            return redirect()->route('index');
+            return redirect()->route('editPassword');
         }
         catch(\Exeption $e){
             return $e->getMessage();

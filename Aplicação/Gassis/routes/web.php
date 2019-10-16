@@ -33,6 +33,9 @@ function() {
         Route::get('/dashboard', ['as'=> 'dashboard','uses'=>'Controller@dashboard']);
         Route::get('/logout', ['as'=> 'user.logout' ,'uses'=>'UserDashboardController@logout']);
         Route::get('/index', ['as'=> 'index' ,'uses'=>'UserDashboardController@index']);
+        Route::get('/editPassword', ['as'=> 'editPassword' ,'uses'=>'UserDashboardController@editPassword']);
+        Route::post('/updatePassword', ['as'=> 'updatePassword' ,'uses'=>'UsersController@updatePassword']);
+        Route::get('/show', ['as'=> 'show' ,'uses'=>'UserDashboardController@show']);
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================
     
@@ -47,7 +50,6 @@ function() {
     // ASSISTED
     #--------------------------------------------------------------------------------------------------------
         Route::get('/assistedRegister', ['as'=> 'assistedRegister' ,'uses'=>'AssistedsController@register']);
-        Route::post('/assistedStore', ['as'=> 'assistedStore' ,'uses'=>'AssistedsController@store']);
         Route::resources(['assisted'=>'AssistedsController']);
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================
@@ -56,7 +58,6 @@ function() {
     // REQUESTER
     #--------------------------------------------------------------------------------------------------------
         Route::get('/requesterRegister', ['as'=> 'requesterRegister' ,'uses'=>'RequestersController@register']);
-        Route::post('/requesterStore', ['as'=> 'requesterStore' ,'uses'=>'RequestersController@store']);
         Route::resources(['requester'=>'RequestersController']);
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================
@@ -65,7 +66,6 @@ function() {
     // PRODUCTOR
     #--------------------------------------------------------------------------------------------------------
         Route::get('/productorRegister', ['as'=> 'productorRegister' ,'uses'=>'ProductorsController@register']);
-        Route::post('/productorStore', ['as'=> 'productorStore' ,'uses'=>'ProductorsController@store']);
         Route::resources(['productor'=>'ProductorsController']);
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================
@@ -75,7 +75,6 @@ function() {
         // TIPO SOLICITANTE
     #--------------------------------------------------------------------------------------------------------
         Route::resources(['tipoSol'=>'TipoSolicitantesController']);
-        Route::post('/tipoSolStore', ['as'=> 'tipoSolStore' ,'uses'=>'TipoSolicitantesController@store']);
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================
 
@@ -83,13 +82,14 @@ function() {
         // DEMANDA
     #--------------------------------------------------------------------------------------------------------
         Route::get('/demandRegister', ['as'=> 'demandRegister' ,'uses'=>'DemandsController@register']);
-        Route::post('/demandStore', ['as'=> 'demandStore' ,'uses'=>'DemandsController@store']);
         Route::post('/demandDetails', ['as'=> 'demandDetails' ,'uses'=>'DemandsController@details']);
+        Route::post('/editDemand', ['as'=> 'editDemand' ,'uses'=>'DemandsController@edit']);
+        Route::post('/updateDemand', ['as'=> 'updateDemand' ,'uses'=>'DemandsController@update']);
+        Route::post('/startProduction', ['as'=> 'startProduction' ,'uses'=>'DemandsController@startProduction']);
         Route::resources(['demand'=>'DemandsController']);
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================
-    
-    
+
 
 }); 
 

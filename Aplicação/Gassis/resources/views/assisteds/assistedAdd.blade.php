@@ -191,7 +191,7 @@
 
       <div class="card-body">
 
-      {!! Form::open(['class'=>'form','route' => 'assistedStore', 'method' => 'post']) !!}
+      {!! Form::open(['class'=>'form','route' => 'assisted.store', 'method' => 'post']) !!}
           {{ csrf_field() }}
           <div class="form-group">
             <div class="form-row">

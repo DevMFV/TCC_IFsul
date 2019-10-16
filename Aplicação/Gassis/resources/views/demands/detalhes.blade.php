@@ -23,6 +23,17 @@
   <!-- Custom styles for this template-->
   <link href="{{asset('css-sbAdmin/sb-admin.css')}}" rel="stylesheet">
 
+
+  <style>
+    .detail-iten{
+      background-image:url({!!$demands->filename!!});
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position-y: center;
+      background-position-x: center;
+    }
+  </style>
+
 </head>
 
 <body id="page-top">
@@ -167,23 +178,46 @@
             Data Table Example</div>
           <div class="card-body">
             <div class="table-responsive">
-
-          
-                @if (Gate::allows('requester'))
-                <a class="nav-link-topAction" href="{{route('demandRegister')}}">
-                  Cadastrar Demanda
-                </a>
-                @endif
-
                   
                 <div class="container-d">
                   
                   <div class="details-container">
+
                     {!!$demands->titulo!!}
+                    {!!$demands->requester->name!!}
+                    {!!$demands->assisted->name!!}
+                    {!!$demands->created_at!!}
+                    {!!$demands->data_prazo!!}
+                    {!!$demands->filename!!}
+
                   </div>
 
                   <div class="details-container">
-                    {!!$demands->titulo!!}
+
+                    {!!$demands->descricao!!}
+
+                    <div class="container-iten">
+
+                    <!--src="{{url('storage/demands/74.png')}}" -->
+                    
+                      <div id="detail-iten" class="detail-iten">
+                      <img id="img" class="img-teste">
+                      </div>
+
+                      <div class="detail-iten-2">
+
+                      <a class="nav-link" href="{{route('productor.index')}}">
+                          <i class="fas fa-fw fa-expand"></i>
+                        </a>
+                       
+                        <a class="nav-link" href="{{route('productor.index')}}">
+                          <i class="fas fa-fw fa-download"></i>
+                        </a>
+
+                      <div>
+
+                    </div>
+
                   </div>
                   
 

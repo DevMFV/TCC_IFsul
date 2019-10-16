@@ -193,7 +193,7 @@
 
       <div class="card-body">
 
-      {!! Form::open(['class'=>'form','route' => 'demandStore', 'method' => 'post', 'enctype'=>'multipart/form-data']) !!}
+      {!! Form::open(['class'=>'form','route' => 'demand.store', 'method' => 'post', 'enctype'=>'multipart/form-data']) !!}
           {{ csrf_field() }}
 
           <div class="cols">
