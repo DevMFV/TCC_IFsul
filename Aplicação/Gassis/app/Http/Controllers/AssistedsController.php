@@ -17,6 +17,7 @@ use App\Entities\TipoDeficiencia;
 use App\Entities\User;
 use App\Providers\AppServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class AssistedsController.
@@ -99,11 +100,20 @@ class AssistedsController extends Controller
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
 
-    public function store(UserCreateRequest $requestPar)
+    public function store(Request $requestPar)
     {
         if(Gate::allows('admin')){
 
             $request = $this->service->store($requestPar->all(),1);
+
+            $all = $this->repository->all();
+            foreach ($all as $key => $value) {$last = $value;}
+
+            if($requestPar->file('arquivo')!=null){
+                $requestPar->file('arquivo')->storeAs('public/assisteds',$last['id'].'.'.$requestPar->file('arquivo')->extension());
+                $filename = ["filename"=>"storage/assisteds".'/'.$last['id'].".".$requestPar->file('arquivo')->extension()];
+                $request = $this->service->update($filename,$last['id']);
+            }
 
             session()->flash('success',[
                 'success'      => $request['success'],
@@ -141,6 +151,22 @@ class AssistedsController extends Controller
         }
 
         return view('users.show', compact('user'));
+    }
+
+    public function edit(Request $id)
+    {
+        $user = $this->repository->find($id["id"]);
+
+
+        $tiposDeficiencia = $this->tipoRepository->all();
+
+        $tipoDeficienciaList = TipoDeficiencia::pluck('tipo','id')->all();
+
+        return view('assisteds.assistedEdit',[
+            'user' => $user,
+            'tiposDeficiencia' => $tiposDeficiencia,
+            'tipoDeficienciaList'=>$tipoDeficienciaList
+            ]);
     }
 
     /**
@@ -196,23 +222,18 @@ class AssistedsController extends Controller
         else{return view('accessDenied');}
     }
 
-
-    public function update(UserUpdateRequest $request, $id)
+    public function update(Request $requestPar, $id)
     {
         if(Gate::allows('admin')){
 
-        $request = $this->service->store($requestPar->all(),1);
-                
-        session()->flash('success',[
-            'success'      => $request['success'],
-            'messages'     => $request['message']
-        ]);
-        
-        $tipoDeficienciaList = TipoDeficiencia::pluck('tipo','id')->all();
-        
-          return view('assisteds.assistedAdd',[
-              'tipoDeficienciaList' => $tipoDeficienciaList
-          ]);
+            $request = $this->service->update($requestPar->all(),$id);
+
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+    
+            return redirect()->route('assisted.index');
         }
         else{return view('accessDenied');}
     }

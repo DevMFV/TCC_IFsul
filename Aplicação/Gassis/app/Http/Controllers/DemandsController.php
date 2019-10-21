@@ -119,12 +119,33 @@ class DemandsController extends Controller
 
         if(Gate::allows('admReqProd')){
 
-            $demands = $this->repository->all();
+            if(auth()->user()->permission==2){
 
-            if($demands!=null){
-                return view('demands.index',[
-                    'demands' => $demands,
-                ]);
+                $demands = $this->repository->findwhere(['requester_id'=>auth()->user()->id]);
+
+                if($demands!=null){
+                    return view('demands.index',[
+                        'demands' => $demands,
+                    ]);
+                }
+                else{
+                    return view('demands.index');
+                }
+
+            }
+            
+            else{
+
+                $demands = $this->repository->all();
+
+                if($demands!=null){
+                    return view('demands.index',[
+                        'demands' => $demands,
+                    ]);
+                }
+                else{
+                    return view('demands.index');
+                }
             }
         }
         else{return view('accessDenied');}
@@ -152,7 +173,6 @@ class DemandsController extends Controller
 
             $all = $this->repository->all();
             foreach ($all as $key => $value) {$last = $value;}
-
             if($requestPar->file('arquivo')!=null){
                 $requestPar->file('arquivo')->storeAs('public/demands',$last['id'].'.'.$requestPar->file('arquivo')->extension());
                 $filename = ["filename"=>"storage/demands".'/'.$last['id'].".".$requestPar->file('arquivo')->extension()];
@@ -162,8 +182,6 @@ class DemandsController extends Controller
             session()->flash('success',[
                 'success'      => $requeststore['success'],
                 'messages'     => $requeststore['message'],
-                'file save success'      => $request['success'],
-                'file save messages'     => $request['message'],
             ]);
             
             $usersAssistedList = User::where(['permission'=>'1'])->pluck('name','id');
@@ -238,7 +256,7 @@ class DemandsController extends Controller
     public function destroy($id)
     {
 
-        if(Gate::allows('admin')){
+        if(Gate::allows('admOrReq')){
             $request = $this->service->destroy($id);
 
             session()->flash('success',[

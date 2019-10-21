@@ -6,6 +6,8 @@ Use App\Repositories\DemandRepository;
 Use App\Validators\DemandValidator;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use File;
 
 class DemandService{
 
@@ -62,9 +64,22 @@ class DemandService{
 
             $demand = $this->repository->find($id);
 
-            dd($demand);
+            $dataUse = $data;
 
-            if(){}
+            $dataUse += ["arquivo"=>null];
+
+            if($dataUse["arquivo"]!=null){
+                if($demand->filename!=null){
+                    // DEVE EXCLUIR A IMAGEM ANTERIOR
+                    $data["arquivo"]->storeAs('public/demands',$demand->id.'.'.$data["arquivo"]->extension());
+                    $filename = "storage/demands".'/'.$demand->id.".".$data["arquivo"]->extension();
+                }
+            
+                else{
+                    $filename = $data;
+                }
+                $data += ["filename"=>$filename];
+            }
 
             $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
 

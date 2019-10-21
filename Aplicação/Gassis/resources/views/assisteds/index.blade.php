@@ -210,12 +210,17 @@
 
                     @if (Gate::allows('admin'))
                     
-                    <td>
+                    <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
+
+                      {!!Form::open(['route' => ['editAssisted'], 'method' => 'POST','style'=>'height:0'])!!}
+                        {!!Form::submit('Editar',['class'=>'edit-form-submit']) !!}
+                        <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $user->id }}">
+                      {!!Form::close()!!}
 
                       {!!Form::open(['route' => ['assisted.destroy', $user->id], 'method' => 'DELETE'])!!}
                         {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
                       {!!Form::close()!!}
-                 
+                    
                     </td>
 
                     @endif

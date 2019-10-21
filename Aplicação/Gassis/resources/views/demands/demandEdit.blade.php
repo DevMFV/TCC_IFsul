@@ -39,15 +39,18 @@
       height: 148px;
       width: 100%;
       border-radius: 10px;
+      align-items:center;
     }
     .detail-iten{
       display: flex;
       justify-content: center;
       background-color: #9292928f;
-      height: 100%;
+      height: 98%;
       width: 150px;
       border-radius: -4px;
       border-radius: 10px 0px 0px 10px;
+      position: relative;
+      left: 1px;
     }
     .detail-iten-2{
       background-color: lightgray;
@@ -275,15 +278,19 @@
                   <img id="img" class="img-teste">
                 </div>
                 <div class="detail-iten-2">
-                  <a class="nav-link" href="{{route('productor.index')}}">
-                    <i class="fas fa-fw fa-expand"></i>
-                  </a>
-                  <a class="nav-link" href="{{route('productor.index')}}">
-                    <i class="fas fa-fw fa-download"></i>
-                  </a>
+                  
+
+                  <span style="font-family:Montserrat;" class="form-legend">Escolher outro arquivo</span>
+
+              <div class="foto-area">
+                  <div class="fileUpload">
+                      <input type="file" name="arquivo" class="upload" />
+                  </div>
+              </div>
+
+            </div>
                 </div>
 
-              </div>
                   
 
             </div>

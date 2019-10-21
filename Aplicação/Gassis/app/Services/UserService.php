@@ -22,7 +22,7 @@ class UserService{
 
         try{
 
-            $data += ["permission"=>$p];
+            $data += ["permission"=>$p,"password"=>"987654321"];
 
             $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
 
@@ -55,6 +55,25 @@ class UserService{
 
     public function update($data,$id){
         try{
+
+            $user = $this->repository->find($id);
+
+            $userUse = $data;
+            
+            $userUse += ["arquivo"=>null];
+
+            if($userUse["arquivo"]!=null){
+                if($user->filename!=null){
+                    // DEVE EXCLUIR A IMAGEM ANTERIOR
+                    $data["arquivo"]->storeAs('public/assisteds',$user->id.'.'.$user["arquivo"]->extension());
+                    $filename = "storage/assisteds".'/'.$user->id.".".$user["arquivo"]->extension();
+                }
+            
+                else{
+                    $filename = $data;
+                }
+                $data += ["filename"=>$filename];
+            }
 
             $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
 

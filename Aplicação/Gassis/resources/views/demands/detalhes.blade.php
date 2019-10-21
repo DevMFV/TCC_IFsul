@@ -25,7 +25,7 @@
 
 
   <style>
-    .detail-iten{
+    .container-file-iten{
       background-image:url({!!$demands->filename!!});
       background-repeat: no-repeat;
       background-size: cover;
@@ -178,54 +178,46 @@
             Data Table Example</div>
           <div class="card-body">
             <div class="table-responsive">
-                  
-                <div class="container-d">
-                  
-                  <div class="details-container">
-
+              <div class="container-details">
+                <div class="datas-details">
                     {!!$demands->titulo!!}
                     {!!$demands->requester->name!!}
                     {!!$demands->assisted->name!!}
                     {!!$demands->created_at!!}
                     {!!$demands->data_prazo!!}
                     {!!$demands->filename!!}
-
-                  </div>
-
-                  <div class="details-container">
-
+                <!-- datas-details -->
+                </div>
+                <div class="datas-details">
                     {!!$demands->descricao!!}
-
-                    <div class="container-iten">
-
-                    <!--src="{{url('storage/demands/74.png')}}" -->
-                    
-                      <div id="detail-iten" class="detail-iten">
-                      <img id="img" class="img-teste">
+                    <div class="container-file">
+                      <div id="container-file-iten" class="container-file-iten">
+                        <img id="img" class="img-teste">
+                      <!-- container-file-iten -->  
                       </div>
-
-                      <div class="detail-iten-2">
-
-                      <a class="nav-link" href="{{route('productor.index')}}">
+                      <div class="container-file-iten-2">
+                        <a class="nav-link" href="{{route('productor.index')}}">
                           <i class="fas fa-fw fa-expand"></i>
                         </a>
-                       
                         <a class="nav-link" href="{{route('productor.index')}}">
                           <i class="fas fa-fw fa-download"></i>
                         </a>
-
+                      <!-- container-file-iten-2  -->
                       <div>
-
+                    <!-- container-file -->
                     </div>
-
-                  </div>
-                  
-
+                <!-- datas-details -->
                 </div>
-
-
+              <!-- container-details -->
+              </div> 
             </div>
           </div>
+          <div class="nav-link-topAction-back-div">
+                <a class="nav-link-topAction-back" href="{{route('demand.index')}}">
+                  Voltar
+                </a>
+              </div>
+
           <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
         </div>
 

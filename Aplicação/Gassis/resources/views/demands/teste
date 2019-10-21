@@ -1,0 +1,46 @@
+<div class="container-details">
+                  
+                  <div class="datas-details">
+
+                    {!!$demands->titulo!!}
+                    {!!$demands->requester->name!!}
+                    {!!$demands->assisted->name!!}
+                    {!!$demands->created_at!!}
+                    {!!$demands->data_prazo!!}
+                    {!!$demands->filename!!}
+
+                  <!-- datas-details -->
+                  </div>
+
+                  <div class="datas-details">
+
+                    {!!$demands->descricao!!}
+
+                    <div class="container-file">
+
+                      <div id="container-file-iten" class="container-file-iten">
+                        <img id="img" class="img-teste">
+
+                      <!-- container-file-iten -->  
+                      </div>
+
+                      <div class="container-file-iten-2">
+
+                        <a class="nav-link" href="{{route('productor.index')}}">
+                          <i class="fas fa-fw fa-expand"></i>
+                        </a>
+                       
+                        <a class="nav-link" href="{{route('productor.index')}}">
+                          <i class="fas fa-fw fa-download"></i>
+                        </a>
+                      <!-- container-file-iten-2  -->
+                      <div>
+
+                    <!-- container-file -->
+                    </div>
+
+                  <!-- datas-details -->
+                  </div>
+
+                <!-- container-details -->
+                </div> 

@@ -16,22 +16,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        /*
+        
         TipoSolicitante::create([
             'tipo'            => 'Exemplo',
         ]);
-        */
-
-        User::create([
-            'name'                      => 'prod1',
-            'filename'                  => 'asdfasdasdfasdf', 
-            'email'                     => 'prod1@gmail.com', 
-            'password'                  => env('PASSWORD_HASH') ? bcrypt('987654321') : '987654321',
-            //'tipo_solicitante_id'       => 1,   
-            'permission'                => 3,
-        ]);
-
-        /*
+        
         User::create([
             'name'                      => 'Exemplo Solicitante',
             'filename'                  => 'asdfasdasdfasdf', 
@@ -75,7 +64,7 @@ class DatabaseSeeder extends Seeder
             'codigo'          => 5
         ]);
 
-        */
         
+    
     }
 }

@@ -51,6 +51,8 @@ function() {
     #--------------------------------------------------------------------------------------------------------
         Route::get('/assistedRegister', ['as'=> 'assistedRegister' ,'uses'=>'AssistedsController@register']);
         Route::resources(['assisted'=>'AssistedsController']);
+        Route::post('/editAssisted', ['as'=> 'editAssisted' ,'uses'=>'AssistedsController@edit']);
+
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================
 

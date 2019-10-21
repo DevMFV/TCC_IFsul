@@ -10,7 +10,7 @@
   <meta name="author" content="">
 
   <title>SB Admin - Tables</title>
-
+  
    <!-- Font-family Montserrat -->
    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
@@ -23,16 +23,54 @@
   <!-- Custom styles for this template-->
   <link href="{{asset('css-sbAdmin/sb-admin.css')}}" rel="stylesheet">
 
+  <style>
+    .detail-iten{
+      background-image:url({!!$user->filename!!});
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position-y: center;
+      background-position-x: center;
+    }
+    .container-iten{
+      display: flex;
+      background-color: lightgrey;
+      justify-content: space-between;
+      flex-direction: row;
+      height: 148px;
+      width: 100%;
+      border-radius: 10px;
+      align-items:center;
+    }
+    .detail-iten{
+      display: flex;
+      justify-content: center;
+      background-color: #9292928f;
+      height: 98%;
+      width: 150px;
+      border-radius: -4px;
+      border-radius: 10px 0px 0px 10px;
+      position: relative;
+      left: 1px;
+    }
+    .detail-iten-2{
+      background-color: lightgray;
+      justify-content: flex-start;
+      display: flex;
+      flex-direction: row;
+      border-radius: 0px 10px 10px 0px;
+    }
+  </style>
+  
 </head>
 
 <body id="page-top">
 
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="#">GAssis</a>
+    <a class="navbar-brand mr-1" href="index.html">GAssis</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
-      <!-- <i class="fas fa-bars"></i> -->
+      <i class="fas fa-bars"></i>
     </button>
 
     <!-- Navbar Search -->
@@ -103,50 +141,75 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
+    
     <ul class="sidebar navbar-nav">
-     
-     <li class="nav-item">
-       <a class="nav-link" href="{{route('dashboard')}}">
-         <i class="fas fa-fw fa-tachometer-alt"></i>
-         <span>Página inicial</span>
-       </a>
-     </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('dashboard')}}">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Página inicial</span>
+        </a>
+      </li>
 
-     
+      <!--
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-fw fa-folder"></i>
+          <span>Pages</span>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+          <h6 class="dropdown-header">Login Screens:</h6>
+          <a class="dropdown-item" href="login.html">Login</a>
+          <a class="dropdown-item" href="register.html">Register</a>
+          <a class="dropdown-item" href="forgot-password.html">Forgot Password</a>
+          <div class="dropdown-divider"></div>
+          <h6 class="dropdown-header">Other Pages:</h6>
+          <a class="dropdown-item" href="404.html">404 Page</a>
+          <a class="dropdown-item" href="blank.html">Blank Page</a>
+        </div>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" href="charts.html">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Charts</span></a>
+      </li>
+      -->
+
+      @if (Gate::allows('admOrReq'))
      <li class="nav-item active">
        <a class="nav-link" href="{{route('demand.index')}}">
          <i class="fas fa-fw fa-box"></i>
          <span>Demandas</span></a>
      </li>
+     @endif
 
-     <li class="nav-item">
+      <li class="nav-item">
        <a class="nav-link" href="{{route('assisted.index')}}">
          <i class="fas fa-fw fa-hands"></i>
          <span>Assistidos</span></a>
      </li>
 
      @if (Gate::allows('admin'))
-     <li class="nav-item">
-       <a class="nav-link" href="{{route('requester.index')}}">
-         <i class="fas fa-fw fa-user"></i>
-         <span>Solicitantes</span></a>
-     </li>
-     
-     <li class="nav-item">
-       <a class="nav-link" href="{{route('productor.index')}}">
-         <i class="fas fa-fw fa-hammer"></i>
-         <span>Produtores</span>
-       </a>
-     </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('requester.index')}}">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Solicitantes</span></a>
+      </li>
 
-     <li class="nav-item">
-       <a class="nav-link" href="{{route('tipoSol.index')}}">
-         <i class="fas fa-fw fa-user"></i>
-         <span>Tipo de Solicitante</span></a>
-     </li>
-     @endif
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('productor.index')}}">
+          <i class="fas fa-fw fa-hammer"></i>
+          <span>Produtores</span></a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('tipoSol.index')}}">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Tipo de Solicitante</span></a>
+      </li>
+      @endif
 
-</ul>
+    </ul>
 
     <div id="content-wrapper">
 
@@ -161,114 +224,51 @@
         </ol>
 
         <!-- DataTables Example -->
-        <div class="card mb-3">
-          <div class="card-header">
-            <i class="fas fa-table"></i>
-            Data Table Example</div>
-          <div class="card-body">
-            <div class="table-responsive">
-
-          
-                @if (Gate::allows('requester'))
-                <a class="nav-link-topAction" href="{{route('demandRegister')}}">
-                  Cadastrar Demanda
-                </a>
-                @endif
-              
-
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                  <tr>
-                    
-                    <th>Id</th>
-                    <th>Título</th>
-                    <th>Data de soloicitação</th>
-                    <th>Data prazo</th>
-                    <th>Estado atual</th>
-                    <th>Assistido</th>
-
-                    <th>Ações</th>
-                    
-                  </tr>
-                </thead>
-
-                <tbody>
-
-                  @foreach($demands as $demand)
-
-                  <tr>
-
-                    <td>{{ $demand->id }}</td>
-                    <td>{{ $demand->titulo }}</td>
-                    <td>{{ $demand->created_at }}</td>
-                    <td>{{ $demand->data_prazo }}</td>
-
-                    @if ($demand->produzindo==null)
-                    <td>{{ "Em espera" }}</td>
-                    @else
-                    <td>{{ "Em produção" }}</td>
-                    @endif
-
-                    <td>{{ $demand->assisted->name}}</td>
-
-                    <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
-
-                      <a class="detail-button" href="{{route('demand.show',$demand->id)}}">Detalhes</a>
-
-                      @if($demand->produzindo==null)
-                        @if (Gate::allows('admOrReq'))
-                            {!!Form::open(['route' => ['editDemand'], 'method' => 'POST','style'=>'height:0'])!!}
-                              {!!Form::submit('Editar',['class'=>'edit-form-submit']) !!}
-                              <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $demand->id }}">
-                            {!!Form::close()!!}
-                        @endif
-                      @endif
-
-                      @if($demand->produzindo!=null)
-                        @if (Gate::allows('admin'))
-                          {!!Form::open(['route' => ['editDemand'], 'method' => 'POST','style'=>'height:0'])!!}
-                            {!!Form::submit('Editar',['class'=>'edit-form-submit']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $demand->id }}">
-                          {!!Form::close()!!}
-                        @endif
-                      @endif
-
-                      @if($demand->produzindo==null)
-                        @if (Gate::allows('admOrReq'))
-                          {!!Form::open(['route' => ['demand.destroy', $demand->id], 'method' => 'DELETE','style'=>'height:0'])!!}
-                          {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
-                          {!!Form::close()!!}
-                        @endif
-                      @endif
-
-                      @if($demand->produzindo!=null)
-                        @if (Gate::allows('admin'))
-                          {!!Form::open(['route' => ['demand.destroy', $demand->id], 'method' => 'DELETE','style'=>'height:0'])!!}
-                          {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
-                          {!!Form::close()!!}
-                        @endif
-                      @endif
-
-                    </td>
-
-                  </tr>
-
-                  @endforeach
-
-                </tbody>
-              </table>
-
-            </div>
-          </div>
-          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-        </div>
-
-        <p class="small text-center text-muted my-5">
-          <em>More table examples coming soon...</em>
-        </p>
+        <div class="card-Add-demand card-register mx-auto mt-5">
+      <div class="card-header">Cadastrar Demanda
 
       </div>
-      <!-- /.container-fluid -->
+
+      <div class="card-body">
+
+      {!! Form::model($user,['class'=>'form','route' => ['assisted.update', $user->id], 'method' => 'PUT', 'enctype'=>'multipart/form-data']) !!}
+          {{ csrf_field() }}
+
+          <div>
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-md-12">
+                  <div class="form-label-group">
+                    <input value="{!!$user->name!!}" type="text" name="name" id="firstName" class="form-control" placeholder="First name" required="required" autofocus="autofocus">
+                    <label for="firstName">Nome Completo</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+                <div class="form-group-col-1">
+                  <div class="form-label-group">
+                    <input value="{!!$user->email!!}" id="dataPrazo" name="email" type="email" class="form-control" placeholder="First name">
+                    <label for="dataPrazo">E-mail</label>
+                  </div>
+                </div>
+
+                {!! Form::select('tipo_deficiencia_id',$tipoDeficienciaList, NULL, ['class' => 'form-control','style'=>'margin-bottom: 1rem;']) !!}
+
+            {!!Form::submit('Atualizar',['class'=>'form-submit']) !!}
+
+              <div class="nav-link-topAction-back-div">
+                <a class="nav-link-topAction-back" href="{{route('assisted.index')}}">
+                  Voltar
+                </a>
+              </div>
+
+              {!! Form::close() !!}
+            </div>
+
+          </div>
+        </div>
+          <!-- /.container-fluid -->
 
       <!-- Sticky Footer -->
       <footer class="sticky-footer">

@@ -197,7 +197,7 @@
             <div class="form-row">
               <div class="col-md-12">
                 <div class="form-label-group">
-                  <input type="password" name="password" id="firstName" class="form-control" placeholder="First name" autofocus="autofocus">
+                  <input required="required" type="password" name="password" id="firstName" class="form-control" placeholder="First name" autofocus="autofocus">
                   <label for="firstName">Nova Senha</label>
                 </div>
               </div>

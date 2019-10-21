@@ -23,6 +23,7 @@ class UserValidator extends LaravelValidator
             'name'           => 'required',
             'email'          => 'required',
             'permission'     => 'required',
+            'password'       => 'required'
             
         ],
         ValidatorInterface::RULE_UPDATE => [],

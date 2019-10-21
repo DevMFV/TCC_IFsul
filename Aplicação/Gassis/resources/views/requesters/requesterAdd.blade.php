@@ -137,9 +137,9 @@
       </li>
       -->
       @if (Gate::allows('admOrReq'))
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="{{route('demand.index')}}">
-          <i class="fas fa-fw fa-hands"></i>
+          <i class="fas fa-fw fa-box"></i>
           <span>Demandas</span></a>
       </li>
       @endif
@@ -151,7 +151,7 @@
       </li>
       
       @if (Gate::allows('admin'))
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="{{route('requester.index')}}">
           <i class="fas fa-fw fa-user"></i>
           <span>Solicitantes</span></a>

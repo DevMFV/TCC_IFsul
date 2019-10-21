@@ -22,7 +22,7 @@ class CreateDemandsTable extends Migration
 			// Demand Datas
 
 			$table->String('titulo', 50);
-			$table->String('descricao', 1000);
+			$table->String('descricao', 1000)->nullable();
 			$table->date('data_pedido')->nullable();
 			$table->date('data_prazo')->nullable();
 			$table->String('filename')->nullable();

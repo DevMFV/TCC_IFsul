@@ -191,8 +191,12 @@
 
       <div class="card-body">
 
-      {!! Form::open(['class'=>'form','route' => 'assisted.store', 'method' => 'post']) !!}
+      {!! Form::open(['class'=>'form','route' => 'assisted.store', 'method' => 'post', 'enctype'=>'multipart/form-data']) !!}
           {{ csrf_field() }}
+
+          <div>
+
+
           <div class="form-group">
             <div class="form-row">
               <div class="col-md-12">
@@ -204,22 +208,26 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <div class="form-label-group">
-              <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="required">
-              <label for="inputEmail">Email</label>
+              <div class="form-group-col-1">
+                <div class="form-label-group">
+                  <input id="dataPrazo" name="email" type="email" class="form-control" placeholder="First name">
+                  <label for="dataPrazo">E-mail</label>
+                </div>
+              </div>
+
+              {!! Form::select('tipo_deficiencia_id',$tipoDeficienciaList, NULL, ['class' => 'form-control']) !!}
+
+              <span style="font-family:Montserrat;" class="form-legend">Anexo</span>
+
+              <div class="foto-area">
+                  <div class="fileUpload">
+                      <input type="file" name="arquivo" class="upload" />
+                  </div>
+              </div>
+
             </div>
-          </div>
-
-          <div class="form-group">
-          <div class="form-label-group">
-
-            {!! Form::select('tipo_deficiencia_id',$tipoDeficienciaList, NULL, ['class' => 'form-control']) !!}
-
-            </div>
-          </div>
-
-          
+        
+          <div>
 
           {!!Form::submit('Cadastrar',['class'=>'form-submit']) !!}
 
@@ -230,6 +238,8 @@
             </div>
 
           {!! Form::close() !!}
+
+          </div>
         
       </div>
     </div>
