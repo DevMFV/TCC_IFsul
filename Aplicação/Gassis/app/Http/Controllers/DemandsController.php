@@ -21,6 +21,7 @@ Use App\Services\DemandService;
 use App\Entities\Demand;
 Use App\Repositories\GenericFunctionsForRepository;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\ProductionsController;
 
 /**
  * Class DemandController.
@@ -86,16 +87,16 @@ class DemandsController extends Controller
         else{return view('accessDenied');}
         
     }
-    
+
     public function startProduction(){
-        if(Gate::allows('admReqProd')){
-            $demand = $this->repository->all()->find($_POST['id']);
-            if($demand!=null){
-                return view('demands.detalhes',[
-                    'demands' => $demand,
-                ]);
-            }
+        
+        if(Gate::allows('prod')){
+
+           $start = $this->service->startProduction($_POST["id"]);
+
+           return redirect()->route('demand.index');
         }
+
         else{return view('accessDenied');}
 
     }
@@ -150,6 +151,35 @@ class DemandsController extends Controller
         }
         else{return view('accessDenied');}
 
+    }
+
+    public function removeds(){
+
+        if(Gate::allows('admOrReq')){
+            
+            $demands =  Demand::onlyTrashed()->get();
+            
+            if($demands!=null){}
+
+            return view('demands.removed',[
+                'demands' => $demands,
+            ]);
+
+            dd($demands);
+        }
+        else{return view('accessDenied');}
+
+    }
+
+    public function recover()
+    {
+        if(Gate::allows('admOrReq')){
+
+            $demand =  Demand::onlyTrashed()->where('id', $_POST["id"])->restore();
+
+            return redirect()->route('demandRemoved');
+        }
+        else{return view('accessDenied');}
     }
 
     /**

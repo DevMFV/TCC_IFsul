@@ -21,7 +21,9 @@ class CreateTipoSolicitantesTable extends Migration
 			
 			$table->string('tipo');
 
+			$table->rememberToken();
 			$table->timestamps();
+			$table->softDeletes(); 
 			
 		});
 	}

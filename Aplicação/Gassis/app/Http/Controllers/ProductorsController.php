@@ -13,6 +13,7 @@ use App\Repositories\UserRepository;
 use App\Validators\UserValidator;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Gate;
+use App\Entities\User;
 
 /**
  * Class ProductorsController.
@@ -72,6 +73,37 @@ class ProductorsController extends Controller
 
     }
 
+    public function removeds(){
+
+        if(Gate::allows('admin')){
+            
+            $users =  User::onlyTrashed()->get();
+            
+            if($users!=null){}
+
+            return view('productors.removed',[
+                'users' => $users,
+            ]);
+
+            dd($users);
+        }
+        else{return view('accessDenied');}
+
+    }
+
+    public function recover()
+    {
+        if(Gate::allows('admin')){
+
+            $user =  User::onlyTrashed()->where('id', $_POST["id"])->restore();
+
+            return redirect()->route('productorRemoved');
+        }
+        else{return view('accessDenied');}
+    }
+
+        
+
     /**
      * Store a newly created resource in storage.
      *
@@ -130,11 +162,18 @@ class ProductorsController extends Controller
      */
 
 
-    public function edit($id)
+    public function edit(Request $id)
     {
-        $user = $this->repository->find($id);
 
-        return view('users.edit', compact('user'));
+        if(Gate::allows('admOrReq')){
+        
+            $user = $this->repository->find($id["id"]);
+
+            return view('productors.productorEdit',[
+                'user' => $user,
+            ]);
+        }
+        else{return view('accessDenied');}
     }
 
     /**
@@ -149,37 +188,20 @@ class ProductorsController extends Controller
      */
 
 
-    public function update(UserUpdateRequest $request, $id)
+    public function update(Request $requestPar, $id)
     {
-        try {
+        if(Gate::allows('admin')){
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            $request = $this->service->update($requestPar->all(),$id);
 
-            $user = $this->repository->update($request->all(), $id);
-
-            $response = [
-                'message' => 'User updated.',
-                'data'    => $user->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+    
+            return redirect()->route('productor.index');
         }
+        else{return view('accessDenied');}
     }
 
 

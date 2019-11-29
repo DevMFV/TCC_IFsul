@@ -144,10 +144,33 @@
       </li>
       @endif
 
+      @if (Gate::allows('admOrProd'))
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('production.index')}}">
+         <i class="fas fa-fw fa-engine"></i>
+         <span>Produções</span></a>
+     </li>
+     @endif
+
       <li class="nav-item active">
        <a class="nav-link" href="{{route('assisted.index')}}">
          <i class="fas fa-fw fa-hands"></i>
          <span>Assistidos</span></a>
+
+         <li class="nav-item  active" style="margin-left: 15%; padding:0">
+            <a class="nav-link" href="{{route('assisted.index')}}">
+              <span>Ativos</span>
+            </a>
+          </li>
+      
+          @if (Gate::allows('admin'))
+          <li class="nav-item " style="margin-left: 15%; padding:0">
+            <a class="nav-link" href="{{route('assistedRemoved')}}">
+              <span>Removidos</span>
+            </a>
+          </li>
+          @endif
+
       </li>
       
       @if (Gate::allows('admin'))
@@ -165,7 +188,7 @@
 
       <li class="nav-item">
         <a class="nav-link" href="{{route('tipoSol.index')}}">
-          <i class="fas fa-fw fa-user"></i>
+          <i class="fas fa-fw fa-list"></i>
           <span>Tipo de Solicitante</span></a>
       </li>
       @endif

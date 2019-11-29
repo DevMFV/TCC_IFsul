@@ -5,6 +5,8 @@ namespace App\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Entities\Production;
 
 /**
  * Class Demand.
@@ -14,6 +16,9 @@ use Prettus\Repository\Traits\TransformableTrait;
 class Demand extends Model implements Transformable
 {
     use TransformableTrait;
+    use SoftDeletes;
+
+    protected $dates=['deleted_at'];
 
     /**
      * The attributes that are mass assignable.
@@ -28,8 +33,11 @@ class Demand extends Model implements Transformable
         'produzindo',
         'requester_id',
         'assisted_id',
-        'descricao'
+        'descricao',
+        'urgencia'
+        
     ];
+
 
     public function requester(){
         return $this->belongsTo(User::class, 'requester_id');
@@ -39,6 +47,8 @@ class Demand extends Model implements Transformable
         return $this->belongsTo(User::class, 'assisted_id');
     }
 
-
+    public function production(){
+        return $this->hasMany(Production::class);
+    }
 
 }

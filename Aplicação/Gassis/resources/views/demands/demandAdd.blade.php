@@ -142,6 +142,28 @@
        <a class="nav-link" href="{{route('demand.index')}}">
          <i class="fas fa-fw fa-box"></i>
          <span>Demandas</span></a>
+
+         <li class="nav-item active" style="margin-left: 15%; padding:0">
+            <a class="nav-link" href="{{route('demand.index')}}">
+              <span>Ativas</span>
+            </a>
+          </li>
+
+          <li class="nav-item" style="margin-left: 15%; padding:0">
+            <a class="nav-link" href="{{route('demandRemoved')}}">
+              <span>Removidas</span>
+            </a>
+          </li>
+      
+     </li>
+     @endif
+
+
+     @if (Gate::allows('admOrProd'))
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('production.index')}}">
+         <i class="fas fa-fw fa-engine"></i>
+         <span>Produções</span></a>
      </li>
      @endif
 
@@ -166,7 +188,7 @@
       
       <li class="nav-item">
         <a class="nav-link" href="{{route('tipoSol.index')}}">
-          <i class="fas fa-fw fa-user"></i>
+          <i class="fas fa-fw fa-list"></i>
           <span>Tipo de Solicitante</span></a>
       </li>
       @endif

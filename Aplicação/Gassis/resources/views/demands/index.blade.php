@@ -117,7 +117,32 @@
        <a class="nav-link" href="{{route('demand.index')}}">
          <i class="fas fa-fw fa-box"></i>
          <span>Demandas</span></a>
+
+         @if (Gate::allows('admOrReq'))
+         <li class="nav-item active" style="margin-left: 15%; padding:0">
+            <a class="nav-link" href="{{route('demand.index')}}">
+              <span>Ativas</span>
+            </a>
+          </li>
+
+          
+          <li class="nav-item" style="margin-left: 15%; padding:0">
+            <a class="nav-link" href="{{route('demandRemoved')}}">
+              <span>Removidas</span>
+            </a>
+          </li>
+          @endif
+
      </li>
+
+
+     @if (Gate::allows('admOrProd'))
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('production.index')}}">
+         <i class="fas fa-fw fa-hammer"></i>
+         <span>Produções</span></a>
+     </li>
+     @endif
 
      <li class="nav-item">
        <a class="nav-link" href="{{route('assisted.index')}}">
@@ -141,7 +166,7 @@
 
      <li class="nav-item">
        <a class="nav-link" href="{{route('tipoSol.index')}}">
-         <i class="fas fa-fw fa-user"></i>
+         <i class="fas fa-fw fa-list"></i>
          <span>Tipo de Solicitante</span></a>
      </li>
      @endif
@@ -182,11 +207,12 @@
                     
                     <th>Id</th>
                     <th>Título</th>
-                    <th>Data de soloicitação</th>
+                    <th>Urgência</th>
+                    <th>Assistido</th>
+                    <th>Solicitante</th>
+                    <th>Data de solicitação</th>
                     <th>Data prazo</th>
                     <th>Estado atual</th>
-                    <th>Assistido</th>
-
                     <th>Ações</th>
                     
                   </tr>
@@ -200,16 +226,29 @@
 
                     <td>{{ $demand->id }}</td>
                     <td>{{ $demand->titulo }}</td>
-                    <td>{{ $demand->created_at }}</td>
-                    <td>{{ $demand->data_prazo }}</td>
+
+                    <td>{{ $demand->urgencia }}</td>
+
+                    @if ($demand->assisted!=null)
+                      <td>{{ $demand->assisted->name}}</td>
+                    @else
+                      <td style="color:lightsteelblue">Solicitante Removido</td>
+                    @endif
+
+                    @if ($demand->requester!=null)
+                      <td>{{ $demand->requester->name}}</td>
+                    @else
+                      <td style="color:lightsteelblue">Solicitante Removido</td>
+                    @endif
+
+                    <td><?php echo date("d/m/Y", strtotime($demand->created_at)); ?></td>
+                    <td><?php echo date("d/m/Y", strtotime($demand->data_prazo)); ?></td>
 
                     @if ($demand->produzindo==null)
                     <td>{{ "Em espera" }}</td>
                     @else
                     <td>{{ "Em produção" }}</td>
                     @endif
-
-                    <td>{{ $demand->assisted->name}}</td>
 
                     <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
 
@@ -224,15 +263,6 @@
                         @endif
                       @endif
 
-                      @if($demand->produzindo!=null)
-                        @if (Gate::allows('admin'))
-                          {!!Form::open(['route' => ['editDemand'], 'method' => 'POST','style'=>'height:0'])!!}
-                            {!!Form::submit('Editar',['class'=>'edit-form-submit']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $demand->id }}">
-                          {!!Form::close()!!}
-                        @endif
-                      @endif
-
                       @if($demand->produzindo==null)
                         @if (Gate::allows('admOrReq'))
                           {!!Form::open(['route' => ['demand.destroy', $demand->id], 'method' => 'DELETE','style'=>'height:0'])!!}
@@ -241,10 +271,19 @@
                         @endif
                       @endif
 
-                      @if($demand->produzindo!=null)
+                      @if($demand->produzindo==null)
+                        @if (Gate::allows('prod'))
+                          {!!Form::open(['route' => ['startProduction'], 'method' => 'Post','style'=>'height:0'])!!}
+                          {!!Form::submit('Iniciar Producao',['class'=>'start-form-submit']) !!}
+                          <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $demand->id }}">
+                          {!!Form::close()!!}
+                        @endif
+                      @endif
+
+                      @if($demand->urgencia=="Alta")
                         @if (Gate::allows('admin'))
-                          {!!Form::open(['route' => ['demand.destroy', $demand->id], 'method' => 'DELETE','style'=>'height:0'])!!}
-                          {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
+                          {!!Form::open(['route' => ['updateProduction'],'method' => 'POST','style'=>'position: relative;left: 6px;'])!!}
+                            {!!Form::submit('Designar',['class'=>'next-form-submit']) !!}
                           {!!Form::close()!!}
                         @endif
                       @endif

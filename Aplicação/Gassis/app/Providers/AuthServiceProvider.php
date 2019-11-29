@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
      * @return void
      */
 
-    /**
+    /*requester     requester    /**
     * Determine whether the user can create models.
     *
     * @param  \App\Entities\User  $user
@@ -50,6 +50,12 @@ class AuthServiceProvider extends ServiceProvider
             }
         });
 
+        Gate::define('assisted', function($user){
+            if($user->permission == 1){
+                return true;
+            }
+        });
+
         Gate::define('admin', function($user){
             if($user->permission == 4){
                 return true;
@@ -62,14 +68,32 @@ class AuthServiceProvider extends ServiceProvider
             }
         });
 
+        Gate::define('prod', function($user){
+            if($user->permission == 3){
+                return true;
+            }
+        });
+
         Gate::define('admOrReq', function($user){
             if($user->permission == 4 || $user->permission == 2){
                 return true;
             }
         });
 
+        Gate::define('admOrProd', function($user){
+            if($user->permission == 4 || $user->permission == 3){
+                return true;
+            }
+        });
+
         Gate::define('admReqProd', function($user){
             if($user->permission == 4 || $user->permission == 3 || $user->permission == 2){
+                return true;
+            }
+        });
+
+        Gate::define('admAssisProd', function($user){
+            if($user->permission == 4 || $user->permission == 3 || $user->permission == 1){
                 return true;
             }
         });

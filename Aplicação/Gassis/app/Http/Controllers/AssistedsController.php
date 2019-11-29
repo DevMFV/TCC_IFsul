@@ -90,6 +90,37 @@ class AssistedsController extends Controller
 
     }
 
+    public function removeds(){
+
+        if(Gate::allows('admin')){
+            
+            $users =  User::onlyTrashed()->get();
+            
+            if($users!=null){}
+
+            return view('assisteds.removed',[
+                'users' => $users,
+            ]);
+
+            dd($users);
+        }
+        else{return view('accessDenied');}
+
+    }
+
+    public function recover()
+    {
+        if(Gate::allows('admin')){
+
+            $user =  User::onlyTrashed()->where('id', $_POST["id"])->restore();
+
+            return redirect()->route('assistedRemoved');
+        }
+        else{return view('accessDenied');}
+
+        
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -155,6 +186,7 @@ class AssistedsController extends Controller
 
     public function edit(Request $id)
     {
+        if(Gate::allows('admOrReq')){
         $user = $this->repository->find($id["id"]);
 
 
@@ -167,6 +199,9 @@ class AssistedsController extends Controller
             'tiposDeficiencia' => $tiposDeficiencia,
             'tipoDeficienciaList'=>$tipoDeficienciaList
             ]);
+        }
+
+        else{return view('accessDenied');}
     }
 
     /**
@@ -206,7 +241,7 @@ class AssistedsController extends Controller
     {
         if(Gate::allows('requester')){
 
-        $request = $this->service->updatePassword($requestPar->all(),1);
+        $request = $this->service->updatePassword($request->all(),$id);
                 
         session()->flash('success',[
             'success'      => $request['success'],

@@ -59,7 +59,7 @@ class CreateUsersTable extends Migration
 			// Relations
 
 			$table->foreign('tipo_deficiencia_id')->references('id')->on('tipodeficiencia');
-			$table->foreign('tipo_solicitante_id')->references('id')->on('tipo_solicitantes');
+			$table->foreign('tipo_solicitante_id')->references('id')->on('tipo_solicitantes')->onDelete('SET NULL');
 
 
 			$table->String('status')->default('active');

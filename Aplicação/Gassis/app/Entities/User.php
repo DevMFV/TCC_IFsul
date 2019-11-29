@@ -7,11 +7,14 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\CanResetPassword;
+use App\Entities\Production;
 
 class User extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
+
+    protected $dates=['deleted_at'];
 
     public $timestamps = true;
 
@@ -34,7 +37,8 @@ class User extends Authenticatable
         'password', 
         'status',
         'tipo_deficiencia_id',
-        'tipo_solicitante_id'
+        'tipo_solicitante_id',
+        'ocupado'
 
     ];
 
@@ -68,6 +72,8 @@ class User extends Authenticatable
         return $this->belongsTo(TipoDeficiencia::class, 'tipo_deficiencia_id');
     }
 
-    
+    public function productions(){
+        return $this->hasMany(Production::class);
+    }
 
 }

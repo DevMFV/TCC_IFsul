@@ -118,6 +118,15 @@
           <span>Demandas</span></a>
       </li>
 
+
+      @if (Gate::allows('admOrProd'))
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('production.index')}}">
+         <i class="fas fa-fw fa-engine"></i>
+         <span>Produções</span></a>
+     </li>
+     @endif
+
       <li class="nav-item">
        <a class="nav-link" href="{{route('assisted.index')}}">
          <i class="fas fa-fw fa-hands"></i>
@@ -135,6 +144,19 @@
         <a class="nav-link" href="{{route('productor.index')}}">
           <i class="fas fa-fw fa-hammer"></i>
           <span>Produtores</span></a>
+
+          <li class="nav-item active" style="margin-left: 15%; padding:0">
+            <a class="nav-link" href="{{route('productor.index')}}">
+              <span>Ativos</span>
+            </a>
+          </li>
+
+          <li class="nav-item" style="margin-left: 15%; padding:0">
+            <a class="nav-link" href="{{route('productorRemoved')}}">
+              <span>Removidos</span>
+            </a>
+          </li>
+
       </li>
 
       <li class="nav-item">
@@ -181,7 +203,6 @@
                     <th>Nome</th>
                     <th>Email</th>
                     <th>Status</th>
-
                     <th>Ações</th>
 
                   </tr>
@@ -200,11 +221,21 @@
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->status }}</td>
-                    <td>
 
+                    <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
+
+                      @if(Gate::allows('admOrProd'))
+                      {!!Form::open(['route' => ['editProductor'], 'method' => 'POST','style'=>'height:0'])!!}
+                        {!!Form::submit('Editar',['class'=>'edit-form-submit']) !!}
+                        <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $user->id }}">
+                      {!!Form::close()!!}
+                      @endif
+
+                      @if(Gate::allows('admin'))
                       {!!Form::open(['route' => ['productor.destroy', $user->id], 'method' => 'DELETE'])!!}
                         {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
                       {!!Form::close()!!}
+                      @endif
 
                     </td>
 

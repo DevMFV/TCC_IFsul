@@ -117,6 +117,15 @@
           <span>Demandas</span></a>
       </li>
 
+
+      @if (Gate::allows('admOrProd'))
+     <li class="nav-item">
+       <a class="nav-link" href="{{route('production.index')}}">
+         <i class="fas fa-fw fa-engine"></i>
+         <span>Produções</span></a>
+     </li>
+     @endif
+
       <li class="nav-item">
        <a class="nav-link" href="{{route('assisted.index')}}">
          <i class="fas fa-fw fa-hands"></i>
@@ -128,6 +137,19 @@
         <a class="nav-link" href="{{route('requester.index')}}">
           <i class="fas fa-fw fa-user"></i>
           <span>Solicitantes</span></a>
+
+          <li class="nav-item active" style="margin-left: 15%; padding:0">
+            <a class="nav-link" href="{{route('requester.index')}}">
+              <span>Ativos</span>
+            </a>
+          </li>
+
+          <li class="nav-item" style="margin-left: 15%; padding:0">
+            <a class="nav-link" href="{{route('requesterRemoved')}}">
+              <span>Removidos</span>
+            </a>
+          </li>
+
       </li>
 
       <li class="nav-item">
@@ -154,14 +176,14 @@
           <li class="breadcrumb-item">
             <a href="#">Dashboard</a>
           </li>
-          <li class="breadcrumb-item active">Tables</li>
+          <li class="breadcrumb-item active">Solicitantes Ativos</li>
         </ol>
 
         <!-- DataTables Example -->
         <div class="card mb-3">
           <div class="card-header">
             <i class="fas fa-table"></i>
-            Data Table Example</div>
+            Solicitantes</div>
           <div class="card-body">
             <div class="table-responsive">
 
@@ -169,7 +191,6 @@
                 <a class="nav-link-topAction" href="{{route('requesterRegister')}}">
                   Cadastrar Solicitante
                 </a>
-              
 
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
@@ -198,14 +219,30 @@
                     <td>{{ $user->id }}</td>
                     <td>{{ $user->filename }}</td>
                     <td>{{ $user->name }}</td>
-                    <td>{{ $user->tipoSol->tipo}}</td>
+
+                    @if ($user->tipoSol!=null)
+                      <td>{{ $user->tipoSol->tipo}}</td>
+                    @else
+                      <td style="color:lightsteelblue">Tipo Removido</td>
+                    @endif
+
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->status }}</td>
-                    <td>
+                    
+                    <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
 
+                    @if (Gate::allows('admOrReq'))
+                      {!!Form::open(['route' => ['editRequester'], 'method' => 'POST','style'=>'height:0'])!!}
+                        {!!Form::submit('Editar',['class'=>'edit-form-submit']) !!}
+                        <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $user->id }}">
+                      {!!Form::close()!!}
+                    @endif
+                    
+                    @if (Gate::allows('admin'))
                       {!!Form::open(['route' => ['requester.destroy', $user->id], 'method' => 'DELETE'])!!}
                         {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
                       {!!Form::close()!!}
+                    @endif
 
                     </td>
 

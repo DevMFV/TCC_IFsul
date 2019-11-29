@@ -13,6 +13,7 @@ use App\Repositories\TipoSolicitanteRepository;
 use App\Validators\TipoSolicitanteValidator;
 use App\Services\TipoSolicitanteService;
 use Illuminate\Support\Facades\Gate;
+use App\Entities\TipoSolicitante;
 
 
 /**
@@ -64,6 +65,36 @@ class TipoSolicitantesController extends Controller
         }
         else{return view('accessDenied');}
 
+    }
+
+    public function removeds(){
+
+        if(Gate::allows('admin')){
+            
+            $tipos =  TipoSolicitante::onlyTrashed()->get();
+            
+            if($tipos!=null){}
+
+            return view('admins.tipoSolicitanteRemoved',[
+                'tipoSolicitantes' => $tipos,
+            ]);
+
+        }
+        else{return view('accessDenied');}
+
+    }
+
+    public function recover()
+    {
+        if(Gate::allows('admin')){
+
+            $tipo =  TipoSolicitante::onlyTrashed()->where('id', $_POST["id"])->restore();
+
+            return redirect()->route('tipoSolRemoved');
+        }
+        else{return view('accessDenied');}
+
+        
     }
 
     /**

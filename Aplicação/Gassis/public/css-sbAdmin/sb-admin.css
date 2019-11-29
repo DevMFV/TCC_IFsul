@@ -50,8 +50,16 @@
     box-sizing: border-box;
 }
 
+.sub-topic {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0rem;
+    width: 225px;
+}
+
 .detail-button {
-    background-color: blue;
+    background-color: #007bff;
     border-radius: 50px;
     padding: 0.5rem 1rem;
     text-align: center;
@@ -68,7 +76,7 @@
 }
 
 .edit-form-submit {
-    background-color: #fde400;
+    background-color: #ffc107;
     border-radius: 50px;
     width: 100%;
     margin: 0 3px 0 3px;
@@ -82,6 +90,57 @@
 .edit-form-submit:hover {
     background-color: rgb(211, 211, 211);
     color: #c4b000;
+}
+
+.start-form-submit {
+    background-color: var(--green);
+    border-radius: 50px;
+    width: 100%;
+    margin: 0 3px 0 3px;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    border: none;
+}
+
+.start-form-submit:hover {
+    background-color: rgb(211, 211, 211);
+    color: var(--green);
+}
+
+.detail-form-submit {
+    background-color: var(--blue);
+    border-radius: 50px;
+    width: 100%;
+    margin: 0 3px 0 3px;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    border: none;
+}
+
+.detail-form-submit:hover {
+    background-color: rgb(211, 211, 211);
+    color: var(--blue);
+}
+
+.next-form-submit {
+    background-color: var(--green);
+    border-radius: 50px;
+    width: 100%;
+    margin: 0 3px 0 3px;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    border: none;
+}
+
+.next-form-submit:hover {
+    background-color: rgb(211, 211, 211);
+    color: var(--green);
 }
 
 .action-button {
@@ -278,7 +337,7 @@
 }
 
 .remove-form-submit {
-    background-color: #ff0000;
+    background-color: #dc3545;
     border-radius: 50px;
     width: 100%;
     padding: 0.5rem 1rem;
@@ -315,7 +374,7 @@
 }
 
 .nav-link-topAction {
-    background-color: #007bff;
+    background-color: var(--blue);
     border-radius: 50px;
     width: 25%;
     margin: 0 0 20px 0px;
@@ -328,7 +387,7 @@
 .nav-link-topAction:hover {
     background-color: rgb(226, 226, 226);
     text-decoration: none;
-    color: blue;
+    color: var(--blue);
 }
 
 html {

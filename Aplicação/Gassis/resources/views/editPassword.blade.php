@@ -166,7 +166,7 @@
 
       <li class="nav-item">
         <a class="nav-link" href="{{route('tipoSol.index')}}">
-          <i class="fas fa-fw fa-user"></i>
+          <i class="fas fa-fw fa-list"></i>
           <span>Tipo de Solicitante</span></a>
       </li>
       @endif

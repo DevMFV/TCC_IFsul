@@ -14,6 +14,7 @@ use App\Repositories\TipoSolicitanteRepository;
 use App\Validators\UserValidator;
 use App\Services\UserService;
 use App\Entities\TipoSolicitante;
+use App\Entities\User;
 use Illuminate\Support\Facades\Gate;
 
 /**
@@ -59,6 +60,8 @@ class RequestersController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    
+
     public function register(){
 
         if(Gate::allows('admin')){
@@ -80,8 +83,6 @@ class RequestersController extends Controller
         if(Gate::allows('admin')){
             $users = $this->repository->all();
 
-            
-
             if($users!=null){}
 
             return view('requesters.index',[
@@ -92,6 +93,37 @@ class RequestersController extends Controller
         }
         else{return view('accessDenied');}
 
+    }
+
+    public function removeds(){
+
+        if(Gate::allows('admin')){
+            
+            $users =  User::onlyTrashed()->get();
+            
+            if($users!=null){}
+
+            return view('requesters.removed',[
+                'users' => $users,
+            ]);
+
+            dd($users);
+        }
+        else{return view('accessDenied');}
+
+    }
+
+    public function recover()
+    {
+        if(Gate::allows('admin')){
+
+            $user =  User::onlyTrashed()->where('id', $_POST["id"])->restore();
+
+            return redirect()->route('requesterRemoved');
+        }
+        else{return view('accessDenied');}
+
+        
     }
 
     /**
@@ -155,11 +187,19 @@ class RequestersController extends Controller
      */
 
 
-    public function edit($id)
+    public function edit(Request $id)
     {
-        $user = $this->repository->find($id);
+        $user = $this->repository->find($id["id"]);
 
-        return view('users.edit', compact('user'));
+        $tiposSolicitante = $this->tipoRepository->all();
+
+        $tipoSolicitanteList = TipoSolicitante::pluck('tipo','id')->all();
+
+        return view('requesters.requesterEdit',[
+            'user'                  =>  $user,
+            'tiposSolicitante'      =>  $tiposSolicitante,
+            'tipoSolicitanteList'   =>  $tipoSolicitanteList
+        ]);
     }
 
     /**
@@ -174,37 +214,20 @@ class RequestersController extends Controller
      */
 
 
-    public function update(UserUpdateRequest $request, $id)
+    public function update(Request $requestPar, $id)
     {
-        try {
+        if(Gate::allows('admin')){
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            $request = $this->service->update($requestPar->all(),$id);
 
-            $user = $this->repository->update($request->all(), $id);
-
-            $response = [
-                'message' => 'User updated.',
-                'data'    => $user->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+            session()->flash('success',[
+                'success'      => $request['success'],
+                'messages'     => $request['message']
+            ]);
+    
+            return redirect()->route('requester.index');
         }
+        else{return view('accessDenied');}
     }
 
 

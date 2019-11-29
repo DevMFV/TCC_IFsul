@@ -5,6 +5,8 @@ use Illuminate\Database\Seeder;
 use App\Entities\User;
 use App\Entities\TipoDeficiencia;
 use App\Entities\TipoSolicitante;
+use App\Entities\Fase;
+use App\Entities\CurrentState;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,7 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
+        
         
         TipoSolicitante::create([
             'tipo'            => 'Exemplo',
@@ -64,7 +66,42 @@ class DatabaseSeeder extends Seeder
             'codigo'          => 5
         ]);
 
+
+        Fase::create([
+            'fase'            => 'Recursos',
+            'codigo'          => 1
+        ]);
+
+        Fase::create([
+            'fase'            => 'Desenvolvimento',
+            'codigo'          => 2
+        ]);
+
+        Fase::create([
+            'fase'            => 'Teste',
+            'codigo'          => 3
+        ]);
+
+        Fase::create([
+            'fase'            => 'Adaptação',
+            'codigo'          => 4
+        ]);
+
+        Fase::create([
+            'fase'            => 'Finalizada',
+            'codigo'          => 5
+        ]);
+
+
+        CurrentState::create([
+            'state'            => 'Pausada',
+            'codigo'            => 1
+        ]);
         
-    
+        CurrentState::create([
+            'state'            => 'Suspensa',
+            'codigo'            => 2
+        ]);
+        
     }
 }

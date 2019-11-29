@@ -115,19 +115,39 @@
               </a>
             </li>
 
-            @if (Gate::allows('admOrReq'))
+            @if (Gate::allows('assisted'))
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('productionMateriais')}}">
+                <i class="fas fa-fw fa-box"></i>
+                <span>Materiais</span>
+              </a>
+            </li>
+            @endif
+
+            @if (Gate::allows('admReqProd'))
             <li class="nav-item">
               <a class="nav-link" href="{{route('demand.index')}}">
-                <i class="fas fa-fw fa-box"></i>
+                <i class="fas fa-fw fa-clock"></i>
                 <span>Demandas</span></a>
             </li>
             @endif
-      
+
+            @if (Gate::allows('admOrProd'))
+              <li class="nav-item">
+                <a class="nav-link" href="{{route('production.index')}}">
+                  <i class="fas fa-fw fa-box"></i>
+                  <span>Produções</span></a>
+              </li>
+            @endif
+            
+            @if (Gate::allows('admReqProd'))
             <li class="nav-item">
              <a class="nav-link" href="{{route('assisted.index')}}">
                <i class="fas fa-fw fa-hands"></i>
                <span>Assistidos</span></a>
             </li>
+            @endif
+            
             
             @if (Gate::allows('admin'))
             <li class="nav-item">
