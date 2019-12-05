@@ -230,7 +230,7 @@ class DemandsController extends Controller
                         'original_name'=>$file->getClientOriginalName(),
                         'file'=>$filename['filename'],
                         'owner_id'=>$last['id'],
-                        'owner_type'=>'App\\\\Entities\\\\Demand'
+                        'owner_type'=>'App\\Entities\\Demand'
                     ];
                     
                     $request = $this->attachmentService->store($data);
