@@ -27,10 +27,10 @@ class CreateAttachmentsTable extends Migration
 
 			$table->enum('owner_type',
 			[
-				'App\\\\Entities\\\\Demand',
-				'App\\\\Entities\\\\User',
-				'App\\\\Entities\\\\Evaluation',
-				'App\\\\Entities\\\\Production'
+				'App\\Entities\\Demand',
+				'App\\Entities\\User',
+				'App\\Entities\\Evaluation',
+				'App\\Entities\\Production'
 			]);
 
             $table->rememberToken();
