@@ -6,11 +6,11 @@ use \Prettus\Validator\Contracts\ValidatorInterface;
 use \Prettus\Validator\LaravelValidator;
 
 /**
- * Class EvaluationValidator.
+ * Class AttachmentValidator.
  *
  * @package namespace App\Validators;
  */
-class EvaluationValidator extends LaravelValidator
+class AttachmentValidator extends LaravelValidator
 {
     /**
      * Validation Rules
@@ -19,8 +19,9 @@ class EvaluationValidator extends LaravelValidator
      */
     protected $rules = [
         ValidatorInterface::RULE_CREATE => [
-            'production_id' =>'required',
-            'assisted_id'   =>'required'
+            'name',
+            'original_name',
+            'file'
         ],
         ValidatorInterface::RULE_UPDATE => [],
     ];

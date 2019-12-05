@@ -7,6 +7,7 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Entities\Production;
+use App\Entities\Designation;
 
 /**
  * Class Demand.
@@ -49,6 +50,14 @@ class Demand extends Model implements Transformable
 
     public function production(){
         return $this->hasMany(Production::class);
+    }
+
+    public function designation(){
+        return $this->hasMany(Designation::class);
+    }
+
+    public function anexos(){
+        return $this->morphMany('\App\Entities\Attachment','owner');
     }
 
 }

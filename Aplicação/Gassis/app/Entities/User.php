@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use App\Entities\Production;
+use App\Entities\Designation;
 
 class User extends Authenticatable
 {
@@ -74,6 +75,10 @@ class User extends Authenticatable
 
     public function productions(){
         return $this->hasMany(Production::class);
+    }
+
+    public function designation(){
+        return $this->hasMany(Designation::class);
     }
 
 }

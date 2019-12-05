@@ -214,60 +214,64 @@
 
                   @foreach($productions as $production)
 
-                  @if($production->demand->produzindo!=null && auth()->user()->permission==3)
-                  continue
-                  @else
+                  @if($production->demand)
 
-                  <tr>
-
-                    <td>{{ $production->id }}</td>
-
-                    <td>{{ $production->demand->titulo }}</td>
-
-                    @if(auth()->user()->permission!=3)
-                    <td>{{ $production->productor->name }}</td>
-                    @endif
-
-                    @if ($production->demand->assisted!=null)
-                      <td>{{ $production->demand->assisted->name}}</td>
+                    @if($production->demand->produzindo!=null && auth()->user()->permission==3)
+                    continue
                     @else
-                      <td style="color:lightsteelblue">Solicitante Removido</td>
+
+                    <tr>
+
+                      <td>{{ $production->id }}</td>
+
+                      <td>{{ $production->demand->titulo }}</td>
+
+                      @if(auth()->user()->permission!=3)
+                      <td>{{ $production->productor->name }}</td>
+                      @endif
+
+                      @if ($production->demand->assisted!=null)
+                        <td>{{ $production->demand->assisted->name}}</td>
+                      @else
+                        <td style="color:lightsteelblue">Solicitante Removido</td>
+                      @endif
+
+                      @if ($production->demand->requester!=null)
+                        <td>{{ $production->demand->requester->name}}</td>
+                      @else
+                        <td style="color:lightsteelblue">Solicitante Removido</td>
+                      @endif
+
+                      <td>{{ $production->created_at }}</td>
+
+                      <td>{{ $production->demand->data_prazo }}</td>
+
+                      <td>{{ $production->fase->fase }}</td>
+
+                      @if ($production->state==null)
+                        <td>Em produção</td>
+                      @else
+                        <td>{{ $production->state->state }}</td>
+                      @endif
+
+                      <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
+
+                        <a class="detail-button" href="{{route('production.show',$production->id)}}">Detalhes</a>
+
+                          @if (Gate::allows('admOrReq'))
+                            {!!Form::open(['route' => ['recoverProduction'], 'method' => 'POST','style'=>'height:0'])!!}
+                            {!!Form::submit('Recuperar',['class'=>'edit-form-submit']) !!}
+                              <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
+                            {!!Form::close()!!}
+                          @endif
+
+                      </td>
+
+                    </tr>
+
                     @endif
-
-                    @if ($production->demand->requester!=null)
-                      <td>{{ $production->demand->requester->name}}</td>
-                    @else
-                      <td style="color:lightsteelblue">Solicitante Removido</td>
-                    @endif
-
-                    <td>{{ $production->created_at }}</td>
-
-                    <td>{{ $production->demand->data_prazo }}</td>
-
-                    <td>{{ $production->fase->fase }}</td>
-                    
-                    @if ($production->state==null)
-                      <td>Em produção</td>
-                    @else
-                      <td>{{ $production->state->state }}</td>
-                    @endif
-
-                    <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
-
-                      <a class="detail-button" href="{{route('production.show',$production->id)}}">Detalhes</a>
-
-                        @if (Gate::allows('admOrReq'))
-                          {!!Form::open(['route' => ['recoverProduction'], 'method' => 'POST','style'=>'height:0'])!!}
-                          {!!Form::submit('Recuperar',['class'=>'edit-form-submit']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
-                          {!!Form::close()!!}
-                        @endif
-
-                    </td>
-
-                  </tr>
-
-                  @endif
+                   
+                  @endif  
 
                   @endforeach
 

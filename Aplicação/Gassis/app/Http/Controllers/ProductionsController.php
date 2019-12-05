@@ -112,6 +112,32 @@ class ProductionsController extends Controller
 
     }
 
+    public function materialShow(Request $id){
+        if(Gate::allows('assisted')){
+
+            $production = Production::find($_POST['id']);
+
+            $demandShow = Demand::find($production['demand_id']);
+
+            $extensao = substr($demandShow->filename, strpos($demandShow->filename, '.')+1 );
+    
+            $nomeArquivo = substr($demandShow->filename, strpos($demandShow->filename, 's/')+2 );
+
+            $production = $this->repository->all()->find($_POST['id']);
+
+            if($production!=null){
+                return view('productions.materialDetalhes',
+                [
+                    'production' => $production,
+                    'extensao'  => $extensao,
+                    'nomeArquivo'  => $nomeArquivo
+                ]);
+            }
+        }
+        else{return view('accessDenied');}
+
+    }
+
     public function index(){
 
         if(Gate::allows('admReqProd')){
@@ -119,13 +145,34 @@ class ProductionsController extends Controller
 
                 $productions = $this->repository->findwhere(['productor_id'=>auth()->user()->id]);
 
-                if($productions!=null){
+                if($productions->all()!=null){
+
+                    foreach ($productions->all() as $key => $value) {
+
+                        if($value['current_state_id']!=null){
+
+                            $retomar = true;
+    
+                        }
+                        else{
+    
+                            $retomar = false;
+    
+                        }
+
+                    }
+
                     return view('productions.index',[
                         'productions' => $productions,
+                        'retomar'=>$retomar
                     ]);
+
                 }
                 else{
-                    return view('productions.index');
+                    return view('productions.index',[
+                        'productions'=>$productions,
+                        'retomar'=>null
+                    ]);
                 }
 
             }
@@ -134,14 +181,9 @@ class ProductionsController extends Controller
 
                 $productions = $this->repository->all();
 
-                if($productions!=null){
                     return view('productions.index',[
                         'productions' => $productions,
                     ]);
-                }
-                else{
-                    return view('productions.index');
-                }
             }
         }
         else{return view('accessDenied');}
@@ -180,14 +222,11 @@ class ProductionsController extends Controller
             $productions =  Production::onlyTrashed()->get();
             
             if($productions!=null){
-                
+                return view('productions.removed',[
+                    'productions' => $productions,
+                ]);
             }
 
-            return view('productions.removed',[
-                'productions' => $productions,
-            ]);
-
-            dd($productions);
         }
         else{return view('accessDenied');}
 

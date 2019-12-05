@@ -118,6 +118,7 @@ function() {
         Route::post('/updateProduction', ['as'=> 'updateProduction' ,'uses'=>'ProductionsController@update']);
         Route::post('/Avaliacao', ['as'=> 'createEvaluation' ,'uses'=>'ProductionsController@update']);
         Route::post('/suspendProduction', ['as'=> 'suspendProduction' ,'uses'=>'ProductionsController@suspend']);
+        Route::post('/materialShow', ['as'=> 'materialShow' ,'uses'=>'ProductionsController@materialShow']); 
 
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================
@@ -130,6 +131,17 @@ function() {
         Route::post('/registerEvaluation', ['as'=> 'registerEvaluation' ,'uses'=>'EvaluationsController@register']);
         Route::resources(['evaluation'=>'EvaluationsController']);
         Route::post('/evaluationShow', ['as'=> 'evaluationShow' ,'uses'=>'EvaluationsController@show']);
+
+    #--------------------------------------------------------------------------------------------------------
+    #========================================================================================================
+
+    #========================================================================================================
+        // DESIGNAÇÃO
+    #--------------------------------------------------------------------------------------------------------
+
+    Route::post('/chooseProductor', ['as'=> 'chooseProductor' ,'uses'=>'DesignationsController@chooseProductor']);
+    Route::post('/designate', ['as'=> 'designate' ,'uses'=>'DesignationsController@designate']);
+    Route::resources(['designation'=>'DesignationsController']);
 
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+Use App\Repositories\UserRepository;
+Use App\Validators\UserValidator;
 Use App\Repositories\DemandRepository;
 Use App\Validators\DemandValidator;
 Use App\Repositories\ProductionRepository;
@@ -18,15 +20,21 @@ class ProductionService{
     private $repository;
     private $demandValidator;
     private $demandRepository;
+    private $userValidator;
+    private $userRepository;
+
 
 
     public function __construct(ProductionRepository $repository, ProductionValidator $validator,
-    DemandRepository $demandRepository, DemandValidator $demandValidator){
+    DemandRepository $demandRepository, DemandValidator $demandValidator,
+    UserRepository $userRepository, UserValidator $userValidator){
 
         $this->validator = $validator;
         $this->repository = $repository;
         $this->demandValidator = $demandValidator;
         $this->demandRepository = $demandRepository;
+        $this->userValidator = $userValidator;
+        $this->userRepository = $userRepository;
 
     }
 
@@ -54,6 +62,35 @@ class ProductionService{
                 
                     $production = $this->repository->update($data,$id);
 
+                    $productions = $this->repository->findwhere(['productor_id'=>auth()->user()->id]);
+
+                    foreach ($productions->all() as $key => $value) {
+
+                        if($value['current_state_id']!=1){
+
+                            $user_id = $this->repository->find($id)['productor_id'];
+
+                            $userData = ["ocupado"=>true];
+
+                            $this->userValidator->with($userData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+
+                            $this->userRepository->update($userData,$user_id);
+
+                        }
+                        else{
+
+                            $user_id = $this->repository->find($id)['productor_id'];
+
+                            $userData = ["ocupado"=>false];
+
+                            $this->userValidator->with($userData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+
+                            $this->userRepository->update($userData,$user_id);
+
+                        }
+
+                    }
+
                     break;
 
                 case 2:
@@ -66,6 +103,14 @@ class ProductionService{
                     break;
 
                 case 3:
+
+                    $user_id = $this->repository->find($id)['productor_id'];
+
+                    $userData = ["ocupado"=>true];
+        
+                    $this->userValidator->with($userData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+
+                    $this->userRepository->update($userData,$user_id);
 
                     $data = ["current_state_id"=>null]; 
 
@@ -172,6 +217,14 @@ class ProductionService{
             $this->demandValidator->with($demandData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
             $this->demandRepository->update($demandData,$demand_id);
+
+            $user_id = $this->repository->find($production_id)['productor_id'];
+
+            $userData = ["ocupado"=>false];
+            
+            $this->userValidator->with($userData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+
+            $this->userRepository->update($userData,$user_id);
 
             $this->repository->delete($production_id);
 

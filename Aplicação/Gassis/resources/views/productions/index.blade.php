@@ -234,8 +234,9 @@
                 <tbody>
 
                   @foreach($productions as $production)
-                  
-                      <tr>
+                 
+
+                      <tr calss="linha">
 
                         <td>{{ $production->id }}</td>
                         <td>{{ $production->demand->titulo }}</td>
@@ -345,6 +346,7 @@
                                     <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="avançar">
                                   {!!Form::close()!!}
                                 @endif
+                                
                                 @if (Gate::allows('prod'))
                                   {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:0'])!!}
                                     {!!Form::submit('Pausar',['class'=>'edit-form-submit']) !!}
@@ -364,13 +366,15 @@
 
                             @elseif($production->state->state=='Pausada')
 
-                                @if (Gate::allows('prod'))
-                                  {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:0'])!!}
-                                  {!!Form::submit('Retomar',['class'=>'edit-form-submit']) !!}
-                                    <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
-                                    <input style="visibility:hidden;width:0;height:0;" type="number" name="function" value="3">
-                                  {!!Form::close()!!}
-                                @endif
+                                  @if (Gate::allows('prod'))
+                                    @if($retomar==true)
+                                      {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:0'])!!}
+                                      {!!Form::submit('Retomar',['class'=>'edit-form-submit']) !!}
+                                        <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
+                                        <input style="visibility:hidden;width:0;height:0;" type="number" name="function" value="3">
+                                      {!!Form::close()!!}
+                                    @endif
+                                  @endif
 
                                 @if (Gate::allows('admOrProd'))
                                   {!!Form::open(['route' => ['suspendProduction'], 'method' => 'POST','style'=>'height:0'])!!}

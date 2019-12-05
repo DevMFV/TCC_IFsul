@@ -246,12 +246,15 @@
                 </div>
               </div>
 
-              <span style="font-family:Montserrat;" class="form-legend">Anexo</span>
-
-              <div class="foto-area">
-                  <div class="fileUpload">
-                      <input type="file" name="arquivo" class="upload" />
-                  </div>
+              
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Anexo</span>
+                </div>
+                <div class="custom-file">
+                  <input type="file" name="arquivo[]" class="custom-file-input" id="inputGroupFile01" multiple>
+                  <label class="custom-file-label" for="inputGroupFile01">Escolher arquivos</label>
+                </div>
               </div>
 
             </div>

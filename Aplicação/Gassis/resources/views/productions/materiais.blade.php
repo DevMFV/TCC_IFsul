@@ -244,19 +244,14 @@
 
                         <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
 
-                   
-                          {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:0'])!!}
-                            {!!Form::submit('Pronto',['class'=>'next-form-submit']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
-                            <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="finalizar">
-                          {!!Form::close()!!}
 
-                          {!!Form::open(['route' => ['registerEvaluation'], 'method' => 'POST','style'=>'height:0'])!!}
-                            {!!Form::submit('Solicitar Adapatação',['class'=>'edit-form-submit']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
-                          {!!Form::close()!!}
-         
-                         
+                          @if (Gate::allows('assisted'))
+                            {!!Form::open(['route' => ['materialShow'], 'method' => 'POST','style'=>'height:0'])!!}
+                              {!!Form::submit('Examinar',['class'=>'start-form-submit']) !!}
+                              <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
+                            {!!Form::close()!!}
+                           @endif
+                   
                         </td>
 
                       </tr>

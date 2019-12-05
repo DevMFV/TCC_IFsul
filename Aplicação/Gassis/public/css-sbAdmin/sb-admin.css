@@ -50,6 +50,38 @@
     box-sizing: border-box;
 }
 
+.container-data {
+    color: dimgrey;
+    background-color: none;
+    width: 95%;
+    border-Radius: 10px;
+    position: relative;
+    left: 2%;
+    height: 8%;
+}
+
+.form-data-detail {
+    font-family: Montserrat;
+    font-size: 20px;
+    margin: 2%;
+}
+
+.form-legend-detail {
+    font-family: Montserrat;
+    font-size: 16px;
+    color: rgb(160, 159, 159);
+    position: relative;
+    left: 2%;
+}
+
+.data-item {
+    display: flex;
+    flex-direction: column;
+    background-color: gainsboro;
+    width: 85%;
+    border-radius: 20px;
+}
+
 .sub-topic {
     display: block;
     width: 100%;
@@ -206,6 +238,7 @@
 }
 
 .container-file {
+    width: 97%;
     display: flex;
     background-color: lightgrey;
     justify-content: center;
@@ -225,7 +258,7 @@
 }
 
 .form-group-col-1 {
-    margin-bottom: 1rem;
+    margin-bottom: 2.4rem;
     width: 100%;
 }
 

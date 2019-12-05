@@ -4,9 +4,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 /**
- * Class CreateEvaluationsTable.
+ * Class CreateDesignationsTable.
  */
-class CreateEvaluationsTable extends Migration
+class CreateDesignationsTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -15,34 +15,44 @@ class CreateEvaluationsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('evaluations', function(Blueprint $table) {
+		Schema::create('designations', function(Blueprint $table) {
 
 			$table->increments('id');
-			$table->string('observacao')->nullable();
-			$table->boolean('atual')->default(true);
-			
+
+
 			# Production Data
 			//=================================================================================================
 
-			$table->unsignedInteger('production_id')->nullable();
+			$table->unsignedInteger('productor_id')->nullable();
 
 			# Relation
-			$table->foreign('production_id')->references('id')->on('productions')->onDelete('SET NULL');
+			$table->foreign('productor_id')->references('id')->on('users')->onDelete('SET NULL');
 
 			//=================================================================================================
 
-			# Assisted Data
+
+			# Demand Data
 			//=================================================================================================
 
-			$table->unsignedInteger('assisted_id');
+			$table->unsignedInteger('demand_id')->nullable();
 
 			# Relation
-			$table->foreign('assisted_id')->references('id')->on('users')->onDelete('SET NULL');
+			$table->foreign('demand_id')->references('id')->on('demands')->onDelete('SET NULL');
+
+			//=================================================================================================
+
+
+			# Admin Data
+			//=================================================================================================
+
+			$table->unsignedInteger('admin_id');
+
+			# Relation
+			$table->foreign('admin_id')->references('id')->on('users')->onDelete('SET NULL');
 
 			//=================================================================================================
 			
-
-
+			
 			$table->rememberToken();
 			$table->timestamps();
 			$table->softDeletes(); 
@@ -57,6 +67,6 @@ class CreateEvaluationsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('evaluations');
+		Schema::dropIfExists('designations');
 	}
 }

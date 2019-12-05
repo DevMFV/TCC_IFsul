@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Entities\User;
 use App\Entities\Demand;
 use App\Http\Controllers\UsersController;
+use App\Repositories\DemandRepository;
+use App\Entities\Attachment;
 
 
 class UserDashboardController extends Controller
@@ -30,11 +32,17 @@ class UserDashboardController extends Controller
      */
     protected $usersController;
 
+
+    /**
+     * @var DemandRepository
+     */
+    protected $demandRepository;
     
-    public function __construct(UserRepository $repository, UserValidator $validator)
+    public function __construct(UserRepository $repository, UserValidator $validator, DemandRepository $demandRepository)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
+        $this->demandRepository = $demandRepository;
     }
 
     public function index(){
@@ -42,9 +50,12 @@ class UserDashboardController extends Controller
     }
 
     public function show(Request $demand){
-        $demandShow = Demand::find($demand['demand']);
-        return view('demands.detalhes',[
-            'demands' => $demandShow]);
+
+        $demandShow = Demand::findOne($demand['demand'])->with(['anexos'])->get();
+
+        return view('demands.detalhesTeste',[
+            'demands'       => $demandShow,
+            ]);
     }
 
     public function editPassword(){

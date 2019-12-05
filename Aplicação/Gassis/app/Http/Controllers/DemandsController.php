@@ -22,6 +22,8 @@ use App\Entities\Demand;
 Use App\Repositories\GenericFunctionsForRepository;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\ProductionsController;
+use App\Services\AttachmentService;
+use PhpParser\Node\Expr\Empty_;
 
 /**
  * Class DemandController.
@@ -53,16 +55,24 @@ class DemandsController extends Controller
     protected $service;
 
     /**
+     * @var AttachmentService
+     */
+    protected $attachmentService;
+
+    /**
      * DemandssController constructor.
      *
      * @param DemandRepository $repository
      * @param UserRepository $userRepository
      */
-    public function __construct(DemandRepository $repository, DemandService $service, UserRepository $userRepository)
+    public function __construct(DemandRepository $repository, DemandService $service, UserRepository $userRepository,
+    AttachmentService $attachmentService
+    )
     {
         $this->repository = $repository;
         $this->userRepository = $userRepository;
         $this->service = $service;
+        $this->attachmentService = $attachmentService;
     }
 
     /**
@@ -106,9 +116,11 @@ class DemandsController extends Controller
 
             $demand = $this->repository->all()->find($id['demand']);
 
+            $extensao = substr($demand->filename, strpos($demand->filename, '.')+1 );
+
             if($demand!=null){
                 return redirect()->route('show',[
-                    'demand' => $demand,
+                    'demand'    => $demand,
                 ]);
             }
         }
@@ -202,11 +214,27 @@ class DemandsController extends Controller
             $requeststore = $this->service->store($requestPar->all(),auth()->user()->id);
 
             $all = $this->repository->all();
+
+            $files = $requestPar->file('arquivo');
+
             foreach ($all as $key => $value) {$last = $value;}
-            if($requestPar->file('arquivo')!=null){
-                $requestPar->file('arquivo')->storeAs('public/demands',$last['id'].'.'.$requestPar->file('arquivo')->extension());
-                $filename = ["filename"=>"storage/demands".'/'.$last['id'].".".$requestPar->file('arquivo')->extension()];
-                $request = $this->service->update($filename,$last['id']);
+
+            if(!empty($requestPar->file('arquivo'))){
+                foreach ($files as $file) {
+
+                    $file->storeAs('public/demands',$last['id'].'.'.$file->getClientOriginalExtension());
+                    $filename = ["filename"=>"storage/demands".'/'.$last['id'].".".$file->getClientOriginalExtension()];
+
+                    $data = [
+                        'name'=>$file->getClientOriginalName(),
+                        'original_name'=>$file->getClientOriginalName(),
+                        'file'=>$filename['filename'],
+                        'owner_id'=>$last['id'],
+                        'owner_type'=>'App\\\\Entities\\\\Demand'
+                    ];
+                    
+                    $request = $this->attachmentService->store($data);
+                }
             }
             
             session()->flash('success',[

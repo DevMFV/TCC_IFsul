@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin - Tables</title>
+  <title>GAssis</title>
 
    <!-- Font-family Montserrat -->
    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
@@ -26,11 +26,33 @@
 
   <style>
     .container-file-iten{
-      background-image:url({!!$demands->filename!!});
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position-y: center;
-      background-position-x: center;
+
+      @if($demands->filename!=null && $extensao!="zip")
+
+        background-image:url({!!$demands->filename!!});
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position-y: center;
+        background-position-x: center;
+
+      @elseif($extensao=="zip")
+
+        background-image:url('storage/comprimido.png');
+        background-position-y: center;
+        background-position-x: center;
+        background-repeat: no-repeat;
+        background-size: 35%;
+
+      @else
+
+        background-image:url('storage/no-file.png');
+        background-position-y: center;
+        background-position-x: center;
+        background-repeat: no-repeat;
+        
+      @endif
+
+      
     }
   </style>
 
@@ -126,7 +148,7 @@
      @if (Gate::allows('admOrReq'))
      <li class="nav-item active">
        <a class="nav-link" href="{{route('demand.index')}}">
-         <i class="fas fa-fw fa-box"></i>
+         <i class="fas fa-fw fa-clock"></i>
          <span>Demandas</span></a>
 
          <li class="nav-item active" style="margin-left: 15%; padding:0">
@@ -148,7 +170,7 @@
      @if (Gate::allows('admOrProd'))
      <li class="nav-item">
        <a class="nav-link" href="{{route('production.index')}}">
-         <i class="fas fa-fw fa-engine"></i>
+         <i class="fas fa-fw fa-box"></i>
          <span>Produções</span></a>
      </li>
      @endif
@@ -188,33 +210,97 @@
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="#">Dashboard</a>
+            <a href="#">Menu</a>
           </li>
-          <li class="breadcrumb-item active">Tables</li>
+          <li class="breadcrumb-item active">Demandas</li>
         </ol>
 
         <!-- DataTables Example -->
         <div class="card mb-3">
+
+        @foreach($anexos as $anexo)
+          <div style="background-color:red">{!!$anexo->file!!}</div>
+        @endforeach
+
+
+
           <div class="card-header">
-            <i class="fas fa-table"></i>
-            Data Table Example</div>
+            <i class="fas fa-search"></i>
+            Detalhes</div>
           <div class="card-body">
             <div class="table-responsive">
               <div class="container-details">
-                <div class="datas-details">
-                    {!!$demands->titulo!!}
-                    {!!$demands->requester->name!!}
-                    {!!$demands->assisted->name!!}
-                    {!!$demands->created_at!!}
-                    {!!$demands->data_prazo!!}
-                    {!!$demands->filename!!}
+                <div class="datas-details" style="display: flex;flex-direction: column; justify-content:center; align-items:center">
+                  
+                  <div class="data-item" style=" width:95%; height:91%; justify-content:space-evenly;">
+                    
+                    <span  class="form-legend-detail">Título</span>
+                    
+                    <div class="container-data">
+                      <span  class="form-data-detail">
+                        {!!$demands->titulo!!}
+                      </span>
+                    </div>
+
+                    <span class="form-legend-detail">Solicitante</span>
+
+                    @foreach($demands->anexos() as $anexo)
+                     <div style="background-color:red">{!!$anexo!!}</div>
+                    @endforeach
+                    
+                    <div class="container-data">
+                      <span class="form-data-detail">
+                        {!!$demands->requester->name!!}
+                      </span>
+                    </div>
+
+                    <span class="form-legend-detail">Assistido</span>
+                    
+                    <div class="container-data">
+                      <span class="form-data-detail">
+                        {!!$demands->assisted->name!!}
+                      </span>
+                    </div>
+
+                    <span class="form-legend-detail">Data do pedido</span>
+                    
+                    <div class="container-data">
+                      <span class="form-data-detail">
+                        <?php echo date("d/m/Y", strtotime($demands->created_at)); ?>
+                      </span>
+                    </div>
+
+                    <span class="form-legend-detail">Data prazo</span>
+                    
+                    <div class="container-data">
+                      <span class="form-data-detail">
+                        <?php echo date("d/m/Y", strtotime($demands->data_prazo)); ?>
+                      </span>
+                    </div>
+
+                  </div>
+                    
+
+
                 <!-- datas-details -->
                 </div>
-                <div class="datas-details">
+                <div class="datas-details" 
+                     style="display: flex;
+                           flex-direction: column;
+                           justify-content: center;"
+                >
                     {!!$demands->descricao!!}
                     <div class="container-file">
                       <div id="container-file-iten" class="container-file-iten">
+
+                     
+
+                      @if($extensao=="pdf")
+                        <iframe src="{{url($demands->filename)}}" style="width:100%;heigth:100%;border:none"></iframe>
+                      @else
                         <img id="img" class="img-teste">
+                      @endif
+
                       <!-- container-file-iten -->  
                       </div>
                       <div class="container-file-iten-2">
@@ -224,6 +310,7 @@
                         <a class="nav-link" href="{{route('productor.index')}}">
                           <i class="fas fa-fw fa-download"></i>
                         </a>
+                        <span style="font-family: Montserrat;position: relative;left: 65%;line-height: 244%;" class="form-legend">{!!$nomeArquivo!!}</span>
                       <!-- container-file-iten-2  -->
                       <div>
                     <!-- container-file -->

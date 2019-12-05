@@ -35,7 +35,8 @@ class Production extends Model implements Transformable
         "demand_id",
         "current_state_id",
         "avaliada",
-        "descricao_suspensao"
+        "descricao_suspensao",
+        "designation_id"
     ];
 
     public function fase(){

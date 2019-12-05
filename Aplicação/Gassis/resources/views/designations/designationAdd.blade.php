@@ -10,7 +10,7 @@
   <meta name="author" content="">
 
   <title>SB Admin - Tables</title>
-
+  
    <!-- Font-family Montserrat -->
    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
@@ -22,17 +22,17 @@
 
   <!-- Custom styles for this template-->
   <link href="{{asset('css-sbAdmin/sb-admin.css')}}" rel="stylesheet">
-
+  
 </head>
 
 <body id="page-top">
 
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="#">GAssis</a>
+    <a class="navbar-brand mr-1" href="index.html">GAssis</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
-      <!-- <i class="fas fa-bars"></i> -->
+      <i class="fas fa-bars"></i>
     </button>
 
     <!-- Navbar Search -->
@@ -103,75 +103,97 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
+    
     <ul class="sidebar navbar-nav">
-     
-     <li class="nav-item">
-       <a class="nav-link" href="{{route('dashboard')}}">
-         <i class="fas fa-fw fa-tachometer-alt"></i>
-         <span>Página inicial</span>
-       </a>
-     </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('dashboard')}}">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Página inicial</span>
+        </a>
+      </li>
 
-     
+      <!--
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-fw fa-folder"></i>
+          <span>Pages</span>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+          <h6 class="dropdown-header">Login Screens:</h6>
+          <a class="dropdown-item" href="login.html">Login</a>
+          <a class="dropdown-item" href="register.html">Register</a>
+          <a class="dropdown-item" href="forgot-password.html">Forgot Password</a>
+          <div class="dropdown-divider"></div>
+          <h6 class="dropdown-header">Other Pages:</h6>
+          <a class="dropdown-item" href="404.html">404 Page</a>
+          <a class="dropdown-item" href="blank.html">Blank Page</a>
+        </div>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" href="charts.html">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Charts</span></a>
+      </li>
+      -->
+
+      @if (Gate::allows('admOrReq'))
      <li class="nav-item active">
        <a class="nav-link" href="{{route('demand.index')}}">
          <i class="fas fa-fw fa-box"></i>
          <span>Demandas</span></a>
 
-         @if (Gate::allows('admOrReq'))
          <li class="nav-item active" style="margin-left: 15%; padding:0">
             <a class="nav-link" href="{{route('demand.index')}}">
               <span>Ativas</span>
             </a>
           </li>
 
-          
           <li class="nav-item" style="margin-left: 15%; padding:0">
             <a class="nav-link" href="{{route('demandRemoved')}}">
               <span>Removidas</span>
             </a>
           </li>
-          @endif
-
+      
      </li>
+     @endif
 
 
      @if (Gate::allows('admOrProd'))
      <li class="nav-item">
        <a class="nav-link" href="{{route('production.index')}}">
-         <i class="fas fa-fw fa-hammer"></i>
+         <i class="fas fa-fw fa-engine"></i>
          <span>Produções</span></a>
      </li>
      @endif
 
-     <li class="nav-item">
+      <li class="nav-item">
        <a class="nav-link" href="{{route('assisted.index')}}">
          <i class="fas fa-fw fa-hands"></i>
          <span>Assistidos</span></a>
      </li>
 
      @if (Gate::allows('admin'))
-     <li class="nav-item">
-       <a class="nav-link" href="{{route('requester.index')}}">
-         <i class="fas fa-fw fa-user"></i>
-         <span>Solicitantes</span></a>
-     </li>
-     
-     <li class="nav-item">
-       <a class="nav-link" href="{{route('productor.index')}}">
-         <i class="fas fa-fw fa-hammer"></i>
-         <span>Produtores</span>
-       </a>
-     </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('requester.index')}}">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Solicitantes</span></a>
+      </li>
 
-     <li class="nav-item">
-       <a class="nav-link" href="{{route('tipoSol.index')}}">
-         <i class="fas fa-fw fa-list"></i>
-         <span>Tipo de Solicitante</span></a>
-     </li>
-     @endif
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('productor.index')}}">
+          <i class="fas fa-fw fa-hammer"></i>
+          <span>Produtores</span></a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('tipoSol.index')}}">
+          <i class="fas fa-fw fa-list"></i>
+          <span>Tipo de Solicitante</span></a>
+      </li>
+      @endif
 
-</ul>
+    </ul>
 
     <div id="content-wrapper">
 
@@ -186,109 +208,65 @@
         </ol>
 
         <!-- DataTables Example -->
-        <div class="card mb-3">
-          <div class="card-header">
-            <i class="fas fa-table"></i>
-            Data Table Example</div>
-          <div class="card-body">
-            <div class="table-responsive">
+        <div class="card-Add-demand card-register mx-auto mt-5">
+      <div class="card-header">Escolher Produtor
 
-          
-                @if (Gate::allows('requester'))
-                <a class="nav-link-topAction" href="{{route('demandRegister')}}">
-                  Cadastrar Demanda
-                </a>
-                @endif
-              
+      </div>
 
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                   <tr>
                     
+                    <th>Foto</th>
                     <th>Id</th>
-                    <th>Título</th>
-                    <th>Urgência</th>
-                    <th>Assistido</th>
-                    <th>Solicitante</th>
-                    <th>Data de solicitação</th>
-                    <th>Data prazo</th>
-                    <th>Estado atual</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Status</th>
                     <th>Ações</th>
-                    
+
                   </tr>
                 </thead>
 
                 <tbody>
 
-                  @foreach($demands as $demand)
+                  @foreach($productors as $productor)
 
                   <tr>
 
-                    <td>{{ $demand->id }}</td>
-                    <td>{{ $demand->titulo }}</td>
+                    <td>{{ $productor->filename }}</td>
+                    <td>{{ $productor->id }}</td>
+                    <td>{{ $productor->name }}</td>
+                    <td>{{ $productor->email }}</td>
 
-                    <td>{{ $demand->urgencia }}</td>
-
-                    @if ($demand->assisted!=null)
-                      <td>{{ $demand->assisted->name}}</td>
-                    @else
-                      <td style="color:lightsteelblue">Solicitante Removido</td>
-                    @endif
-
-                    @if ($demand->requester!=null)
-                      <td>{{ $demand->requester->name}}</td>
-                    @else
-                      <td style="color:lightsteelblue">Solicitante Removido</td>
-                    @endif
-
-                    <td><?php echo date("d/m/Y", strtotime($demand->created_at)); ?></td>
-                    <td><?php echo date("d/m/Y", strtotime($demand->data_prazo)); ?></td>
-
-                    @if ($demand->produzindo==null)
-                    <td>{{ "Em espera" }}</td>
-                    @else
-                    <td>{{ "Em produção" }}</td>
-                    @endif
+                    <td>
+                      @if($productor->ocupado==false)
+                        Livre
+                      @else
+                        Ocupado
+                      @endif
+                    </td>
 
                     <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
 
-                      <a class="detail-button" href="{{route('demand.show',$demand->id)}}">Detalhes</a>
+                      @if($productor->ocupado==false)
 
-                      @if($demand->produzindo==null)
-                        @if (Gate::allows('admOrReq'))
-                            {!!Form::open(['route' => ['editDemand'], 'method' => 'POST','style'=>'height:0'])!!}
-                              {!!Form::submit('Editar',['class'=>'edit-form-submit']) !!}
-                              <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $demand->id }}">
-                            {!!Form::close()!!}
-                        @endif
-                      @endif
-
-                      @if($demand->produzindo==null)
-                        @if (Gate::allows('admOrReq'))
-                          {!!Form::open(['route' => ['demand.destroy', $demand->id], 'method' => 'DELETE','style'=>'height:0'])!!}
-                          {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
-                          {!!Form::close()!!}
-                        @endif
-                      @endif
-
-                      @if($demand->produzindo==null)
-                        @if(auth()->user()->ocupado==false)
-                          @if (Gate::allows('prod'))
-                            {!!Form::open(['route' => ['startProduction'], 'method' => 'Post','style'=>'height:0'])!!}
-                            {!!Form::submit('Iniciar Producao',['class'=>'start-form-submit']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $demand->id }}">
-                            {!!Form::close()!!}
-                          @endif
-                        @endif
-                      @endif
-
-                      @if($demand->urgencia =="Alta" && $demand->produzindo != true )
                         @if (Gate::allows('admin'))
-                          {!!Form::open(['route' => ['chooseProductor'],'method' => 'POST','style'=>'position: relative;left: 6px;'])!!}
+                          {!!Form::open(['route' => ['designate'],'method' => 'POST','style'=>'position: relative;left: 6px;'])!!}
                             {!!Form::submit('Designar',['class'=>'next-form-submit']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="demandId" value="{{ $demand->id }}">
+                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $productor->id }}">
+                            <input style="visibility:hidden;width:0;height:0;" type="number" name="demandId" value="{{ $demandId }}">
                           {!!Form::close()!!}
                         @endif
+
+                      @else
+
+                        @if(Gate::allows('admin'))
+                        {!!Form::open(['route' => ['editProductor'], 'method' => 'POST','style'=>'height:0'])!!}
+                          {!!Form::submit('Examinar',['class'=>'edit-form-submit']) !!}
+                          <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $productor->id }}">
+                        {!!Form::close()!!}
+                        @endif
+
                       @endif
 
                     </td>
@@ -299,17 +277,9 @@
 
                 </tbody>
               </table>
-
-            </div>
-          </div>
-          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-        </div>
-
-        <p class="small text-center text-muted my-5">
-          <em>More table examples coming soon...</em>
-        </p>
-
+        
       </div>
+    </div>
       <!-- /.container-fluid -->
 
       <!-- Sticky Footer -->

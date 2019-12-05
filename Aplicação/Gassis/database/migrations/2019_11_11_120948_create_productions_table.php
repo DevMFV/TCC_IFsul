@@ -18,7 +18,6 @@ class CreateProductionsTable extends Migration
 		Schema::create('productions', function(Blueprint $table) {
 			
 			$table->increments('id');
-			$table->String('filename')->nullable();
 			$table->boolean('avaliada')->default(false);
 			$table->String('descricao_suspensao')->nullable();
 
@@ -72,7 +71,7 @@ class CreateProductionsTable extends Migration
 				$table->unsignedInteger('designation_id')->nullable();
 
 				# Relation
-				//$table->foreign('designation_id')->references('id')->on('designations')->onDelete('SET NULL');
+				$table->foreign('designation_id')->references('id')->on('designations')->onDelete('SET NULL');
 
 			//=================================================================================================
 

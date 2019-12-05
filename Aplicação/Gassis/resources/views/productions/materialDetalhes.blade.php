@@ -23,6 +23,40 @@
   <!-- Custom styles for this template-->
   <link href="{{asset('css-sbAdmin/sb-admin.css')}}" rel="stylesheet">
 
+
+  <style>
+    .container-file-iten{
+
+      @if($production->demand->filename!=null && $extensao!="zip")
+
+        background-image:url({!!$production->demand->filename!!});
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position-y: center;
+        background-position-x: center;
+
+      @elseif($extensao=="zip")
+
+        background-image:url('storage/comprimido.png');
+        background-position-y: center;
+        background-position-x: center;
+        background-repeat: no-repeat;
+        background-size: 35%;
+
+      @else
+
+        background-image:url('storage/no-file.png');
+        background-position-y: center;
+        background-position-x: center;
+        background-repeat: no-repeat;
+        
+      @endif
+
+      
+    }
+  </style>
+
+
 </head>
 
 <body id="page-top">
@@ -112,34 +146,32 @@
        </a>
      </li>
 
-     
+     @if (Gate::allows('admOrReq'))
      <li class="nav-item active">
        <a class="nav-link" href="{{route('demand.index')}}">
          <i class="fas fa-fw fa-box"></i>
          <span>Demandas</span></a>
 
-         @if (Gate::allows('admOrReq'))
          <li class="nav-item active" style="margin-left: 15%; padding:0">
             <a class="nav-link" href="{{route('demand.index')}}">
               <span>Ativas</span>
             </a>
           </li>
 
-          
           <li class="nav-item" style="margin-left: 15%; padding:0">
             <a class="nav-link" href="{{route('demandRemoved')}}">
               <span>Removidas</span>
             </a>
           </li>
-          @endif
-
+      
      </li>
+     @endif
 
 
      @if (Gate::allows('admOrProd'))
      <li class="nav-item">
        <a class="nav-link" href="{{route('production.index')}}">
-         <i class="fas fa-fw fa-hammer"></i>
+         <i class="fas fa-fw fa-engine"></i>
          <span>Produções</span></a>
      </li>
      @endif
@@ -160,8 +192,7 @@
      <li class="nav-item">
        <a class="nav-link" href="{{route('productor.index')}}">
          <i class="fas fa-fw fa-hammer"></i>
-         <span>Produtores</span>
-       </a>
+         <span>Produtores</span></a>
      </li>
 
      <li class="nav-item">
@@ -192,116 +223,111 @@
             Data Table Example</div>
           <div class="card-body">
             <div class="table-responsive">
-
-          
-                @if (Gate::allows('requester'))
-                <a class="nav-link-topAction" href="{{route('demandRegister')}}">
-                  Cadastrar Demanda
-                </a>
-                @endif
-              
-
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                  <tr>
+              <div class="container-details">
+              <div class="datas-details" style="display: flex;flex-direction: column; justify-content:center; align-items:center">
+                  
+                  <div class="data-item" style=" width:95%; height:91%; justify-content:space-evenly;">
                     
-                    <th>Id</th>
-                    <th>Título</th>
-                    <th>Urgência</th>
-                    <th>Assistido</th>
-                    <th>Solicitante</th>
-                    <th>Data de solicitação</th>
-                    <th>Data prazo</th>
-                    <th>Estado atual</th>
-                    <th>Ações</th>
+                    <span  class="form-legend-detail">Título</span>
                     
-                  </tr>
-                </thead>
+                    <div class="container-data">
+                      <span  class="form-data-detail">
+                      {!!$production->demand->titulo!!}
+                      </span>
+                    </div>
 
-                <tbody>
+                    <span class="form-legend-detail">Solicitante</span>
+                    
+                    <div class="container-data">
+                      <span class="form-data-detail">
+                      {!!$production->demand->requester->name!!}
+                      </span>
+                    </div>
 
-                  @foreach($demands as $demand)
+                    <span class="form-legend-detail">Assistido</span>
+                    
+                    <div class="container-data">
+                      <span class="form-data-detail">
+                      {!!$production->demand->assisted->name!!}
+                      </span>
+                    </div>
 
-                  <tr>
+                    <span class="form-legend-detail">Data do pedido</span>
+                    
+                    <div class="container-data">
+                      <span class="form-data-detail">
+                        <?php echo date("d/m/Y", strtotime($production->demand->created_at)); ?>
+                      </span>
+                    </div>
 
-                    <td>{{ $demand->id }}</td>
-                    <td>{{ $demand->titulo }}</td>
+                    <span class="form-legend-detail">Data prazo</span>
+                    
+                    <div class="container-data">
+                      <span class="form-data-detail">
+                        <?php echo date("d/m/Y", strtotime($production->demand->data_prazo)); ?>
+                      </span>
+                    </div>
 
-                    <td>{{ $demand->urgencia }}</td>
+                  </div>
+                    
 
-                    @if ($demand->assisted!=null)
-                      <td>{{ $demand->assisted->name}}</td>
-                    @else
-                      <td style="color:lightsteelblue">Solicitante Removido</td>
-                    @endif
 
-                    @if ($demand->requester!=null)
-                      <td>{{ $demand->requester->name}}</td>
-                    @else
-                      <td style="color:lightsteelblue">Solicitante Removido</td>
-                    @endif
+                <!-- datas-details -->
+                </div>
+                <div class="datas-details" 
+                     style="display: flex;
+                           flex-direction: column;
+                           justify-content: center;"
+                >
+                    
+                    <div class="container-file">
+                      <div id="container-file-iten" class="container-file-iten">
 
-                    <td><?php echo date("d/m/Y", strtotime($demand->created_at)); ?></td>
-                    <td><?php echo date("d/m/Y", strtotime($demand->data_prazo)); ?></td>
-
-                    @if ($demand->produzindo==null)
-                    <td>{{ "Em espera" }}</td>
-                    @else
-                    <td>{{ "Em produção" }}</td>
-                    @endif
-
-                    <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
-
-                      <a class="detail-button" href="{{route('demand.show',$demand->id)}}">Detalhes</a>
-
-                      @if($demand->produzindo==null)
-                        @if (Gate::allows('admOrReq'))
-                            {!!Form::open(['route' => ['editDemand'], 'method' => 'POST','style'=>'height:0'])!!}
-                              {!!Form::submit('Editar',['class'=>'edit-form-submit']) !!}
-                              <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $demand->id }}">
-                            {!!Form::close()!!}
-                        @endif
+                      @if($extensao=="pdf")
+                        <iframe src="{{url($demands->filename)}}" style="width:100%;heigth:100%;border:none"></iframe>
+                      @else
+                        <img id="img" class="img-teste">
                       @endif
 
-                      @if($demand->produzindo==null)
-                        @if (Gate::allows('admOrReq'))
-                          {!!Form::open(['route' => ['demand.destroy', $demand->id], 'method' => 'DELETE','style'=>'height:0'])!!}
-                          {!!Form::submit('Remover',['class'=>'remove-form-submit']) !!}
-                          {!!Form::close()!!}
-                        @endif
-                      @endif
-
-                      @if($demand->produzindo==null)
-                        @if(auth()->user()->ocupado==false)
-                          @if (Gate::allows('prod'))
-                            {!!Form::open(['route' => ['startProduction'], 'method' => 'Post','style'=>'height:0'])!!}
-                            {!!Form::submit('Iniciar Producao',['class'=>'start-form-submit']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $demand->id }}">
-                            {!!Form::close()!!}
-                          @endif
-                        @endif
-                      @endif
-
-                      @if($demand->urgencia =="Alta" && $demand->produzindo != true )
-                        @if (Gate::allows('admin'))
-                          {!!Form::open(['route' => ['chooseProductor'],'method' => 'POST','style'=>'position: relative;left: 6px;'])!!}
-                            {!!Form::submit('Designar',['class'=>'next-form-submit']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="demandId" value="{{ $demand->id }}">
-                          {!!Form::close()!!}
-                        @endif
-                      @endif
-
-                    </td>
-
-                  </tr>
-
-                  @endforeach
-
-                </tbody>
-              </table>
-
+                      <!-- container-file-iten -->  
+                      </div>
+                      <div class="container-file-iten-2">
+                        <a class="nav-link" href="{{route('productor.index')}}">
+                          <i class="fas fa-fw fa-expand"></i>
+                        </a>
+                        <a class="nav-link" href="{{route('productor.index')}}">
+                          <i class="fas fa-fw fa-download"></i>
+                        </a>
+                        <span style="font-family: Montserrat;position: relative;left: 65%;line-height: 244%;" class="form-legend">{!!$nomeArquivo!!}</span>
+                      <!-- container-file-iten-2  -->
+                      <div>
+                    <!-- container-file -->
+                    </div>
+                <!-- datas-details -->
+                </div>
+                <div class="datas-details">
+                  
+                    
+                    
+                <!-- datas-details -->
+                </div>
+              <!-- container-details -->
+              </div> 
             </div>
           </div>
+          <div class="nav-link-topAction-back-div">
+                          {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:0'])!!}
+                            {!!Form::submit('Pronto',['class'=>'next-form-submit']) !!}
+                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
+                            <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="finalizar">
+                          {!!Form::close()!!}
+
+                          {!!Form::open(['route' => ['registerEvaluation'], 'method' => 'POST','style'=>'height:0'])!!}
+                            {!!Form::submit('Solicitar Adapatação',['class'=>'edit-form-submit']) !!}
+                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
+                          {!!Form::close()!!}
+              </div>
+
           <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
         </div>
 
