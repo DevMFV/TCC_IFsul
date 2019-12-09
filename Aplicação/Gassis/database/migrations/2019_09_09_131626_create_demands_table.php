@@ -27,7 +27,9 @@ class CreateDemandsTable extends Migration
 			$table->date('data_prazo')->nullable();
 			$table->String('filename')->nullable();
 			$table->boolean('produzindo')->nullable();
+			$table->boolean('finalizada')->nullable();
 			$table->String('urgencia');
+
 
 		
 			// Requester Datas

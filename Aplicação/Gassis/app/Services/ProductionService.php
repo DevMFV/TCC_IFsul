@@ -7,8 +7,10 @@ Use App\Validators\UserValidator;
 Use App\Repositories\DemandRepository;
 Use App\Validators\DemandValidator;
 Use App\Repositories\ProductionRepository;
+Use App\Repositories\AttachmentRepository;
 Use App\Validators\ProductionValidator;
 use Prettus\Validator\Contracts\ValidatorInterface;
+use App\Services\AttachmentService;
 use App\Entities\Production;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -22,26 +24,31 @@ class ProductionService{
     private $demandRepository;
     private $userValidator;
     private $userRepository;
+    protected $attachmentRepository;
+    protected $attachmentService;
 
 
 
     public function __construct(ProductionRepository $repository, ProductionValidator $validator,
     DemandRepository $demandRepository, DemandValidator $demandValidator,
-    UserRepository $userRepository, UserValidator $userValidator){
+    UserRepository $userRepository, UserValidator $userValidator,
+    AttachmentRepository $attachmentRepository,AttachmentService $attachmentService){
 
         $this->validator = $validator;
         $this->repository = $repository;
         $this->demandValidator = $demandValidator;
         $this->demandRepository = $demandRepository;
-        $this->userValidator = $userValidator;
         $this->userRepository = $userRepository;
+        $this->userValidator = $userValidator;
+        $this->attachmentRepository = $attachmentRepository;
+        $this->attachmentService = $attachmentService;
 
     }
 
     // @param  UserCreateRequest $request
 
 
-    public function update($id, $function, $descricao){
+    public function update($id, $function, $descricao, $requestPar){
 
         try{
 
@@ -52,10 +59,10 @@ class ProductionService{
                     $production = Production::find($id);
 
                     if($production['fase_id']!= 3){
-                        $data = ["current_state_id"=>1];
+                        $data = ["current_state_id"=>3];
                     }
                     else{
-                        $data = ["current_state_id"=>null];
+                        $data = ["current_state_id"=>2];
                     }
 
                     $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
@@ -66,11 +73,11 @@ class ProductionService{
 
                     foreach ($productions->all() as $key => $value) {
 
-                        if($value['current_state_id']!=1){
+                        if($value['current_state_id']==3){
 
                             $user_id = $this->repository->find($id)['productor_id'];
 
-                            $userData = ["ocupado"=>true];
+                            $userData = ["ocupado"=>false];
 
                             $this->userValidator->with($userData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
@@ -81,7 +88,7 @@ class ProductionService{
 
                             $user_id = $this->repository->find($id)['productor_id'];
 
-                            $userData = ["ocupado"=>false];
+                            $userData = ["ocupado"=>true];
 
                             $this->userValidator->with($userData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
@@ -95,11 +102,40 @@ class ProductionService{
 
                 case 2:
 
-                    $data = ["current_state_id"=>2,"descricao_suspensao"=>$descricao];
+                        $productionContext = Production::find($id);
+
+                        $productionAll = $this->repository->all();
+
+                        foreach ($productionAll->all() as $key => $value) {
+
+
+                            if($value['current_state_id']==3 || $value['current_state_id']==4 || $productionContext['fase_id']==2){
+    
+                                $ocupado = false;
+        
+                            }
+                            else{
+        
+                                $ocupado = true;
+        
+                            }
+    
+                        }
+
+                        $user_id = $productionContext['productor_id'];
+
+                        $userData = ["ocupado"=>$ocupado];
+
+                        $this->userValidator->with($userData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+
+                        $user = $this->userRepository->update($userData,$user_id);
+
+                    $data = ["current_state_id"=>4,"descricao_suspensao"=>$descricao];
 
                     $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
                     $production = $this->repository->update($data,$id);
+
                     break;
 
                 case 3:
@@ -112,7 +148,7 @@ class ProductionService{
 
                     $this->userRepository->update($userData,$user_id);
 
-                    $data = ["current_state_id"=>null]; 
+                    $data = ["current_state_id"=>2]; 
 
                     $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
@@ -121,20 +157,102 @@ class ProductionService{
 
                 case 'avançar':
 
-                    $production = Production::find($id);
+                    $productionOlderFiles = Production::with('anexos')->where(['id'=>$id])->first();
 
-                    $data = ["fase_id"=>$production['fase_id']+1];
+                    $anexos = $productionOlderFiles['anexos']->all();
+
+                    foreach ($anexos as $anexo) {
+                        if($anexo['atual']){
+                            $this->attachmentRepository->update(["atual"=>false],$anexo["id"]);
+                        }
+                    }
+        
+                    $productionStage = Production::find($id);
+
+                    $data = ["fase_id"=>$productionStage['fase_id']+1];
 
                     $production = $this->repository->update($data,$id);
+
+                    $productionAll = $this->repository->all();
+
+                    if($productionStage['fase_id']==2 || $productionStage['fase_id']==3){
+
+                        foreach ($productionAll->all() as $key => $value) {
+
+                            if($value['current_state_id']==1 || $value['current_state_id']==2 || $productionStage['fase_id']==2){
+    
+                                $ocupado = false;
+        
+                            }
+                            else{
+        
+                                $ocupado = true;
+        
+                            }
+    
+                        }
+
+                        $user_id = $productionStage['productor_id'];
+
+                        $userData = ["ocupado"=>$ocupado];
+
+                        $this->userValidator->with($userData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+
+                        $user = $this->userRepository->update($userData,$user_id);
+
+                    }
+
+
+                    $productionFile = $this->repository->find($id);
+
+                    $files = $requestPar->file('arquivo');
+
+                    if(!empty($requestPar->file('arquivo'))){
+                        foreach ($files as $file) {
+        
+                            $filename = ["filename"=>"storage/demands".'/'.$productionFile['id']."-".time().".".$file->getClientOriginalExtension()];
+                            $file->storeAs('public/demands',$productionFile['id']."-".time().".".$file->getClientOriginalExtension());
+                            
+                            $data = [
+                                'name'=>$productionFile['id']."-".time().".".$file->getClientOriginalExtension(),
+                                'original_name'=>$file->getClientOriginalName(),
+                                'file'=>$filename['filename'],
+                                'owner_id'=>$productionFile['id'],
+                                'owner_type'=>'App\\Entities\\Production',
+                                'atual'=>true,
+                            ];
+                            
+                            $request = $this->attachmentService->store($data);
+
+                        }
+                    }
+                    
                     break;
                 
                 case 'finalizar':
 
+                    $user_id = $this->repository->find($id)['productor_id'];
+                    
+                    $userData = ["ocupado"=>false];
+                    
+                    $this->userValidator->with($userData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+                    
+                    $this->userRepository->update($userData,$user_id);
+
                     $production = Production::find($id);
+
+                    $demand_id = $production['demand_id'];
 
                     $data = ["fase_id"=>5];
 
                     $production = $this->repository->update($data,$id);
+
+                    $dataDemand = ["finalizada"=>true];
+
+                    $this->demandValidator->with($dataDemand)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+
+                    $demand = $this->demandRepository->update($dataDemand,$demand_id);
+
                     break;
 
                 case 'avaliar':
@@ -148,6 +266,8 @@ class ProductionService{
 
                 case 'avaliada':
 
+                
+
                     $production = Production::find($id);
 
                     $data = ["avaliada"=>true];
@@ -155,6 +275,9 @@ class ProductionService{
                     $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
                 
                     $production = $this->repository->update($data,$id);
+
+
+
 
                     break;
 
@@ -169,13 +292,78 @@ class ProductionService{
 
                 case 'adaptada':
 
+                    $productionOlderFiles = Production::with('anexos')->where(['id'=>$id])->first();
+
+                    $anexos = $productionOlderFiles['anexos']->all();
+
+                    foreach ($anexos as $anexo) {
+                        if($anexo['atual']){
+                            $this->attachmentRepository->update(["atual"=>false],$anexo["id"]);
+                        }
+                    }
+
+                    $productionStage = Production::find($id);
+
+                    $productionAll = $this->repository->all();
+
+                    if($productionStage['fase_id']==4 || $productionStage['fase_id']==3){
+
+                        foreach ($productionAll->all() as $key => $value) {
+
+                            if($value['current_state_id']==1 || $value['current_state_id']==2 || $productionStage['fase_id']==2){
+    
+                                $ocupado = false;
+        
+                            }
+                            else{
+        
+                                $ocupado = true;
+        
+                            }
+    
+                        }
+
+                        $user_id = $productionStage['productor_id'];
+
+                        $userData = ["ocupado"=>$ocupado];
+
+                        $this->userValidator->with($userData)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+
+                        $user = $this->userRepository->update($userData,$user_id);
+
+                    }
+
                     $production = Production::find($id);
 
-                    $data = ["fase_id"=>$production['fase_id']-1];
+                    $data = ["descricao_adaptacao"=>$requestPar->all()["descricao_adaptacao"],"adaptada"=>true,"fase_id"=>$production['fase_id']-1];
                     
                     $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
                 
                     $production = $this->repository->update($data,$id);
+
+                    $productionFile = $this->repository->find($id);
+
+                    $files = $requestPar->file('arquivo');
+
+                    if(!empty($requestPar->file('arquivo'))){
+                        foreach ($files as $file) {
+        
+                            $filename = ["filename"=>"storage/demands".'/'.$productionFile['id']."-".time().".".$file->getClientOriginalExtension()];
+                            $file->storeAs('public/demands',$productionFile['id']."-".time().".".$file->getClientOriginalExtension());
+                            
+                            $data = [
+                                'name'=>$productionFile['id']."-".time().".".$file->getClientOriginalExtension(),
+                                'original_name'=>$file->getClientOriginalName(),
+                                'file'=>$filename['filename'],
+                                'owner_id'=>$productionFile['id'],
+                                'owner_type'=>'App\\Entities\\Production',
+                                'atual'=>true,
+                            ];
+                            
+                            $request = $this->attachmentService->store($data);
+                            
+                        }
+                    }
 
                     break;
                     

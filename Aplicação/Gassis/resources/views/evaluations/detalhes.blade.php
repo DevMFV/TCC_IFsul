@@ -22,17 +22,19 @@
 
   <!-- Custom styles for this template-->
   <link href="{{asset('css-sbAdmin/sb-admin.css')}}" rel="stylesheet">
-  
+
+
+
 </head>
 
 <body id="page-top">
 
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="index.html">GAssis</a>
+    <a class="navbar-brand mr-1" href="#">GAssis</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
-      <i class="fas fa-bars"></i>
+      <!-- <i class="fas fa-bars"></i> -->
     </button>
 
     <!-- Navbar Search -->
@@ -103,95 +105,68 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
-    
     <ul class="sidebar navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('dashboard')}}">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Página inicial</span>
-        </a>
-      </li>
+     
+    <li class="nav-item">
+              <a class="nav-link" href="{{route('dashboard')}}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Página inicial</span>
+              </a>
+            </li>
 
-      <!--
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-          <h6 class="dropdown-header">Login Screens:</h6>
-          <a class="dropdown-item" href="login.html">Login</a>
-          <a class="dropdown-item" href="register.html">Register</a>
-          <a class="dropdown-item" href="forgot-password.html">Forgot Password</a>
-          <div class="dropdown-divider"></div>
-          <h6 class="dropdown-header">Other Pages:</h6>
-          <a class="dropdown-item" href="404.html">404 Page</a>
-          <a class="dropdown-item" href="blank.html">Blank Page</a>
-        </div>
-      </li>
+            @if (Gate::allows('assisted'))
+            <li class="nav-item  active">
+              <a class="nav-link" href="{{route('production.index')}}">
+                <i class="fas fa-fw fa-box"></i>
+                <span>Materiais</span>
+              </a>
+            </li>
+            @endif
+
+            @if (Gate::allows('admReqProd'))
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('demand.index')}}">
+                <i class="fas fa-fw fa-box"></i>
+                <span>Demandas</span></a>
+            </li>
+            @endif
+
+            @if (Gate::allows('admOrProd'))
+              <li class="nav-item  active">
+                <a class="nav-link" href="{{route('production.index')}}">
+                  <i class="fas fa-fw fa-hammer"></i>
+                  <span>Produções</span></a>
+              </li>
+            
       
-      <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span></a>
-      </li>
-      -->
-      @if (Gate::allows('admOrReq'))
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('demand.index')}}">
-          <i class="fas fa-fw fa-box"></i>
-          <span>Demandas</span></a>
-      </li>
-      @endif
-
-      @if (Gate::allows('admOrProd'))
-     <li class="nav-item">
-       <a class="nav-link" href="{{route('production.index')}}">
-         <i class="fas fa-fw fa-hammer"></i>
-         <span>Produções</span></a>
-     </li>
-     @endif
-
-      <li class="nav-item">
-       <a class="nav-link" href="{{route('assisted.index')}}">
-         <i class="fas fa-fw fa-hands"></i>
-         <span>Assistidos</span></a>
-      </li>
+            <li class="nav-item">
+             <a class="nav-link" href="{{route('assisted.index')}}">
+               <i class="fas fa-fw fa-hands"></i>
+               <span>Assistidos</span></a>
+            </li>
+            @endif
+            
+            @if (Gate::allows('admin'))
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('requester.index')}}">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Solicitantes</span></a>
+            </li>
       
-      @if (Gate::allows('admin'))
-      <li class="nav-item active">
-        <a class="nav-link" href="{{route('requester.index')}}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Solicitantes</span></a>
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('productor.index')}}">
+                <i class="fas fa-fw fa-hammer"></i>
+                <span>Produtores</span></a>
+            </li>
+      
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('tipoSol.index')}}">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Tipo de Solicitante</span></a>
+            </li>
+            @endif
 
-          <li class="nav-item active" style="margin-left: 15%; padding:0">
-            <a class="nav-link" href="{{route('requester.index')}}">
-              <span>Ativos</span>
-            </a>
-          </li>
-
-          <li class="nav-item" style="margin-left: 15%; padding:0">
-            <a class="nav-link" href="{{route('requesterRemoved')}}">
-              <span>Removidos</span>
-            </a>
-          </li>
-
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('productor.index')}}">
-          <i class="fas fa-fw fa-hammer"></i>
-          <span>Produtores</span></a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('tipoSol.index')}}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Tipo de Solicitante</span></a>
-      </li>
-      @endif
-
-    </ul>
+</ul>
 
     <div id="content-wrapper">
 
@@ -206,71 +181,258 @@
         </ol>
 
         <!-- DataTables Example -->
-        <div class="card card-register mx-auto mt-5">
-      <div class="card-header">Cadastrar Solicitante
+        <div class="card mb-3">
+          <div class="card-header">
+            <i class="fas fa-table"></i>
+            Data Table Example</div>
+          <div class="card-body">
+            <div class="table-responsive">
 
-      </div>
 
-      <div class="card-body">
 
-      <div style="display: flex">
 
-        <div style="width: 45%;margin: 2%;">
+              <div class="container-details">
 
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-md-12">
-                    <div class="form-label-group">
-                    {!!$evaluation->id!!}
-                  {!!$evaluation->observacao!!}
-                  {!!$evaluation->production->demand->titulo!!}
+                <div class="datas-details" 
+                style="display: flex;
+                flex-direction: column; 
+                justify-content:center; 
+                align-items:center">
+
+                  <div class="data-item" 
+                  style="
+                  height: 51%;">
+
+                    <div style="    
+                    display: flex;
+                    flex-direction: row;
+                    height: 40%;
+                    width: 98%;
+                    ">
+
+                      <div class="d-item">
+
+                        <span  class="form-legend-detail">Título</span>
+
+                        <div class="container-data">
+                          <span  class="form-data-detail">
+                            {!!$evaluation->production->demand->titulo!!}
+
+                          </span>
+                        </div>
+
+                      </div>
+
+                      <div class="d-item">
+
+                        <span class="form-legend-detail">Solicitante</span>
+
+                        <div class="container-data">
+                          <span class="form-data-detail">
+                            {!!$evaluation->production->demand->requester->name!!}
+                          </span>
+                        </div>
+
+                      </div>
+
+                      <div class="d-item">
+
+                        <span class="form-legend-detail">Assistido</span>
+
+                        <div class="container-data">
+                          <span class="form-data-detail">
+                            {!!$evaluation->production->demand->assisted->name!!}
+                          </span>
+                        </div>
+
+                      </div>
+
+                      <div class="d-item">
+
+                        <span class="form-legend-detail">Data do pedido</span>
+
+                        <div class="container-data">
+                          <span class="form-data-detail">
+                            <?php echo date("d/m/Y", strtotime($evaluation->production->demand->created_at)); ?>
+                          </span>
+                        </div>
+
+                      </div>
+
+                      <div class="d-item">
+
+                        <span class="form-legend-detail">Data prazo</span>
+
+                        <div class="container-data">
+                          <span class="form-data-detail">
+                            <?php echo date("d/m/Y", strtotime($evaluation->production->demand->data_prazo)); ?>
+                          </span>
+                        </div>
+
+                      </div>
+
                     </div>
+
+                    <div  style="    
+                    display: flex;
+                    flex-direction: row;
+                    height: 55%;
+                    width: 98%;
+                    position: relative;
+                    top: -5%;
+                    border-radius: 15px;
+                    border: 1px solid #ced4da;
+                    ">
+
+                      <span class="form-legend-detail" style="margin-top:2%">{!!$evaluation->observacao!!}</span>
+
+                    </div>
+
+                  <!--  data-item    #3 --->
                   </div>
+
+                  <div class="data-item-2" 
+                  style="
+                  height: 35%;
+                  margin-top: 1%;">
+
+                    @foreach($anexos as $anexo)
+
+                      @if($anexo->atual==true)
+                      <div class="container-file">
+
+
+                        @if(substr($anexo->file, strpos($anexo->file, '.')+1)=='pdf')
+
+                          <iframe src="{{url($anexo->file)}}"></iframe>
+                        
+                        @elseif(
+                          substr($anexo->file, strpos($anexo->file, '.')+1)=='png'  ||
+                          substr($anexo->file, strpos($anexo->file, '.')+1)=='jpg'  ||
+                          substr($anexo->file, strpos($anexo->file, '.')+1)=='jpeg' 
+                        )
+
+                          <div id="container-file-iten" class="container-file-iten" style="
+                          background-image:url({!!$anexo->file!!});
+                          background-repeat: no-repeat;
+                          background-size: cover;
+                          background-position-y: center;
+                          background-position-x: center;
+                          ">
+                          </div>
+                        
+                        @elseif(substr($anexo->file, strpos($anexo->file, '.')+1)=='zip')
+
+                          <div id="container-file-iten" class="container-file-iten" style="
+                          background-image: url('storage/comprimido.png');
+                          background-repeat: no-repeat;                                                  
+                          background-size: cover;                                                  
+                          background-position-y: center;                                                  
+                          background-position-x: center;                                                  
+                          background-size: 30%;
+                          ">
+                          </div>
+                        
+                        @else
+
+                          <div id="container-file-iten" class="container-file-iten" style="
+                          background-image:url('storage/arquivo.png');
+                          background-repeat: no-repeat;                                                  
+                          background-size: cover;                                                  
+                          background-position-y: center;                                                  
+                          background-position-x: center;                                                  
+                          background-size: 30%;
+                          ">
+                          </div>
+
+                        @endif
+
+                        <div class="container-file-iten-2">
+
+                          <div style="display:flex">
+
+                            <a class="nav-link" href="{{route('attachmentDownload', $anexo->id)}}">
+                              <i class="fas fa-fw fa-download"></i>
+                            </a>
+
+                          </div> 
+                          
+                          <div style="margin-right: 5%;">
+
+                            <span 
+                            style=
+                            "
+                            font-family: Montserrat;
+                            line-height: 244%;
+                            color: white;
+                            margin-right: 10%;
+                            
+                            " 
+                            class="form-legend">
+                              {!!$anexo->original_name!!}
+                            </span>
+
+                          </div> 
+
+                        </div>
+
+                      </div>
+                      @endif
+                    @endforeach
+
+                  </div>
+
+                <!--  datas-details    #2 --->
                 </div>
+
+              <!-- container-details   #1 --->
               </div>
 
-              <div class="form-group">
-              <div class="form-label-group">
-              </div>   
+              <div class="container-actions">
+
+              <div class="edit-form-submit" style="    
+                height: 60%;
+                width: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 10px;
+                font-size: 120%;">
+                  <a style="    
+                  text-align: center;
+                  text-decoration: none;
+                  color: white;
+                  width: 30em;
+                  height: 3em;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;" 
+                  href="{{route('production.index')}}">
+                    Voltar
+                  </a>
+                </div>
+
+
+                @if (Gate::allows('prod'))
+                  {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:60%;width:45%'])!!}
+                    {!!Form::submit('Iniciar Adaptação',['class'=>'next-form-submit','style'=>'height:100%;;border-radius:10px;font-size:120%']) !!}
+                    <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $evaluation->production->id }}">
+                    <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="adaptar">
+                  {!!Form::close()!!}
+                @endif
+                
               </div>
-        </div>
 
-        <div style="width: 45%;margin: 2%;">
-
-                      <div id="container-file-iten" class="container-file-iten">
-                        <img id="img" class="img-teste">
-                      <!-- container-file-iten -->  
-                      </div>
-                      <div class="container-file-iten-2">
-                        <a class="nav-link" href="{{route('productor.index')}}">
-                          <i class="fas fa-fw fa-expand"></i>
-                        </a>
-                        <a class="nav-link" href="{{route('productor.index')}}">
-                          <i class="fas fa-fw fa-download"></i>
-                        </a>
-                      <!-- container-file-iten-2  -->
-                      </div>
-
-        </div>
-
-      </div>
-
-          @if (Gate::allows('prod'))
-            {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:0'])!!}
-              {!!Form::submit('Iniciar Adaptação',['class'=>'next-form-submit']) !!}
-              <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $evaluation->production->id }}">
-              <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="adaptar">
-            {!!Form::close()!!}
-          @endif
-
-            <div class="nav-link-topAction-back-div" style="margin-top:6%">
-              <a class="nav-link-topAction-back" href="{{route('production.index')}}">
-                Voltar
-              </a>
             </div>
-        
+          </div>
+          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        </div>
+
+        <p class="small text-center text-muted my-5">
+          <em>More table examples coming soon...</em>
+        </p>
+
       </div>
-    </div>
       <!-- /.container-fluid -->
 
       <!-- Sticky Footer -->

@@ -390,16 +390,27 @@
 
               <div class="container-actions">
 
-              {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:60%;width:45%'])!!}
-                            {!!Form::submit('Pronto',['class'=>'next-form-submit','style'=>'height:100%;;border-radius:10px;font-size:120%']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
-                            <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="finalizar">
-                          {!!Form::close()!!}
-
-                          {!!Form::open(['route' => ['registerEvaluation'], 'method' => 'POST','style'=>'height:60%;width:45%'])!!}
-                            {!!Form::submit('Solicitar Adapatação',['class'=>'edit-form-submit','style'=>'height:100%;;border-radius:10px;font-size:120%']) !!}
-                            <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
-                          {!!Form::close()!!}
+              <div class="edit-form-submit" style="    
+                height: 60%;
+                width: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 10px;
+                font-size: 120%;">
+                  <a style="    
+                  text-align: center;
+                  text-decoration: none;
+                  color: white;
+                  width: 30em;
+                  height: 3em;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;" 
+                  href="{{route('production.index')}}">
+                    Voltar
+                  </a>
+                </div>
                 
               </div>
 

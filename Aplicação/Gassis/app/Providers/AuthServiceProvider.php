@@ -98,5 +98,11 @@ class AuthServiceProvider extends ServiceProvider
             }
         });
 
+        Gate::define('assistedOrProd', function($user){
+            if($user->permission == 3 || $user->permission == 1){
+                return true;
+            }
+        });
+
     }
 }

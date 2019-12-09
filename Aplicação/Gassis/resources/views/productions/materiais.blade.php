@@ -219,6 +219,7 @@
                   @foreach($productions as $production)
 
                     @if($production->demand->assisted->id == auth()->user()->id && $production->fase->fase=='Teste' && $production->avaliada!=true)
+                      
 
                       <tr>
 
@@ -244,7 +245,6 @@
 
                         <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
 
-
                           @if (Gate::allows('assisted'))
                             {!!Form::open(['route' => ['materialShow'], 'method' => 'POST','style'=>'height:0'])!!}
                               {!!Form::submit('Examinar',['class'=>'start-form-submit']) !!}
@@ -255,6 +255,8 @@
                         </td>
 
                       </tr>
+
+                    
 
                     @endif
 

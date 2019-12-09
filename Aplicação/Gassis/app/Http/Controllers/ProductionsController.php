@@ -73,6 +73,15 @@ class ProductionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function registerProduction(){
+        if(Gate::allows('prod')){
+
+            $production = $this->repository->all()->find( $_POST["id"]);
+
+            return view('productions.productionAdd',['production' => $production]);
+        }
+        else{return view('accessDenied');}
+    }
 
     public function suspend(){
 
@@ -102,10 +111,29 @@ class ProductionsController extends Controller
     public function show(Request $id){
         if(Gate::allows('admReqProd')){
 
+            $production = Production::find($id['production']);
+
+            $demandShow = Demand::find($production['demand_id']);
+
+            $extensao = substr($demandShow->filename, strpos($demandShow->filename, '.')+1 );
+    
+            $nomeArquivo = substr($demandShow->filename, strpos($demandShow->filename, 's/')+2 );
+
             $production = $this->repository->all()->find($id['production']);
 
+            $productionShow = Production::with('anexos')->where(['id'=>$id['production']])->first();
+
+            $anexos = $productionShow['anexos']->all();
+
             if($production!=null){
-                return view('productions.detalhes',['production' => $production]);
+                return view('productions.base',
+                [
+                    'production' => $production,
+                    'extensao'  => $extensao,
+                    'nomeArquivo'  => $nomeArquivo,
+                    'anexos'  => $anexos,
+                    
+                ]);
             }
         }
         else{return view('accessDenied');}
@@ -125,12 +153,18 @@ class ProductionsController extends Controller
 
             $production = $this->repository->all()->find($_POST['id']);
 
+            $productionShow = Production::with('anexos')->where(['id'=>$_POST['id']])->first();
+
+            $anexos = $productionShow['anexos']->all();
+
             if($production!=null){
                 return view('productions.materialDetalhes',
                 [
                     'production' => $production,
                     'extensao'  => $extensao,
-                    'nomeArquivo'  => $nomeArquivo
+                    'nomeArquivo'  => $nomeArquivo,
+                    'anexos'  => $anexos,
+                    
                 ]);
             }
         }
@@ -140,7 +174,7 @@ class ProductionsController extends Controller
 
     public function index(){
 
-        if(Gate::allows('admReqProd')){
+        if(Gate::allows('admAssisProd')){
             if(auth()->user()->permission==3){
 
                 $productions = $this->repository->findwhere(['productor_id'=>auth()->user()->id]);
@@ -149,7 +183,7 @@ class ProductionsController extends Controller
 
                     foreach ($productions->all() as $key => $value) {
 
-                        if($value['current_state_id']!=null){
+                        if($value['current_state_id']==3 || $value['fase_id']==5){
 
                             $retomar = true;
     
@@ -171,10 +205,18 @@ class ProductionsController extends Controller
                 else{
                     return view('productions.index',[
                         'productions'=>$productions,
-                        'retomar'=>null
+                        'retomar'=>$retomar
                     ]);
                 }
 
+            }
+
+            else if(auth()->user()->permission==1){
+                $productions = $this->repository->all();
+
+                    return view('productions.materiais',[
+                        'productions' => $productions,
+                    ]);
             }
 
             else{
@@ -274,15 +316,18 @@ class ProductionsController extends Controller
      */
 
 
-    public function update()
+    public function update(Request $requestPar)
     {
         if(Gate::allows('admAssisProd')){
 
             if($_POST['function']==2){
-                $request = $this->service->update($_POST['id'],$_POST['function'],$_POST['descricao']);
+                $request = $this->service->update($_POST['id'],$_POST['function'],$_POST['descricao'],null);
+            }
+            else if($_POST['function']=='adaptada'){
+                $request = $this->service->update($_POST['id'],$_POST['function'],null,$requestPar);
             }
             else{
-                $request = $this->service->update($_POST['id'],$_POST['function'],null);
+                $request = $this->service->update($_POST['id'],$_POST['function'],null,$requestPar);
             }
 
             session()->flash('success',[

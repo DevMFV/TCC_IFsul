@@ -244,7 +244,9 @@
                     <td><?php echo date("d/m/Y", strtotime($demand->created_at)); ?></td>
                     <td><?php echo date("d/m/Y", strtotime($demand->data_prazo)); ?></td>
 
-                    @if ($demand->produzindo==null)
+                    @if ($demand->finalizada==true)
+                    <td>{{ "Finalizada" }}</td>
+                    @elseif ($demand->produzindo==null)
                     <td>{{ "Em espera" }}</td>
                     @else
                     <td>{{ "Em produção" }}</td>

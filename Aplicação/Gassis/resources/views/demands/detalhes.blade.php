@@ -24,38 +24,7 @@
   <link href="{{asset('css-sbAdmin/sb-admin.css')}}" rel="stylesheet">
 
 
-  <style>
-    .container-file-iten{
-
-      @if($demands->filename!=null && $extensao!="zip")
-
-        background-image:url({!!$demands->filename!!});
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position-y: center;
-        background-position-x: center;
-
-      @elseif($extensao=="zip")
-
-        background-image:url('storage/comprimido.png');
-        background-position-y: center;
-        background-position-x: center;
-        background-repeat: no-repeat;
-        background-size: 35%;
-
-      @else
-
-        background-image:url('storage/no-file.png');
-        background-position-y: center;
-        background-position-x: center;
-        background-repeat: no-repeat;
-        
-      @endif
-
-      
-    }
-  </style>
-
+  
 </head>
 
 <body id="page-top">
@@ -218,12 +187,6 @@
         <!-- DataTables Example -->
         <div class="card mb-3">
 
-        @foreach($anexos as $anexo)
-          <div style="background-color:red">{!!$anexo->file!!}</div>
-        @endforeach
-
-
-
           <div class="card-header">
             <i class="fas fa-search"></i>
             Detalhes</div>
@@ -243,10 +206,6 @@
                     </div>
 
                     <span class="form-legend-detail">Solicitante</span>
-
-                    @foreach($demands->anexos() as $anexo)
-                     <div style="background-color:red">{!!$anexo!!}</div>
-                    @endforeach
                     
                     <div class="container-data">
                       <span class="form-data-detail">
@@ -279,6 +238,76 @@
                     </div>
 
                   </div>
+
+
+
+
+
+
+
+
+
+                  <div class="container-file">
+                        <div id="container-file-iten" class="container-file-iten">
+  
+                         
+  
+                        <!-- container-file-iten -->  
+                        </div>
+                        
+                        <div class="container-file-iten-2">
+                          <a class="nav-link" href="{{route('productor.index')}}">
+                            <i class="fas fa-fw fa-expand"></i>
+                          </a>
+                          <a class="nav-link" href="{{route('productor.index')}}">
+                            <i class="fas fa-fw fa-download"></i>
+                          </a>
+
+                          <span 
+                          style="font-family: Montserrat;
+                          position: relative;left: 65%;
+                          line-height: 244%;" 
+                          class="form-legend">
+                            {!!$anexo->name!!}
+                          </span>
+                          
+                        <!-- container-file-iten-2  -->
+                        <div>
+                      <!-- container-file -->
+                      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     
 
 
@@ -289,17 +318,16 @@
                            flex-direction: column;
                            justify-content: center;"
                 >
-                    {!!$demands->descricao!!}
+                    
                     <div class="container-file">
                       <div id="container-file-iten" class="container-file-iten">
 
-                     
-
-                      @if($extensao=="pdf")
-                        <iframe src="{{url($demands->filename)}}" style="width:100%;heigth:100%;border:none"></iframe>
-                      @else
-                        <img id="img" class="img-teste">
-                      @endif
+                        @foreach($anexos as $anexo)
+                          <div class="attachment"><span style="font-family: Montserrat;position: relative;left: 65%;line-height: 244%;" class="form-legend">{!!$anexo->name!!}</span>
+                       
+                          </div>
+                          <span style="font-family: Montserrat;position: relative;left: 65%;line-height: 244%;" class="form-legend">{!!$anexo->name!!}</span>
+                        @endforeach
 
                       <!-- container-file-iten -->  
                       </div>
@@ -310,7 +338,7 @@
                         <a class="nav-link" href="{{route('productor.index')}}">
                           <i class="fas fa-fw fa-download"></i>
                         </a>
-                        <span style="font-family: Montserrat;position: relative;left: 65%;line-height: 244%;" class="form-legend">{!!$nomeArquivo!!}</span>
+                        
                       <!-- container-file-iten-2  -->
                       <div>
                     <!-- container-file -->

@@ -262,18 +262,14 @@
 
                         <td>{{ $production->fase->fase }}</td>
 
-                        @if ($production->state==null)
+                        @if ($production->fase->fase!='Finalizada')
 
-                          @if($production->avaliada==true)
-                            <td>Avaliada</td>
-                          @elseif($production->fase->fase=='Finalizada')
-                            <td>Finalizada</td>
-                          @else
-                            <td>Em produção</td>
-                          @endif
+                          <td>{{ $production->state->state }}</td>
 
                         @else
-                          <td>{{ $production->state->state }}</td>
+
+                          <td>{{ $production->fase->fase }}</td>
+
                         @endif
 
                         <td style="display:flex;flex-direction:row;height:72px;justify-content: space-evenly;">
@@ -284,7 +280,7 @@
 
                           @endif
                           
-                            @if($production->state==null)
+                            @if($production->state->id==2)
 
                               @if($production->fase->fase=='Teste')
 
@@ -310,7 +306,7 @@
                               @elseif($production->fase->fase=='Adaptação')
 
                                 @if (Gate::allows('prod'))
-                                  {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:0'])!!}
+                                  {!!Form::open(['route' => ['registerProduction'], 'method' => 'POST','style'=>'height:0'])!!}
                                     {!!Form::submit('Concluir',['class'=>'next-form-submit']) !!}
                                     <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
                                     <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="adaptada">
@@ -340,11 +336,24 @@
                               @else
 
                                 @if (Gate::allows('prod'))
-                                  {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:0'])!!}
-                                    {!!Form::submit('Concluir fase',['class'=>'next-form-submit']) !!}
-                                    <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
-                                    <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="avançar">
-                                  {!!Form::close()!!}
+                                  @if ($production->fase->fase=='Desenvolvimento' || $production->fase->fase=='Adaptção')
+                                    
+                                    {!!Form::open(['route' => ['registerProduction'], 'method' => 'POST','style'=>'height:0'])!!}
+                                      {!!Form::submit('Concluir fase',['class'=>'next-form-submit']) !!}
+                                      <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
+                                      <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="avançar">
+                                    {!!Form::close()!!}
+
+                                  @else
+
+                                    {!!Form::open(['route' => ['updateProduction'], 'method' => 'POST','style'=>'height:0'])!!}
+                                      {!!Form::submit('Concluir fase',['class'=>'next-form-submit']) !!}
+                                      <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
+                                      <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="avançar">
+                                    {!!Form::close()!!}
+
+                                  @endif
+
                                 @endif
                                 
                                 @if (Gate::allows('prod'))

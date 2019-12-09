@@ -38,4 +38,8 @@ class Evaluation extends Model implements Transformable
         return $this->belongsTo(User::class, 'assisted_id');
     }
 
+    public function anexos(){
+        return $this->morphMany('\App\Entities\Attachment','owner');
+    }
+
 }

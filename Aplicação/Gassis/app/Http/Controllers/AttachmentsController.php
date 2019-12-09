@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use \Illuminate\Http\Response;
 
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
@@ -45,7 +46,16 @@ class AttachmentsController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     
      */
+
+    public function download($id){
+
+        $file = $this->repository->find($id);
+        return response()->download($file['file']);
+
+    }
+
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));

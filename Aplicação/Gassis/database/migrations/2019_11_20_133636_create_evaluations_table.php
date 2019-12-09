@@ -18,7 +18,7 @@ class CreateEvaluationsTable extends Migration
 		Schema::create('evaluations', function(Blueprint $table) {
 
 			$table->increments('id');
-			$table->string('observacao')->nullable();
+			$table->string('observacao',2000)->nullable();
 			$table->boolean('atual')->default(true);
 			
 			# Production Data

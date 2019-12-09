@@ -198,7 +198,7 @@ class DemandService{
 
             $user = $this->userRepository->update($userDatas,auth()->user()->id);
 
-            $productionDatas = ['fase_id'=>1,'productor_id'=>auth()->user()->id,'demand_id'=>$id];
+            $productionDatas = ['current_state_id'=>2,'fase_id'=>1,'productor_id'=>auth()->user()->id,'demand_id'=>$id];
 
             $this->productionValidator->with($productionDatas)->passesOrFail(ValidatorInterface::RULE_CREATE);
 

@@ -20,12 +20,14 @@ class CreateProductionsTable extends Migration
 			$table->increments('id');
 			$table->boolean('avaliada')->default(false);
 			$table->String('descricao_suspensao')->nullable();
+			$table->boolean('adaptada')->default(false);
+			$table->String('descricao_adaptacao')->nullable();
 
 
 			# status Data
 			//=================================================================================================
 
-				$table->unsignedInteger('current_state_id')->nullable();
+				$table->unsignedInteger('current_state_id')->default(1);
 
 				# Relation
 				$table->foreign('current_state_id')->references('id')->on('current_states')->onDelete('SET NULL');
@@ -38,7 +40,7 @@ class CreateProductionsTable extends Migration
 				$table->unsignedInteger('fase_id');
 
 				# Relation
-				$table->foreign('fase_id')->references('id')->on('fase')->onDelete('SET NULL');
+				$table->foreign('fase_id')->references('id')->on('fases')->onDelete('SET NULL');
 
 			//=================================================================================================
 

@@ -114,10 +114,15 @@ class EvaluationsController extends Controller
 
             $e = $this->repository->findwhere(['production_id'=>$_POST["id"],'atual'=>true]);
 
-            //$evaluation = $this->repository->all()->find($evaluationId);
+            $evaluation = Evaluation::with('anexos')->where(['production_id'=>$_POST['id'],'atual'=>true])->first();
+
+            $anexos = $evaluation['anexos']->all();
 
             if($e!=null){
-                return view('evaluations.detalhes',['evaluation' => $e->all()[0]]);
+                return view('evaluations.detalhes',[
+                    'evaluation' => $e->all()[0],
+                    'anexos' => $anexos,
+                    ]);
             }
             
         }
@@ -207,25 +212,24 @@ class EvaluationsController extends Controller
     {
 
         if(Gate::allows('assisted')){
-            
-            $request = $this->service->update($_POST['productionId']);
 
-            $requeststore = $this->service->store($requestPar->all());
-
-            $all = $this->repository->all();
-            foreach ($all as $key => $value) {$last = $value;}
-            if($requestPar->file('arquivo')!=null){
-                $requestPar->file('arquivo')->storeAs('public/evaluations',$last['id'].'.'.$requestPar->file('arquivo')->extension());
-                $filename = ["filename"=>"storage/evaluations".'/'.$last['id'].".".$requestPar->file('arquivo')->extension()];
-                $request = $this->service->update($filename,$last['id']);
+            if($requestPar->file()==[]){
+                $arquivo = false;
             }
+            else{
+                $arquivo = true;
+            }
+            
+            $request = $this->service->update($_POST['production_id']);
+
+            $requeststore = $this->service->store($requestPar->all(),$arquivo);
             
             session()->flash('success',[
                 'success'      => $requeststore['success'],
                 'messages'     => $requeststore['message'],
             ]);
 
-            $this->productionService->update($_POST['production_id'],'avaliada',null);
+            $this->productionService->update($_POST['production_id'],'avaliada',null,null);
 
             return redirect()->route('productionMateriais');
         }

@@ -187,12 +187,17 @@
 
       <div class="card-body">
 
-      {!! Form::open(['class'=>'form','route' => 'evaluation.store', 'method' => 'post', 'enctype'=>'multipart/form-data']) !!}
+      {!! Form::open(['class'=>'form','route' => 'updateProduction', 'method' => 'post', 'enctype'=>'multipart/form-data']) !!}
           {{ csrf_field() }}
 
-          <input style="visibility:hidden;width:0;height:0;" type="number" name="production_id" value="{{ $production->id }}">
-   
-                                   
+          @if($production->fase->fase=="Desenvolvimento")
+          <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
+          <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="avançar">
+          @else
+          <input style="visibility:hidden;width:0;height:0;" type="number" name="id" value="{{ $production->id }}">
+          <input style="visibility:hidden;width:0;height:0;" type="text" name="function" value="adaptada">
+          @endif
+          
 
           <div class="cols">
 
@@ -211,17 +216,17 @@
 
               <div class="form-group">
                 <div class="form-label-group">
-                  <textarea style="height:33ch" id="inputDescricao" class="form-control" type="text" name="descricao" placeholder="Descrição"  maxlength="1000" autofocus="autofocus"></textarea>
+                  <textarea style="height:33ch" id="inputDescricao" class="form-control" type="text" name="descricao_adaptacao" placeholder="Descrição"  maxlength="1000" autofocus="autofocus"></textarea>
                 </div>
               </div>
             </div>
         
           </div>
 
-          {!!Form::submit('Enviar',['class'=>'form-submit']) !!}
+          {!!Form::submit('Pronto',['class'=>'form-submit']) !!}
 
             <div class="nav-link-topAction-back-div">
-              <a class="nav-link-topAction-back" href="{{route('productionMateriais')}}">
+              <a class="nav-link-topAction-back" href="{{route('demand.index')}}">
                 Voltar
               </a>
             </div>

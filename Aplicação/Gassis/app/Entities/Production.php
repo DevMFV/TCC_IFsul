@@ -36,7 +36,9 @@ class Production extends Model implements Transformable
         "current_state_id",
         "avaliada",
         "descricao_suspensao",
-        "designation_id"
+        "adaptada",
+        "descricao_adaptacao",
+        "designation_id",
     ];
 
     public function fase(){
@@ -53,6 +55,10 @@ class Production extends Model implements Transformable
 
     public function state(){
         return $this->belongsTo(CurrentState::class, 'current_state_id');
+    }
+
+    public function anexos(){
+        return $this->morphMany('\App\Entities\Attachment','owner');
     }
 
 }

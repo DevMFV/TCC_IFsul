@@ -12,6 +12,7 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Repositories\TipoSolicitanteRepository;
 use App\Validators\UserValidator;
 use App\Repositories\DemandRepository;
+use App\Repositories\AttachmentRepository;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
 use App\Entities\TipoSolicitante;
@@ -49,6 +50,11 @@ class DemandsController extends Controller
     protected $userRepository;
 
     /**
+     * @var AttachmentRepository
+     */
+    protected $attachmentRepository;
+
+    /**
      * @var DemandValidator
      */
     protected $validator;
@@ -66,13 +72,14 @@ class DemandsController extends Controller
      * @param UserRepository $userRepository
      */
     public function __construct(DemandRepository $repository, DemandService $service, UserRepository $userRepository,
-    AttachmentService $attachmentService
+    AttachmentService $attachmentService, AttachmentRepository $attachmentRepository
     )
     {
         $this->repository = $repository;
         $this->userRepository = $userRepository;
         $this->service = $service;
         $this->attachmentService = $attachmentService;
+        $this->attachmentRepository = $attachmentRepository;
     }
 
     /**
@@ -102,7 +109,7 @@ class DemandsController extends Controller
         
         if(Gate::allows('prod')){
 
-           $start = $this->service->startProduction($_POST["id"]);
+           $start = $this->service->startProduction($_POST["id"]); 
 
            return redirect()->route('demand.index');
         }
@@ -222,11 +229,11 @@ class DemandsController extends Controller
             if(!empty($requestPar->file('arquivo'))){
                 foreach ($files as $file) {
 
-                    $file->storeAs('public/demands',$last['id'].'.'.$file->getClientOriginalExtension());
-                    $filename = ["filename"=>"storage/demands".'/'.$last['id'].".".$file->getClientOriginalExtension()];
-
+                    $filename = ["filename"=>"storage/demands".'/'.$last['id']."-".time().".".$file->getClientOriginalExtension()];
+                    $file->storeAs('public/demands',$last['id']."-".time().".".$file->getClientOriginalExtension());
+                    
                     $data = [
-                        'name'=>$file->getClientOriginalName(),
+                        'name'=>$last['id']."-".time().".".$file->getClientOriginalExtension(),
                         'original_name'=>$file->getClientOriginalName(),
                         'file'=>$filename['filename'],
                         'owner_id'=>$last['id'],
@@ -234,6 +241,7 @@ class DemandsController extends Controller
                     ];
                     
                     $request = $this->attachmentService->store($data);
+                    
                 }
             }
             

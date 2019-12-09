@@ -35,7 +35,8 @@ class Demand extends Model implements Transformable
         'requester_id',
         'assisted_id',
         'descricao',
-        'urgencia'
+        'urgencia',
+        'finalizada'
         
     ];
 

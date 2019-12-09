@@ -51,10 +51,15 @@ class UserDashboardController extends Controller
 
     public function show(Request $demand){
 
-        $demandShow = Demand::findOne($demand['demand'])->with(['anexos'])->get();
+        $demandShow = Demand::with('anexos')->where(['id'=>$demand['demand']])->first();
 
-        return view('demands.detalhesTeste',[
-            'demands'       => $demandShow,
+        $anexos = $demandShow['anexos']->all();
+
+        $extensao = substr($demandShow->filename, strpos($demand->filename, '.')+1 );
+
+        return view('demands.base',[
+            'anexos'       => $anexos,
+            'demands'      => $demandShow
             ]);
     }
 

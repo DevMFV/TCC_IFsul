@@ -94,13 +94,23 @@ class DatabaseSeeder extends Seeder
 
 
         CurrentState::create([
-            'state'            => 'Pausada',
+            'state'            => 'Em espera',
             'codigo'            => 1
+        ]);
+
+        CurrentState::create([
+            'state'            => 'Em produção',
+            'codigo'            => 2
+        ]);
+
+        CurrentState::create([
+            'state'            => 'Pausada',
+            'codigo'            => 3
         ]);
         
         CurrentState::create([
             'state'            => 'Suspensa',
-            'codigo'            => 2
+            'codigo'            => 4
         ]);
         
     }

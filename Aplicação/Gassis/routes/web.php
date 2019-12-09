@@ -118,7 +118,8 @@ function() {
         Route::post('/updateProduction', ['as'=> 'updateProduction' ,'uses'=>'ProductionsController@update']);
         Route::post('/Avaliacao', ['as'=> 'createEvaluation' ,'uses'=>'ProductionsController@update']);
         Route::post('/suspendProduction', ['as'=> 'suspendProduction' ,'uses'=>'ProductionsController@suspend']);
-        Route::post('/materialShow', ['as'=> 'materialShow' ,'uses'=>'ProductionsController@materialShow']); 
+        Route::post('/materialShow', ['as'=> 'materialShow' ,'uses'=>'ProductionsController@materialShow']);
+        Route::post('/registerProduction', ['as'=> 'registerProduction' ,'uses'=>'ProductionsController@registerProduction']); 
 
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================
@@ -142,6 +143,15 @@ function() {
     Route::post('/chooseProductor', ['as'=> 'chooseProductor' ,'uses'=>'DesignationsController@chooseProductor']);
     Route::post('/designate', ['as'=> 'designate' ,'uses'=>'DesignationsController@designate']);
     Route::resources(['designation'=>'DesignationsController']);
+
+    #--------------------------------------------------------------------------------------------------------
+    #========================================================================================================
+
+    #========================================================================================================
+        // Attachment
+    #--------------------------------------------------------------------------------------------------------
+
+    Route::get('/attachmentDownload/{file}', ['as'=> 'attachmentDownload' ,'uses'=>'AttachmentsController@download']);
 
     #--------------------------------------------------------------------------------------------------------
     #========================================================================================================

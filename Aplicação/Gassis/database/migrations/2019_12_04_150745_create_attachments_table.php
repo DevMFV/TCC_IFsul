@@ -22,6 +22,7 @@ class CreateAttachmentsTable extends Migration
 			$table->String('file',100);
 			$table->string('name',200);
 			$table->string('original_name',200);
+			$table->boolean('atual')->nullable();
 
 			$table->unsignedInteger('owner_id')->nullable();
 

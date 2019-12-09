@@ -25,7 +25,8 @@ class Attachment extends Model implements Transformable
         'original_name',
         'file',
         'owner_type',
-        'owner_id'
+        'owner_id',
+        'atual'
 
     ];
 }
